@@ -1,0 +1,5 @@
+{
+    "EINVAL": "Invalid value",
+    "EMFILE": "Too many open files",
+    "EINTR": "Interrupted by a signal"
+}

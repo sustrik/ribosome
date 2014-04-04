@@ -1,0 +1,23 @@
+# This generator will translate the input JSON file into XML file.
+
+def xmlify(j)
+    if(j.is_a?(Array))
+        for i in j
+.<item>@
+            xmlify(i)
+.</item>@
+        end
+    elsif(j.is_a?(Hash))
+       for i in j
+.<@i[0]@>@
+           xmlify(i[1])
+.</@i[0]@>@
+       end
+    else
+.@j@@
+    end
+end
+
+.<root>@
+xmlify(root)
+.</root>
