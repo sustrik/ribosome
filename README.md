@@ -1,10 +1,10 @@
 RIBOSOME
 =======
 
-A simple generic code generation tool.
+A simple and generic code generation tool.
 
-It allows you to generate code in any language from rules written in Ruby and
-data supplied in JSON format.
+It allows you to generate code in any language based on rules written in Ruby
+and data supplied in JSON format.
 
 Installation
 -----------
@@ -17,7 +17,7 @@ Command line
 -----------
 
 The generator is 'ribosome.rb'. It takes two arguments. The rule file,
-also known as 'DNA' file and the data file in JSON formar:
+also known as DNA file and the data file in JSON format:
 
 ```
 $ ruby ribosome.rb foo.dna foo.json
@@ -26,7 +26,7 @@ $ ruby ribosome.rb foo.dna foo.json
 Example
 ------
 
-Example in 'example-errors' subdirectory generates C code. Specifically, it
+Generator in 'example-errors' subdirectory generates C code. Specifically, it
 turns a data file describing POSIX errors into 'errno.h' file and implementation
 of standard strerror() function, stored in strerror.c file.
 
@@ -76,14 +76,16 @@ $ cd examples-errors
 $ ruby ../ribosome.rb errors.dna errors.json
 ```
 
-We get two output files. 'errno.h' looks like this:
+We get two output files.
+
+'errno.h' looks like this:
 
 ```
 #define EINTR 1
 #define EINVAL 2
 #define EMFILE 3
 ```
-and 'strerror.h' file looks like this:
+and 'strerror.c' file looks like this:
 
 ```
 #include <errno.h>
@@ -106,7 +108,7 @@ char *strerror(int errnum) {
 DNA file syntax
 -------------
 
-DNA files are Ruby programs with some preprocessing added into the mix.
+DNA files are Ruby programs with some preprocessing applied.
 Thus, following DNA will do exactly what you would expect it to do:
 
 ```
@@ -121,14 +123,14 @@ Additionally, line starting with a dot (.) are copied directly to the output.
 .}
 ```
 
-By default, output is directed to stdout thus you can re-direct it using
+By default, output is directed to stdout. Therefore, you can re-direct it using
 classic UNIX pipes:
 
 ```
-ruby ribosome.rb foo.dna foo.json > out.txt
+ruby ribosome.rb foo.dna foo.json > out.c
 ```
 
-However, you can redirece the output to a specific destination inside
+However, you can redirece the output to a specific destination directly from
 the DNA file:
 
 ```
@@ -139,10 +141,10 @@ the DNA file:
 ```
 
 Note that all the lines starting with an exclamation mark (!) are ribosome
-commands. We'll introduce more commands later as we go.
+commands. We'll introduce more commands later on.
 
 Also note that the argument of '!output' command is a Ruby expression.
-Thus, you can do things like this:
+Thus, you can do things like:
 
 ```
 name = 'foo'
@@ -157,21 +159,22 @@ To re-direct the output back to stdout do the following:
 ```
 
 The most useful part of the ribosome syntax though is embedding Ruby expressions
-directly to the output. The expressions should be enclosed between two at (@)
-signs:
+directly into the output. The expressions should be enclosed between two
+at-signs (@):
 
 ```
 name = 'Fred'
 .Hello, @name@!
 ```
 
-If you want to write at sign (@) to the ouptut, escape it using two at signs:
+If you want to write an at-sign (@) to the ouptut, escape it using two
+consecutive at-signs:
 
 ```
 .My email address is fred@@example.org
 ```
 
-Finally, at sign (@) at the end of the line means that newline should not be
+Finally, at-sign (@) at the end of the line means that newline should not be
 written to the output:
 
 ```
@@ -187,9 +190,10 @@ The above program will produce following output:
 1 2 3 4 5 6 7 8 9
 ```
 
-The input JSON specified on the commad line is accessible via ruby variable
-called $root and it's the standard JSON object as defined by json gem. For
-example, following code will print out names and values in a JSON map:
+On the command line you specify an input file. The file is supposed to contain
+data in JSON format. The JSON is accessible via ruby variable called 'root' and
+it's the standard JSON object as defined by json gem. So, for example, following
+code will print out names and values in a JSON map:
 
 ```
 for i in $root
