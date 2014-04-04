@@ -40,7 +40,7 @@ rna = File.open(rnafile, "w")
 # Initialise the root object.
 rna.write("require 'rubygems'\n")
 rna.write("require 'json'\n")
-rna.write("root = JSON.parse(File.read('")
+rna.write("$root = JSON.parse(File.read('")
 rna.write(jsonfile)
 rna.write("'))\n");
 

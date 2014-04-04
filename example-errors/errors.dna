@@ -4,7 +4,7 @@
 !output "errno.h"
 
 errnum = 1
-for i in root
+for i in $root
 .#define @i[0]@ @errnum@
     errnum += 1
 end
@@ -16,7 +16,7 @@ end
 .
 .char *strerror(int errnum) {
 .    switch(errnum) {
-for i in root
+for i in $root
 .    case @i[0]@:
 .        return "@i[1]@";
 end

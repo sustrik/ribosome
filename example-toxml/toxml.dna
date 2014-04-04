@@ -19,5 +19,5 @@ def xmlify(j)
 end
 
 .<root>@
-xmlify(root)
+xmlify($root)
 .</root>

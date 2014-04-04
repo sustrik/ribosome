@@ -191,7 +191,7 @@ The above program will produce following output:
 ```
 
 On the command line you specify an input file. The file is supposed to contain
-data in JSON format. The JSON is accessible via ruby variable called 'root' and
+data in JSON format. The JSON is accessible via ruby variable called $root and
 it's the standard JSON object as defined by json gem. So, for example, following
 code will print out names and values in a JSON map:
 
@@ -202,7 +202,7 @@ for i in $root
 end
 ```
 
-Syntax highlghting
+Syntax highlighting
 ----------------
 
 Given that DNA files contain two overlapping indentations, for good readability
