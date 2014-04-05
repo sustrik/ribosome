@@ -130,7 +130,7 @@ classic UNIX pipes:
 ruby ribosome.rb foo.dna foo.json > out.c
 ```
 
-However, you can redirece the output to a specific destination directly from
+However, you can redirect the output to a specific destination directly from
 the DNA file:
 
 ```
@@ -167,7 +167,7 @@ name = 'Fred'
 .Hello, @name@!
 ```
 
-If you want to write an at-sign (@) to the ouptut, escape it using two
+If you want to write an at-sign (@) to the output, escape it using two
 consecutive at-signs:
 
 ```
