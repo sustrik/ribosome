@@ -1,0 +1,16 @@
+<object name = "complex">
+    <prop name = "r" type = "double" />
+    <prop name = "i" type = "double" />
+    <method name = "complex">
+        <arg name = "r" type = "double" />
+        <arg name = "i" type = "double" />
+        this.r = r;
+        this.i = i;      
+    </method>
+    <method name = "add" return = "complex">
+        <arg name = "x" type = "complex" />
+        return complex (
+            r + x.r,
+            i + x.i);
+    </method>
+</object>

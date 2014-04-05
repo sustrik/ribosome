@@ -22,11 +22,19 @@
 
 # Parse the command line arguments.
 if(ARGV.size() != 2)
-    puts("usage: ribosome <dna-file> <json-file>")
+    puts("usage: ribosome <dna-file> <input-file>")
     exit()
 end
 dnafile = ARGV[0]
-jsonfile = ARGV[1]
+inputfile = ARGV[1]
+if(inputfile[-4..-1] == ".xml")
+    type = "x"
+elsif(inputfile[-5..-1] == ".json")
+    type = "j"
+else
+    $stderr.puts("input file must be either .json or .xml")
+    exit()
+end
 if(dnafile[-4..-1] == ".dna")
     rnafile = dnafile[0..-5] + ".rna.rb"
 else
@@ -38,11 +46,19 @@ dna = File.open(dnafile, "r")
 rna = File.open(rnafile, "w")
 
 # Initialise the root object.
-rna.write("require 'rubygems'\n")
-rna.write("require 'json'\n")
-rna.write("$root = JSON.parse(File.read('")
-rna.write(jsonfile)
-rna.write("'))\n");
+if(type == 'j')
+    rna.write("require 'rubygems'\n")
+    rna.write("require 'json'\n")
+    rna.write("$root = JSON.parse(File.read('")
+    rna.write(inputfile)
+    rna.write("'))\n");
+end
+if(type == 'x')
+    rna.write("require 'rexml/document'\n")
+    rna.write("$root = REXML::Document.new(File.new('")
+    rna.write(inputfile)
+    rna.write("')).root\n")
+end
 
 # Initial output channel is stdout.
 rna.write("$____out____ = $stdout\n")
@@ -166,5 +182,5 @@ dna.close()
 require(rnafile)
 
 # Delete the RNA file.
-File.delete(rnafile)
+# File.delete(rnafile)
 
