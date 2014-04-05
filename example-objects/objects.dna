@@ -7,12 +7,12 @@ $root.elements.each("method") do |m|
     first = true
     m.elements.each("arg") do |a|
         if(!first)
-., @
+            ., @
         end
         first = false
-.@a.attributes["type"]@ @a.attributes["name"]@@
+        .@a.attributes["type"]@ @a.attributes["name"]@@
     end
-.) {
+    .) {
     for t in m.texts
         if(!t.to_s.lstrip.empty?)
 .        @t@

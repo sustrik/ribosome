@@ -66,6 +66,7 @@ rna.write("$____out____ = $stdout\n")
 # Process the DNA file.
 ln = 0
 while(line = dna.gets())
+    line = line.lstrip()
     ln += 1
 
     # Lines starting with ! are ribosome commands.
