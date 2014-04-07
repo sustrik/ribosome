@@ -53,41 +53,6 @@ def ltrim(s)
     return ws,s
 end
 
-def expand(s, bind)
-
-    # Find all occurences of @{.
-    i = -1
-    while true
-        i = s.index('@{', i + 1)
-        if(i == nil)
-            break;
-        end
-        j = i + 1
-
-        # Find corresponding }.
-        par = 0;
-        while true
-            if(s[j] == ?{)
-                par += 1
-            end
-            if(s[j] == ?})
-                par -= 1
-            end
-            if(par == 0)
-                break
-            end
-            j += 1
-        end
-
-        # Replace the expression with its value.
-        val = eval(s[i + 2..j - 1], bind).to_s
-        s[i..j] = val;
-        i += val.size
-    end
-
-    return s
-end
-
 ################################################################################
 #  RNA helper functions.                                                       #
 ################################################################################
@@ -237,10 +202,10 @@ module Ribosome
         return $stack.size <= 1
     end
 
-    def Ribosome.output(name)
+    def Ribosome.output(name, bind)
         close()
         $outisafile = true
-        $out = File.open(name, "w")
+        $out = File.open(expand(name, bind), "w")
     end
 
     def Ribosome.stdout()
@@ -319,7 +284,6 @@ while(line = dna.gets())
         else
             command = line[0..i-1]
             args = line[i + 1..-1]
-            args = expand(args, binding)
         end
 
         # !separate is used to insert separators between
@@ -333,7 +297,7 @@ while(line = dna.gets())
             line = dna.gets()
             $ln += 1
             if(line[0] == ?! || line[0] == ?. || line[0] == ?+)
-                # TOOD: We can check for ruby loop keywords here.
+                # TODO: We can check for ruby loop keywords here.
                 dnaerror("'separate' command must be followed by a loop")
             end
             rna.write(line)
@@ -356,7 +320,7 @@ while(line = dna.gets())
             if(args.size == 0)
                 dnaerror("command 'output' expects an argument")
             end
-            rna.write("Ribosome.output(#{args.inspect()})\n")
+            rna.write("Ribosome.output(#{args.inspect()}, binding)\n")
             next
         end
 
