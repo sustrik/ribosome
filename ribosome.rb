@@ -186,6 +186,15 @@ module Ribosome
 
     end
 
+    def Ribosome.dot(line, ws, bind)
+        write("\n")
+        write(adjust(expand(line, bind), ws))
+    end
+
+    def Ribosome.plus(line, bind)
+        write(expand(line, bind))
+    end
+
     # Initialise the ribosome stack. Each level on the stack contains a block of
     # text in the form of array of lines (strings).
     $stack = [[]]
@@ -195,6 +204,7 @@ module Ribosome
     $outisafile = false
 
 end
+
 '
 
 ################################################################################
@@ -295,30 +305,16 @@ while(line = dna.gets())
     # Dot indicates thar the following text should be copied to a new line
     # in the output. The text is properly indented.
     if(line[0] == ?.)
-
-        # Remove the initial whitespace.
         ws,line = ltrim(line)
-
-        # Terminate the previous line.
-        rna.write("Ribosome.write(\"\\n\")\n")
-
-        # 1. Expand any embedded control expressions.
-        # 2. Trim any top, bottom or left whitespace.
-        rna.write("Ribosome.write(Ribosome.adjust(Ribosome.expand(#{line.inspect()}, binding()), #{ws}))\n")
-
+        rna.write("Ribosome.dot(#{line.inspect()}, #{ws}, binding)\n")
         next
     end
 
     # Plus sign (+) indicates that the following text should be copied to
     # the output without moving to a new line. No indenting kung-fu is done. 
     if(line[0] == ?+)
-
-        # Remove the initial whitespace.
         ws,line = ltrim(line)
-
-        # Expand any embedded control expressions.
-        rna.write("Ribosome.write(Ribosome::expand(#{line.inspect()}, binding()))\n")
-
+        rna.write("Ribosome.plus(#{line.inspect()}, binding)\n")
         next
     end
 
