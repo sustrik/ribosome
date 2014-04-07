@@ -200,6 +200,21 @@ for i in $root
 end
 ```
 
+Please note that ribosome strives to improve readability of the code by not
+allowing trailing whitespace in ribosome lines (those that start with '!', '.'
+or '+'). Add backslash to the line to make it compile:
+
+```
+.aaa \
++bbb
+```
+
+The result will be:
+
+```
+aaa bbb
+```
+
 One common annoying problem with code generation is creating lists, where
 separator occurs between each pair of element but doesn't occur after the
 last element in the list.
@@ -235,8 +250,7 @@ editors. Any help in this area will be highly appreciated!
 TODO
 ----
 
-1. Handling of whitespace at the end of the lines
-2. Handling of TABs
+1. Handling of TABs
 
 License
 ------

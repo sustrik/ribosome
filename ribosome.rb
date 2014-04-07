@@ -53,6 +53,16 @@ def ltrim(s)
     return ws,s
 end
 
+def ending(s)
+    if(s[-1] == ?\s || s[-1] == ?\t)
+        dnaerror("line ends by whitespace, add a backslash at the end")
+    end
+    if(s[-1] == ?\\)
+        return s[0..-2]
+    end
+    return s
+end
+
 ################################################################################
 #  RNA helper functions.                                                       #
 ################################################################################
@@ -276,7 +286,8 @@ while(line = dna.gets())
 
         # Split the line into command itself and the arguments.
         # Expand the embedded expressions within arguments.
-        line = line[1..-2].lstrip();
+        line = line[1..-2].lstrip()
+        line = ending(line)
         i = line.index(" ")
         if(i == nil)
             command = line
@@ -342,6 +353,7 @@ while(line = dna.gets())
     # in the output. The text is properly indented.
     if(line[0] == ?.)
         ws,line = ltrim(line)
+        line = ending(line)
         rna.write("Ribosome.dot(#{line.inspect()}, #{ws}, binding)\n")
         next
     end
@@ -350,6 +362,7 @@ while(line = dna.gets())
     # the output without moving to a new line. No indenting kung-fu is done. 
     if(line[0] == ?+)
         ws,line = ltrim(line)
+        line = ending(line)
         rna.write("Ribosome.plus(#{line.inspect()}, binding)\n")
         next
     end
