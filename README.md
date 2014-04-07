@@ -200,8 +200,33 @@ for i in $root
 end
 ```
 
+List separators
+-------------
+
+One common annoying problem with code generation is creating lists, where
+separator occurs between each pair of element but doesn't occur after the
+last element in the list.
+
+To help with the problem, ribosome allows to prepend any control language
+loop to be annotated by !separate command:
+
+```
+.{
+!separate ,
+for i in 1..9
++#{i}
+end
++}
+```
+
+The result will be:
+
+```
+{1,2,3,4,5,6,7,8,9}
+```
+
 Syntax highlighting
-----------------
+-----------------
 
 Given that DNA files contain two overlapping indentations, for good readability
 it is crucial to highlight the lines starting with dot (.) in a different colour
