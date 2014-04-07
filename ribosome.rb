@@ -82,6 +82,7 @@ def ____close____()
     for l in $____stack____.last
         $____out____.write(l)
     end
+    $____stack____ = [[]]
     $____out____.write("\n");
     if ($____outisafile____)
         $____out____.close()
