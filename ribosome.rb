@@ -195,6 +195,22 @@ module Ribosome
         write(expand(line, bind))
     end
 
+    def Ribosome.outermost()
+        return $stack.size <= 1
+    end
+
+    def Ribosome.output(name, bind)
+        close()
+        $outisafile = true
+        $out = File.open(eval(name, bind).to_s(), "w")
+    end
+
+    def Ribosome.stdout()
+        close()
+        $outisafile = false
+        $out = $stdout
+    end
+
     # Initialise the ribosome stack. Each level on the stack contains a block of
     # text in the form of array of lines (strings).
     $stack = [[]]
@@ -204,6 +220,7 @@ module Ribosome
     $outisafile = false
 
 end
+
 
 '
 
@@ -270,7 +287,7 @@ while(line = dna.gets())
         #}
 
         # Remaining commands can be used only in the outermost scope.
-        rna.write("if(Ribosome.$stack.size > 1)\n")
+        rna.write("if(!Ribosome.outermost())\n")
         rna.write("    $stderr.write(\"#{$dnafile}:#{$ln} - command '#{words[0]}' used in a nested function\\n\")\n")
         rna.write("    exit()\n")
         rna.write("end\n")
@@ -280,9 +297,7 @@ while(line = dna.gets())
             if(words.size() != 2)
                 dnaerror("command 'output' expects one argument")
             end
-            rna.write("Ribosome.close()\n")
-            rna.write("Ribosome.$outisafile = true\n")
-            rna.write("Ribosome.$out = File.open(#{words[1]}, 'w')\n")
+            rna.write("Ribosome.output(#{words[1].inspect()}, binding)\n")
             next
         end
 
@@ -291,9 +306,7 @@ while(line = dna.gets())
             if(words.size() != 1)
                 dnaerror("command 'stdout' expects no arguments")
             end
-            rna.write("Ribosome.close()\n")
-            rna.write("Ribosome.$outisafile = false\n")
-            rna.write("Ribosome.$out = $stdout\n")
+            rna.write("Ribosome.stdout()\n")
             next
         end
 
