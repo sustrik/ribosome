@@ -58,6 +58,10 @@ end
 #  RNA helper functions.                                                       #
 ################################################################################
 
+# In theory, helpers could be placed into a separate module file to keep
+# the RNA lean and tidy, however, embedding the whole thing into each RNA
+# file makes the ribosome dependencies and deployment much simpler.
+
 rnahelpers = '
 
 module Ribosome
