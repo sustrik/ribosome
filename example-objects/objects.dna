@@ -4,12 +4,8 @@
 $root.elements.each("method") do |m|
 .
 .   @{m.attributes["return"]} @{m.attributes["name"]}(
-    first = true
+!   separate ,
     m.elements.each("arg") do |a|
-        if(!first)
-+       , 
-        end
-        first = false
 +       @{a.attributes["type"]} @{a.attributes["name"]}
     end
 +   ) {

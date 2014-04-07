@@ -279,16 +279,30 @@ while(line = dna.gets())
 
         # Parse the arguments. This should probably be done in a more
         # sophisticated way in the future to allow arguments containing spaces.
-        words = line[1..-1].split(/\s+/)
+        words = line[1..-1].lstrip().split(/\s+/)
 
         # !separate is used to insert separators between
         # the iterations of a loop.
-        #if(words[0] == 'separate') {
-        #    rna.write("____first_#{$ln}____ = true\n")
-        #    line = dna.gets()
-        #    $ln += 1
-        #    next
-        #}
+        if(words[0] == 'separate')
+            if(words.size() != 2)
+                dnaerror("command 'separate' expects one argument")
+            end
+            cname = "____separate_#{$ln}____"
+            rna.write("#{cname} = true\n")
+            line = dna.gets()
+            $ln += 1
+            if(line[0] == ?! || line[0] == ?. || line[0] == ?+)
+                # TOOD: We can check for ruby loop keywords here.
+                dnaerror("'separate' command must be followed by a loop")
+            end
+            rna.write(line)
+            rna.write("if(#{cname})\n")
+            rna.write("    #{cname} = false\n")
+            rna.write("else\n")
+            rna.write("    Ribosome.write(#{words[1].inspect()})\n");
+            rna.write("end\n")
+            next
+        end
 
         # Remaining commands can be used only in the outermost scope.
         rna.write("if(!Ribosome.outermost())\n")
