@@ -200,9 +200,6 @@ for i in $root
 end
 ```
 
-List separators
--------------
-
 One common annoying problem with code generation is creating lists, where
 separator occurs between each pair of element but doesn't occur after the
 last element in the list.
@@ -212,10 +209,10 @@ loop to be annotated by !separate command:
 
 ```
 .{
-!separate ,
-for i in 1..9
-+#{i}
-end
+!   separate ,
+    for i in 1..9
++       #{i}
+    end
 +}
 ```
 
@@ -234,6 +231,13 @@ than the rest of the program.
 
 In the future, we intend to provide highlighting rules for the most common
 editors. Any help in this area will be highly appreciated!
+
+TODO
+----
+
+1. Handling of whitespace at the end of the lines
+2. Handling of TABs
+3. Re-think evaluation of command parameters
 
 License
 ------
