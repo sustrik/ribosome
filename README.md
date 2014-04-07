@@ -204,7 +204,7 @@ allowing trailing whitespace in ribosome lines (those that start with '!', '.'
 or '+'). Add $ sign to the line to make it compile:
 
 ```
-.aaa \
+.aaa $
 +bbb
 ```
 
