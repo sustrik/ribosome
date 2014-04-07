@@ -20,168 +20,310 @@
 # IN THE SOFTWARE.
 #
 
-# Parse the command line arguments.
-if(ARGV.size() != 2)
-    puts("usage: ribosome <dna-file> <input-file>")
+################################################################################
+#  DNA helper functions.                                                       #
+################################################################################
+
+# Print out the error and terminate the generation.
+def dnaerror(s)
+    $stderr.write("#{$dnafile}:#{$ln} - #{s}\n")
     exit()
-end
-dnafile = ARGV[0]
-inputfile = ARGV[1]
-if(inputfile[-4..-1] == ".xml")
-    type = "x"
-elsif(inputfile[-5..-1] == ".json")
-    type = "j"
-else
-    $stderr.puts("input file must be either .json or .xml")
-    exit()
-end
-if(dnafile[-4..-1] == ".dna")
-    rnafile = dnafile[0..-5] + ".rna.rb"
-else
-    rnafile = dnafile + ".rna.rb"
 end
 
-# Open the files for the dna-to-rna translation step.
-dna = File.open(dnafile, "r")
+# Remove whitespace from the beginning of the . or + line.
+# Returns trimmed line and the amount of whitespace removed.
+def ltrim(s)
+
+    # Find out the amount of whitespace at the beginning of the line.
+    ws = 0;
+    for i in 1..s.size()
+        if(s[i] == ?\s)
+            ws += 1
+            next
+        end
+        if(s[i] == ?\t)
+            ws += 8
+        end
+        break
+    end
+
+    # Cut off the control character and any subsequent whitespace.
+    s = s[i..-2]
+
+    return ws,s
+end
+
+
+################################################################################
+#  RNA helper functions.                                                       #
+################################################################################
+
+rnahelpers = '
+
+def ____openroot____(name)
+    if(name[-4..-1] == ".xml")
+        require "rexml/document"
+        return REXML::Document.new(File.new(name)).root
+    elsif(name[-5..-1] == ".json")
+        require "rubygems"
+        require "json"
+        return JSON.parse(File.read(name))
+    else
+        $stderr.puts("input file must be either .json or .xml")
+        exit()
+    end
+end
+
+def ____write____(s)
+    $____stack____.last.push(s)
+end
+
+def ____close____()
+    for l in $____stack____.last
+        $____out____.write(l)
+    end
+    $____out____.write("\n");
+    if ($____outisafile____)
+        $____out____.close()
+    end
+end
+
+def ____expand____(s, b)
+
+    # Find all occurences of @{.
+    i = -1
+    while true
+        i = s.index(\'@{\', i + 1)
+        if(i == nil)
+            break;
+        end
+        j = i + 1
+
+        # Find corresponding }.
+        par = 0;
+        while true
+            if(s[j] == ?{)
+                par += 1
+            end
+            if(s[j] == ?})
+                par -= 1
+            end
+            if(par == 0)
+                break
+            end
+            j += 1
+        end
+
+        # Replace the expression with its value.
+        expr = s[i + 2..j - 1]
+        $____stack____.push([])
+        val = eval(expr, b)
+        top = $____stack____.pop()
+        if(top.empty?)
+
+            # Classic functions.
+            s[i..j] = val.to_s()
+            i += val.to_s().size
+        else
+
+            # Ribosome functions.
+            res = top.join()
+            s[i..j] = res
+            i += res.size
+        end
+        
+    end
+
+    return s
+end
+
+def ____adjust____(line, ws)
+
+    a = line.to_a()
+
+    # Find top, bottom and left boundary of the block of text.
+    i = 0
+    top = -1
+    bottom = -1
+    left = -1
+    for l in a
+        if(!l.lstrip().empty?)
+            if(top == -1)
+                top = i;
+            end
+            bottom = i;
+            if (left == -1)
+                left = l.size() - l.lstrip().size()
+            else
+                left = [left, l.size() - l.lstrip().size()].min
+            end
+        end
+        i += 1
+    end
+
+    # Strip the top and bottom whitespace.
+    if(top == -1)
+        a = []
+    else
+        a = a[top..bottom]
+    end
+
+    # Strip the original whitespace from the left.
+    # Add the amount of whitespace specified in the argument.
+    for i in 0..a.size() - 1
+        a[i] = " " * ws + a[i][left..-1]
+    end
+
+    # Return the adjusted block. Strip off the trailing newline.
+    res = a.join
+    if(res[-1] == ?\n)
+        res = res[0..-2]
+    end
+    return res;
+end
+
+'
+
+################################################################################
+#  Main function.                                                              #
+################################################################################
+
+# Parse the command line arguments.
+if(ARGV.size() != 1 && ARGV.size() != 2)
+    puts("usage: ribosome <dna-file> [<input-file>]")
+    exit()
+end
+$dnafile = ARGV[0]
+if (ARGV.size < 2)
+    infile = ""
+else
+    infile = ARGV[1]
+end
+
+# Open the files for the DNA-to-RNA translation step.
+$ln = 0
+if($dnafile[-4..-1] == ".dna")
+    rnafile = $dnafile[0..-5] + ".rna.rb"
+else
+    rnafile = $dnafile + ".rna.rb"
+end
+dna = File.open($dnafile, "r")
 rna = File.open(rnafile, "w")
 
-# Initialise the root object.
-if(type == 'j')
-    rna.write("require 'rubygems'\n")
-    rna.write("require 'json'\n")
-    rna.write("$root = JSON.parse(File.read('")
-    rna.write(inputfile)
-    rna.write("'))\n");
-end
-if(type == 'x')
-    rna.write("require 'rexml/document'\n")
-    rna.write("$root = REXML::Document.new(File.new('")
-    rna.write(inputfile)
-    rna.write("')).root\n")
-end
+# Add RNA helper functions.
+rna.write(rnahelpers)
 
-# Initial output channel is stdout.
+# Open the input file.
+rna.write("if(ARGV.size > 0)\n")
+rna.write("    $root = ____openroot____(ARGV[0])\n")
+rna.write("end\n\n")
+
+# Initialise the ribosome stack.
+# Each level on the stack contains a block of text in the form of
+# array of lines (strings).
+rna.write("$____stack____ = [[]]\n")
+
+# Initialise output channel.
 rna.write("$____out____ = $stdout\n")
+rna.write("$____outisafile____ = false\n")
 
-# Process the DNA file.
-ln = 0
+# Process the DNA file, line-by-line.
 while(line = dna.gets())
-    line = line.lstrip()
-    ln += 1
 
-    # Lines starting with ! are ribosome commands.
-    if(line[0] == ?!)
-        words = line.split(/\s+/)
+    # We are counting lines so that we can report line numbers in errors.
+    $ln += 1
 
-        # !output redirects the output to a different file.
-        if(words[0] == '!output')
+    # Empty lines are ignored.
+    if(line.size() == 0 || line[0] == ?\n)
+        next
+    end
+
+    # Lines starting with '!' are ribosome commands.
+    if(line[0] == ?!	)
+
+        # Check whether command is used in the outermost scope.
+        rna.write("if($____stack____.size > 1)\n")
+        rna.write("    $stderr.write(\"#{$dnafile}:#{$ln} - command used in a nested function\\n\")\n")
+        rna.write("    exit()\n")
+        rna.write("end\n")
+
+        # Parse the arguments. This should probably be done in a more
+        # sophisticated way in the future to allow arguments containing spaces.
+        words = line[1..-1].split(/\s+/)
+
+        # >output redirects the output to a different file.
+        if(words[0] == 'output')
             if(words.size() != 2)
-                $stderr.puts("#{dnafile}:#{ln} - command '!output' requires one argument, found #{words.size() - 1}")
-                exit()
+                dnaerror("command 'output' expects one argument")
             end
-            rna.write("$____out____ = File.open(")
-            rna.write(words[1])
-            rna.write(", 'w')\n")
+            rna.write("____close____()\n")
+            rna.write("____outisafile____ = true\n")
+            rna.write("$____out____ = File.open(#{words[1]}, 'w')\n")
             next
         end
 
-        # !stdout redirects the output to stdout.
-        if(words[0] == '!stdout')
+        # >stdout redirects the output to stdout.
+        if(words[0] == 'stdout')
             if(words.size() != 1)
-                $stderr.puts("#{dnafile}:#{ln} - command '!stdout' requires no arguments, found #{words.size() - 1}")
-                exit()
+                dnaerror("command 'stdout' expects no arguments")
             end
+            rna.write("____close____()\n")
+            rna.write("____outisafile____ = false\n")
             rna.write("$____out____ = $stdout\n")
             next
         end
 
         # Invalid command.
-        $stderr.puts("#{dnafile}:#{ln} - invalid command '#{words[0]}'")
+        $stderr.puts("#{$dnafile}:#{$ln} - invalid command '#{words[0]}'")
         exit()
     end
 
-    # Lines starting with . need more processing.
+    # Dot indicates thar the following text should be copied to a new line
+    # in the output. The text is properly indented.
     if(line[0] == ?.)
-        newline = true
-        rna.write('$____out____.write("')
-        i = 1
-        while(i < line.size() - 1)
 
-            # Characters ' and \ have to be escaped.
-            if(line[i] == ?")
-                rna.write('\\"')
-                i += 1
-                next
-            end
-            if(line[i] == ?\\)
-                rna.write('\\\\')
-                i += 1
-                next
-            end
+        # Remove the initial whitespace.
+        ws,line = ltrim(line)
 
-            # Common character.
-            if(line[i] != ?@)
-                rna.write(line[i].chr())
-                i += 1
-                next
-            end
+        # Terminate the previous line.
+        rna.write("____write____(\"\\n\")\n")
 
-            # Operator @.
-            i += 1
+        # 1. Expand any embedded control expressions.
+        # 2. Trim any top, bottom or left whitespace.
+        rna.write("____write____(____adjust____(____expand____(#{line.inspect()}, binding()), #{ws}))\n")
 
-            # @ at the end of line means that newline should not be added.
-            if(i == line.size() - 1)
-                newline = false
-                i += 1
-                next
-            end
-
-            # @@ is an escape sequence and should be replaced by @.
-            if(line[i] == ?@)
-                rna.write('@')
-                i += 1
-                next
-            end
-
-            # Otherwise it's a ruby expression to evaluate.
-            # The expression is terminated by another @.
-            rna.write('" + (')
-            loop do
-                if(i == line.size() - 1)
-                    $stderr.puts("#{dnafile}:#{ln} - embedded expression is not terminated")
-                    exit()
-                end
-                if(line[i] == ?@)
-                    i += 1
-                    break
-                end
-                rna.write(line[i].chr())
-                i += 1
-            end
-            rna.write(').to_s() + "')
-        end
-        if(newline)
-            rna.write('\\n')
-        end
-        rna.write("\")\n")
         next
     end
 
-    # Other lines are copied to the RNA file verbatim.
+    # Plus sign (+) indicates that the following text should be copied to
+    # the output without moving to a new line. No indenting kung-fu is done. 
+    if(line[0] == ?+)
+
+        # Remove the initial whitespace.
+        ws,line = ltrim(line)
+
+        # Expand any embedded control expressions.
+        rna.write("____write____(____expand____(#{line.inspect()}, binding()))\n")
+
+        next
+    end
+
+    # All other lines are copied to the RNA file verbatim.
     rna.write(line)
 
 end
 
 # Flush the output file.
-rna.write("$____out____.close()\n")
+rna.write("____close____()\n\n")
 
 # Flush the RNA file.
 rna.close()
 dna.close()
 
 # Execute the RNA file.
-require(rnafile)
+system("ruby #{rnafile} #{infile}")
 
 # Delete the RNA file.
+# For now we are letting the file be to help with debugging of ribosome.
 # File.delete(rnafile)
 

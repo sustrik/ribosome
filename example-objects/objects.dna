@@ -1,23 +1,19 @@
 # This generator creates C++ objects from the definitions in the XML file.
 
-.class @$root.attributes["name"]@ {
+.class @{$root.attributes["name"]} {
 $root.elements.each("method") do |m|
 .
-.    @m.attributes["return"]@ @m.attributes["name"]@(@
+.   @{m.attributes["return"]} @{m.attributes["name"]}(
     first = true
     m.elements.each("arg") do |a|
         if(!first)
-            ., @
++       , 
         end
         first = false
-        .@a.attributes["type"]@ @a.attributes["name"]@@
++       @{a.attributes["type"]} @{a.attributes["name"]}
     end
-    .) {
-    for t in m.texts
-        if(!t.to_s.lstrip.empty?)
-.        @t@
-        end
-    end
-.    }
++   ) {
+.       @{m.texts.join}
+.   }
 end
 .};

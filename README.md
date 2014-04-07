@@ -4,20 +4,21 @@ RIBOSOME
 A simple and generic code generation tool.
 
 It allows you to generate code in any language based on rules written in Ruby
-and data supplied in JSON format.
+and data supplied in JSON or XML format.
 
 Installation
 -----------
 
-1. Install 'ruby' and 'rubygems' packages. 
-2. Install 'json' gem ("sudo gem install json").
-3. Clone this git repository.
+Ribosome is a single Ruby script, thus you'll need only Ruby installed.
+
+However, if you are going to use JSON input, you'll additionally have to
+instal 'json' gem ("sudo gem install json").
 
 Command line
 -----------
 
 The generator is 'ribosome.rb'. It takes two arguments. The rule file,
-also known as DNA file and the data file in JSON format:
+also known as DNA file and the data file in JSON/XML format:
 
 ```
 $ ruby ribosome.rb foo.dna foo.json
@@ -46,8 +47,8 @@ The file containing transformation rules (errors.dna) looks like this:
 !output "errno.h"
 
 errnum = 1
-for i in root
-.#define @i[0]@ @errnum@
+for i in $root
+.#define @{i[0]} @{errnum}
     errnum += 1
 end
 .
@@ -58,9 +59,9 @@ end
 .
 .char *strerror(int errnum) {
 .    switch(errnum) {
-for i in root
-.    case @i[0]@:
-.        return "@i[1]@";
+for i in $root
+.    case @{i[0]}:
+.        return "@{i[1]}";
 end
 .    default:
 .        return "Unknown error";
@@ -130,7 +131,7 @@ classic UNIX pipes:
 ruby ribosome.rb foo.dna foo.json > out.c
 ```
 
-However, you can redirect the output to a specific destination directly from
+However, you can redirect the output to a specific file directly from
 the DNA file:
 
 ```
@@ -159,27 +160,20 @@ To re-direct the output back to stdout do the following:
 ```
 
 The most useful part of the ribosome syntax though is embedding Ruby expressions
-directly into the output. The expressions should be enclosed between two
-at-signs (@):
+directly into the output. The expressions should use "@{expr}" syntax:
 
 ```
 name = 'Fred'
-.Hello, @name@!
+.Hello, @{name}!
 ```
 
-If you want to write an at-sign (@) to the output, escape it using two
-consecutive at-signs:
-
-```
-.My email address is fred@@example.org
-```
-
-Finally, at-sign (@) at the end of the line means that newline should not be
-written to the output:
+If you want the output not to be generated into a new line, but rather let it
+be appended to the last generated line, you can use plus sign (+) instead of
+dot:
 
 ```
 for i in 1..9
-.@i@ @
++   @{i}
 end
 .
 ```
@@ -187,18 +181,22 @@ end
 The above program will produce following output:
 
 ```
-1 2 3 4 5 6 7 8 9
+123456789
 ```
 
-On the command line you specify an input file. The file is supposed to contain
-data in JSON format. The JSON is accessible via ruby variable called $root and
-it's the standard JSON object as defined by json gem. So, for example, following
-code will print out names and values in a JSON map:
+As already mentioned, you specify an input file on the command line. The file
+is supposed to contain data in either XML or JSON format. Ribosome expect either
+'xml' or 'json' file extension and will parse the input accordingly. Resulting
+tree will be accessible to your DNA script via $root variable. In case of JSON
+it will contain JSON object as defined by json gem. In case of XML it will
+contain root REXML::Element.
+
+So, for example, following code will print out names and values in a JSON map:
 
 ```
 for i in $root
-.Name: @i[0]@
-.Value: @i[1]@
+.Name: @{i[0]}
+.Value: @{i[1]}
 end
 ```
 
