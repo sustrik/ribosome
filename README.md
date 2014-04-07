@@ -175,7 +175,6 @@ dot:
 for i in 1..9
 +   @{i}
 end
-.
 ```
 
 The above program will produce following output:
