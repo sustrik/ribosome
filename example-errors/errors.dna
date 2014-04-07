@@ -1,7 +1,7 @@
 # This generator produces definitions of POSIX errors
 # and implementation of strerror(2) function.
 
-!output "errno.h"
+!output errno.h
 
 errnum = 1
 for i in $root
@@ -10,7 +10,7 @@ for i in $root
 end
 .
 
-!output "strerror.c"
+!output strerror.c
 
 .#include <errno.h>
 .

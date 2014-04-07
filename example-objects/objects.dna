@@ -4,7 +4,7 @@
 $root.elements.each("method") do |m|
 .
 .   @{m.attributes["return"]} @{m.attributes["name"]}(
-!   separate ,
+!   separate , 
     m.elements.each("arg") do |a|
 +       @{a.attributes["type"]} @{a.attributes["name"]}
     end

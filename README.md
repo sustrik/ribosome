@@ -44,7 +44,7 @@ The input file looks like this:
 The file containing transformation rules (errors.dna) looks like this:
 
 ```
-!output "errno.h"
+!output errno.h
 
 errnum = 1
 for i in $root
@@ -53,7 +53,7 @@ for i in $root
 end
 .
 
-!output "strerror.c"
+!output strerror.c
 
 .#include <errno.h>
 .
@@ -135,7 +135,7 @@ However, you can redirect the output to a specific file directly from
 the DNA file:
 
 ```
-!output "foo.c"
+!output foo.c
 .int main() {
 .    return 0;
 .}
@@ -144,13 +144,13 @@ the DNA file:
 Note that all the lines starting with an exclamation mark (!) are ribosome
 commands. We'll introduce more commands later on.
 
-Also note that the argument of '!output' command is a Ruby expression.
+Also note that the argument of '!output' command can contain ruby expressions.
 Thus, you can do things like:
 
 ```
 name = 'foo'
-extension = 'c'
-!output filename+'.'+extension
+ext = 'c'
+!output @{name}.@{ext}
 ```
 
 To re-direct the output back to stdout do the following:
@@ -237,7 +237,6 @@ TODO
 
 1. Handling of whitespace at the end of the lines
 2. Handling of TABs
-3. Re-think evaluation of command parameters
 
 License
 ------

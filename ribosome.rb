@@ -53,6 +53,40 @@ def ltrim(s)
     return ws,s
 end
 
+def expand(s, bind)
+
+    # Find all occurences of @{.
+    i = -1
+    while true
+        i = s.index('@{', i + 1)
+        if(i == nil)
+            break;
+        end
+        j = i + 1
+
+        # Find corresponding }.
+        par = 0;
+        while true
+            if(s[j] == ?{)
+                par += 1
+            end
+            if(s[j] == ?})
+                par -= 1
+            end
+            if(par == 0)
+                break
+            end
+            j += 1
+        end
+
+        # Replace the expression with its value.
+        val = eval(s[i + 2..j - 1], bind).to_s
+        s[i..j] = val;
+        i += val.size
+    end
+
+    return s
+end
 
 ################################################################################
 #  RNA helper functions.                                                       #
@@ -203,10 +237,10 @@ module Ribosome
         return $stack.size <= 1
     end
 
-    def Ribosome.output(name, bind)
+    def Ribosome.output(name)
         close()
         $outisafile = true
-        $out = File.open(eval(name, bind).to_s(), "w")
+        $out = File.open(name, "w")
     end
 
     def Ribosome.stdout()
@@ -224,7 +258,6 @@ module Ribosome
     $outisafile = false
 
 end
-
 
 '
 
@@ -255,7 +288,6 @@ dna = File.open($dnafile, "r")
 rna = File.open(rnafile, "w")
 
 # Add RNA helper functions.
-
 rna.write(rnahelpers)
 
 # Open the input file.
@@ -277,15 +309,24 @@ while(line = dna.gets())
     # Lines starting with '!' are ribosome commands.
     if(line[0] == ?!)
 
-        # Parse the arguments. This should probably be done in a more
-        # sophisticated way in the future to allow arguments containing spaces.
-        words = line[1..-1].lstrip().split(/\s+/)
+        # Split the line into command itself and the arguments.
+        # Expand the embedded expressions within arguments.
+        line = line[1..-2].lstrip();
+        i = line.index(" ")
+        if(i == nil)
+            command = line
+            args = ""
+        else
+            command = line[0..i-1]
+            args = line[i + 1..-1]
+            args = expand(args, binding)
+        end
 
         # !separate is used to insert separators between
         # the iterations of a loop.
-        if(words[0] == 'separate')
-            if(words.size() != 2)
-                dnaerror("command 'separate' expects one argument")
+        if(command == 'separate')
+            if(args.size == 0)
+                dnaerror("command 'separate' expects an argument")
             end
             cname = "____separate_#{$ln}____"
             rna.write("#{cname} = true\n")
@@ -299,29 +340,29 @@ while(line = dna.gets())
             rna.write("if(#{cname})\n")
             rna.write("    #{cname} = false\n")
             rna.write("else\n")
-            rna.write("    Ribosome.write(#{words[1].inspect()})\n");
+            rna.write("    Ribosome.write(#{args.inspect()})\n");
             rna.write("end\n")
             next
         end
 
         # Remaining commands can be used only in the outermost scope.
         rna.write("if(!Ribosome.outermost())\n")
-        rna.write("    $stderr.write(\"#{$dnafile}:#{$ln} - command '#{words[0]}' used in a nested function\\n\")\n")
+        rna.write("    $stderr.write(\"#{$dnafile}:#{$ln} - command '#{command}' used in a nested function\\n\")\n")
         rna.write("    exit()\n")
         rna.write("end\n")
 
         # !output redirects the output to a different file.
-        if(words[0] == 'output')
-            if(words.size() != 2)
-                dnaerror("command 'output' expects one argument")
+        if(command == 'output')
+            if(args.size == 0)
+                dnaerror("command 'output' expects an argument")
             end
-            rna.write("Ribosome.output(#{words[1].inspect()}, binding)\n")
+            rna.write("Ribosome.output(#{args.inspect()})\n")
             next
         end
 
         # !stdout redirects the output to stdout.
-        if(words[0] == 'stdout')
-            if(words.size() != 1)
+        if(command == 'stdout')
+            if(args.lstrip().size > 0)
                 dnaerror("command 'stdout' expects no arguments")
             end
             rna.write("Ribosome.stdout()\n")
@@ -329,7 +370,7 @@ while(line = dna.gets())
         end
 
         # Invalid command.
-        $stderr.puts("#{$dnafile}:#{$ln} - invalid command '#{words[0]}'")
+        $stderr.puts("#{$dnafile}:#{$ln} - invalid command '#{command}'")
         exit()
     end
 
