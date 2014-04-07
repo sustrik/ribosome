@@ -201,7 +201,7 @@ end
 
 Please note that ribosome strives to improve readability of the code by not
 allowing trailing whitespace in ribosome lines (those that start with '!', '.'
-or '+'). Add backslash to the line to make it compile:
+or '+'). Add $ sign to the line to make it compile:
 
 ```
 .aaa \

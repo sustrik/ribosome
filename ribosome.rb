@@ -55,9 +55,9 @@ end
 
 def ending(s)
     if(s[-1] == ?\s || s[-1] == ?\t)
-        dnaerror("line ends by whitespace, add a backslash at the end")
+        dnaerror("line ends by whitespace, add '$' sign at the end")
     end
-    if(s[-1] == ?\\)
+    if(s[-1] == ?$)
         return s[0..-2]
     end
     return s
