@@ -183,7 +183,7 @@ The above program will produce following output:
 123456789
 ```
 
-In case you are producing output that it's a DNA file itself, you'll need
+In case you are producing output that is a DNA file itself, you'll need
 produce text that contains @{} itself. In such case you can specify the level
 of indirection:
 
