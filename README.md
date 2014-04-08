@@ -183,6 +183,22 @@ The above program will produce following output:
 123456789
 ```
 
+In case you are producing output that it's a DNA file itself, you'll need
+produce text that contains @{} itself. In such case you can specify the level
+of indirection:
+
+```
+..@2{i}
+```
+
+will be compiled to:
+
+```
+.@1{i}
+```
+
+where @1{i} is a synonym of @{i}.
+
 As already mentioned, you specify an input file on the command line. The file
 is supposed to contain data in either XML or JSON format. Ribosome expect either
 'xml' or 'json' file extension and will parse the input accordingly. Resulting
