@@ -109,25 +109,37 @@ module Ribosome
         # Find all occurences of @{.
         i = -1
         while true
-            i = s.index(\'@{\', i + 1)
+            i = s.index(/@[1-9]?\{/, i + 1)
             if(i == nil)
                 break;
             end
             j = i + 1
+            level = 1
+            if (s[j] >= ?1 && s[j] <= ?9)
+                level = s[j] - ?0
+                j += 1
+            end
 
             # Find corresponding }.
             par = 0;
             while true
                 if(s[j] == ?{)
                     par += 1
-                end
-                if(s[j] == ?})
+                elsif(s[j] == ?})
                     par -= 1
                 end
                 if(par == 0)
                     break
                 end
                 j += 1
+            end
+
+            # Expression of higher indirection levels are simply brought
+            # down a level.
+            if(level > 1)
+                s[i + 1] -= 1
+                i = j + 1
+                next
             end
 
             # Replace the expression with its value.
