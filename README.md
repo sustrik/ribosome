@@ -24,6 +24,8 @@ also known as DNA file and the data file in JSON/XML format:
 $ ruby ribosome.rb foo.dna foo.json
 ```
 
+If not needed, the data file may be ommitted though.
+
 Example
 ------
 
