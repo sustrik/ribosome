@@ -75,6 +75,7 @@ rnahelpers = '
 
 module Ribosome
 
+    # Open the input file.
     def Ribosome.openroot(name)
         if(name[-4..-1] == ".xml")
             require "rexml/document"
@@ -89,10 +90,12 @@ module Ribosome
         end
     end
 
+    # Write one string to the output.
     def Ribosome.write(s)
         $stack.last.push(s)
     end
 
+    # Flush the data to the currently open file and close it.
     def Ribosome.close()
         for l in $stack.last
             $out.write(l)
@@ -104,6 +107,8 @@ module Ribosome
         end
     end
 
+    # Expand embedded expressions in the string s.
+    # Evaluate the expressions in the context of binding b.
     def Ribosome.expand(s, b)
 
         # Find all occurences of @{.
@@ -165,6 +170,8 @@ module Ribosome
         return s
     end
 
+    # Remove the whitespace from the code of block. Shift the result to
+    # the right by ws characters.
     def Ribosome.adjust(line, ws)
 
         a = line.to_a()
@@ -246,6 +253,8 @@ module Ribosome
 
 end
 
+# This function allows to escape "@{" and "@N{" sequences
+# in the embedded expressions.
 def atbrace(i)
     if(i == 0)
         return "@{"
