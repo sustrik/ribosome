@@ -253,12 +253,13 @@ module Ribosome
 
 end
 
-# This function allows to escape "@{" and "@N{" sequences
-# in the embedded expressions.
-def atbrace(i)
-    if(i == 0)
-        return "@{"
-    end
+# This function allows to escape "@{" sequence in the embedded expressions.
+def atbrace()
+    return "@{"
+end
+
+# This function allows to escape "@N{" sequence in the embedded expressions.
+def atbracen(i)
     return "@#{i}{"
 end
 

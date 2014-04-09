@@ -197,7 +197,17 @@ will be compiled to:
 .@1{i}
 ```
 
-where @1{i} is a synonym of @{i}.
+where @1{i} is a synonym for @{i}.
+
+Finally, if a rare ocassion that you need to insert "@{" as such into
+the generated code use built-in 'atbrace()' function:
+
+```
+. @{atbrace()}
+```
+
+Alternatively, you can use 'atbracen(N)' to generate "@N{"-style string
+(where N is a digit).
 
 As already mentioned, you specify an input file on the command line. The file
 is supposed to contain data in either XML or JSON format. Ribosome expect either
