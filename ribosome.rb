@@ -336,8 +336,11 @@ while(line = dna.gets())
             rna.write("#{cname} = true\n")
             line = dna.gets()
             $ln += 1
-            if(line[0] == ?! || line[0] == ?. || line[0] == ?+)
-                # TODO: We can check for ruby loop keywords here.
+            if(line[0] == ?! || line[0] == ?. || line[0] == ?+ ||
+                  (line.index('while') == nil && line.index('until') == nil &&
+                  line.index('for') == nil && line.index('each') == nil &&
+                  line.index('upto') == nil && line.index('downto') == nil &&
+                  line.index('times') == nil && line.index('loop') == nil))
                 dnaerror("'separate' command must be followed by a loop")
             end
             rna.write(line)
