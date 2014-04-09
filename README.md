@@ -236,12 +236,6 @@ or '+'). Add $ sign to the line to make it compile:
 +bbb
 ```
 
-The result will be:
-
-```
-aaa bbb
-```
-
 One common annoying problem with code generation is creating lists, where
 separator occurs between each pair of element but doesn't occur after the
 last element in the list.
