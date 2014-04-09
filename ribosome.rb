@@ -1,3 +1,5 @@
+#!/usr/bin/ruby
+
 #
 # Copyright (c) 2014 Martin Sustrik  All rights reserved.
 #
