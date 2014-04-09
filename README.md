@@ -265,6 +265,10 @@ Given that DNA files contain two overlapping indentations, for good readability
 it is crucial to highlight the lines starting with dot (.) in a different colour
 than the rest of the program.
 
+Currently supported syntax highlighters:
+
+    ribosome.vim
+
 In the future, we intend to provide highlighting rules for the most common
 editors. Any help in this area will be highly appreciated!
 
