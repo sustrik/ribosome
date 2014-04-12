@@ -116,7 +116,7 @@ output("test.txt")
 .Test!
 ```
 
-To redirect the output back to stdout use 'stdout' function:
+To redirect the output back to the console use 'stdout' function:
 
 ```
 output("test.txt")
