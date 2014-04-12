@@ -3,21 +3,21 @@
 def xmlify(j)
     if(j.is_a?(Array))
         for i in j
-+           <item>
+.           /+<item>
             xmlify(i)
-+           </item>
+.           /+</item>
         end
     elsif(j.is_a?(Hash))
        for i in j
-+          <@{i[0]}>
+.          /+<@{i[0]}>
            xmlify(i[1])
-+          </@{i[0]}>
+.          /+</@{i[0]}>
        end
     else
-+       @{j}
+.       /+@{j}
     end
 end
 
-+<root>
-xmlify($root)
-+</root>
+.<root>
+xmlify(root)
+./+</root>

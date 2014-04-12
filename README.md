@@ -1,284 +1,348 @@
 RIBOSOME
 =======
 
-A simple and generic code generation tool.
+A simple generic code generation tool.
 
-It allows you to generate code in any language based on rules written in Ruby
-and data supplied in JSON or XML format.
+## In fifty words
 
-Installation
------------
+1. You write standard Ruby scripts.
+2. However, lines starting with a dot (.) go straight to the output file.
+3. To expand Ruby expressions within dot-style lines use @{expr} construct.
+4. Support for reading input data from JSON or XML file is provided.
 
-Ribosome is a single Ruby script, thus you'll need only Ruby installed.
-
-However, if you are going to use JSON input, you'll additionally have to
-instal 'json' gem ("sudo gem install json").
-
-Command line
------------
-
-The generator is 'ribosome.rb'. It takes two arguments. The rule file,
-also known as DNA file and the data file in JSON/XML format:
+## Example
 
 ```
-$ ruby ribosome.rb foo.dna foo.json
-```
-
-If not needed, the data file may be ommitted though.
-
-Example
-------
-
-Generator in 'example-errors' subdirectory generates C code. Specifically, it
-turns a data file describing POSIX errors into 'errno.h' file and implementation
-of standard strerror() function, stored in strerror.c file.
-
-The input file looks like this:
-
-```
-{
-    "EINVAL": "Invalid value",
-    "EMFILE": "Too many open files",
-    "EINTR": "Interrupted by a signal"
-}
-```
-
-The file containing transformation rules (errors.dna) looks like this:
-
-```
-!output errno.h
-
-errnum = 1
-for i in $root
-.#define @{i[0]} @{errnum}
-    errnum += 1
-end
+.#include <stdio.h>
 .
-
-!output strerror.c
-
-.#include <errno.h>
-.
-.char *strerror(int errnum) {
-.    switch(errnum) {
-for i in $root
-.    case @{i[0]}:
-.        return "@{i[1]}";
-end
-.    default:
-.        return "Unknown error";
-.    }
-.}
-.
-```
-
-After running the code generation:
-
-```
-$ cd examples-errors
-$ ruby ../ribosome.rb errors.dna errors.json
-```
-
-We get two output files.
-
-'errno.h' looks like this:
-
-```
-#define EINTR 1
-#define EINVAL 2
-#define EMFILE 3
-```
-and 'strerror.c' file looks like this:
-
-```
-#include <errno.h>
-
-char *strerror(int errnum) {
-    switch(errnum) {
-    case EINTR:
-        return "Interrupted by a signal";
-    case EINVAL:
-        return "Invalid value";
-    case EMFILE:
-        return "Too many open files";
-    default:
-        return "Unknown error";
-    }
-}
-
-```
-
-DNA file syntax
--------------
-
-DNA files are Ruby programs with some preprocessing applied.
-Thus, following DNA will do exactly what you would expect it to do:
-
-```
-puts("Hello world!")
-```
-
-Additionally, line starting with a dot (.) are copied directly to the output.
-
-```
 .int main() {
+for i in 1..10
+.    printf("@{11-i}!\n");
+end
+.    printf("Go!\n");
 .    return 0;
 .}
 ```
 
-By default, output is directed to stdout. Therefore, you can re-direct it using
-classic UNIX pipes:
+The script above produces the following output:
 
 ```
-ruby ribosome.rb foo.dna foo.json > out.c
+#include <stdio.h>
+
+int main() {
+    printf("10!\n");
+    printf("9!\n");
+    printf("8!\n");
+    printf("7!\n");
+    printf("6!\n");
+    printf("5!\n");
+    printf("4!\n");
+    printf("3!\n");
+    printf("2!\n");
+    printf("1!\n");
+    printf("Go!\n");
+    return 0;
+}
+```
+
+## Installation
+
+Ribosome is a single Ruby script, thus all you need is to install Ruby
+beforehand.
+
+However, if you are going to use JSON input, you'll additionally have to
+instal 'json' gem.
+
+## Command line
+
+The generator is called 'ribosome'. It takes two arguments. The script file,
+also known as DNA file, and the data file in JSON/XML format:
+
+```
+$ ribosome foo.dna bar.json
+```
+
+If not needed, the data file may be ommitted.
+
+## Documentation
+
+DNA file is a standard Ruby program (except for the lines starting with
+a dot). Therefore it is possible to just take your existing Ruby program
+and run it with ribosome:
+
+```
+ribosome foo.rb
+```
+
+### Simple output
+
+Lines starting with a dot (.) are copied directly to the output:
+
+```
+for i in 1..2
+.Test!
+end
+```
+
+The above script produces the following output:
+
+```
+Test!
+Test!
+```
+
+Lines starting with a dot can be terminated by $ sign. The sign is optional,
+unless there's a whitespace at the end of the line. In such case the $ sign
+must be used to ensure that the whitespace cannot be overlooked easily.
+
+```
+.Hello!    $
+```
+
+### Redirecting output
+
+By default, the output is directed to stdout. Therefore, you can re-direct it
+using classic UNIX pipes:
+
+```
+ribosome test.dna > test.txt
 ```
 
 However, you can redirect the output to a specific file directly from
-the DNA file:
+the DNA file. Use 'output' function in Ruby to accomplish the task:
 
 ```
-!output foo.c
-.int main() {
-.    return 0;
-.}
+output("test.txt")
+.Test!
 ```
 
-Note that all the lines starting with an exclamation mark (!) are ribosome
-commands. We'll introduce more commands later on.
-
-Also note that the argument of '!output' command can contain ruby expressions.
-Thus, you can do things like:
+To redirect the output back to stdout use 'stdout' function in Ruby:
 
 ```
-name = 'foo'
-ext = 'c'
-!output @{name}.@{ext}
+output("test.txt")
+.This line goes to the file!
+stdout()
+.This line goes to the console!
 ```
 
-To re-direct the output back to stdout do the following:
+### Embedded expressions
 
-```
-!stdout
-```
-
-The most useful part of the ribosome syntax though is embedding Ruby expressions
-directly into the output. The expressions should use "@{expr}" syntax:
+Often, you need to insert a computed value to the output. You can do so by
+embedding Ruby expressions to dot-style lines:
 
 ```
 name = 'Fred'
 .Hello, @{name}!
 ```
+With straight Ruby functions, the return value is taken, converted into string
+and written to the output.
 
-If you want the output not to be generated into a new line, but rather let it
-be appended to the last generated line, you can use plus sign (+) instead of
-dot:
+However, if the enbedded expression produces any ribosome output itself,
+it is inserted into the output file instead of the return value:
 
 ```
-for i in 1..9
-+   @{i}
+def greet(name)
+.printf ("Hello, @{name}!\n");
+end
+
+.int main () {
+.    @{greet("Alice")}
+.    @{greet("Bob")}
+.    return 0;
+.}
+```
+
+### Input files
+
+Code generators typically need rich structured input instead of simple
+command line parameters.
+
+Ribosome supports both JSON and XML input files. It distinguishes beween the
+two based on the file extensions. Thus, JSON input files should have .json
+extension and XML imput files should have .xml extension.
+
+Imagine a JSON file that contains names of different errors:
+
+```
+ ["EINVAL", "EMFILE", "EINTR"]
+```
+
+Following DNA script will convert it into a C header file:
+
+```
+errnum = 1
+for i in root
+.#define @{i} @{errnum}
+    errnum += 1
 end
 ```
 
-The above program will produce following output:
+Note that the root of the input JSON is available as JSON object (JSON class is
+defined by 'json' gem) called 'root'.
+
+While JSON is nice and concise, in the case where you need to supply whole
+blocks of code in the input file, XML fares better:
 
 ```
-123456789
+<root>
+    <function name="foo">
+    printf ("foo");
+    printf ("\n");
+    </end>
+    <function name="bar">
+    printf ("bar");
+    printf ("\n");
+    </end>
+</root>
 ```
 
-In case you are producing output that is a DNA file itself, you'll need
-produce text that contains @{} itself. In such case you can specify the level
-of indirection:
+The script can access the root of the XML input as REXML::Element object
+called 'root':
 
 ```
-..@2{i}
-```
-
-will be compiled to:
-
-```
-.@1{i}
-```
-
-where @1{i} is a synonym for @{i}.
-
-Finally, if a rare ocassion that you need to insert "@{" as such into
-the generated code use built-in 'atbrace()' function:
-
-```
-. @{atbrace()}
-```
-
-Alternatively, you can use 'atbracen(N)' to generate "@N{"-style string
-(where N is a digit).
-
-As already mentioned, you specify an input file on the command line. The file
-is supposed to contain data in either XML or JSON format. Ribosome expect either
-'xml' or 'json' file extension and will parse the input accordingly. Resulting
-tree will be accessible to your DNA script via $root variable. In case of JSON
-it will contain JSON object as defined by json gem. In case of XML it will
-contain root REXML::Element.
-
-So, for example, following code will print out names and values in a JSON map:
-
-```
-for i in $root
-.Name: @{i[0]}
-.Value: @{i[1]}
+root.elements.each("function") do |m|
+.void @{m.attributes["name"]}() {
+.    @{m.texts.join}
+.}
+.
 end
 ```
 
-Please note that ribosome strives to improve readability of the code by not
-allowing trailing whitespace in ribosome lines (those that start with '!', '.'
-or '+'). Add $ sign to the line to make it compile:
+### Line concatenation
+
+Typically, each dot-style is translated into a line in the output file.
+Sometimes, however, you may want to generate complex stuff into a single
+line in the output file. In such cases you can append the line directly
+to the previous line. Use /+ operator to achieve such behaviour:
 
 ```
-.aaa $
-+bbb
+.Hello $
+for i in ["Alice", "Bob", "Carol"]
+.   /+@{i} $
+end
+./+!
 ```
 
-One common annoying problem with code generation is creating lists, where
-separator occurs between each pair of element but doesn't occur after the
-last element in the list.
+Note that all the whitespace preceding /+ operator is silently ignored.
 
-To help with the problem, ribosome allows to prepend any control language
-loop to be annotated by !separate command:
+### Separators
 
-```
-.{
-!   separate ,
-    for i in 1..9
-+       #{i}
-    end
-+}
-```
-
-The result will be:
+One often occuring problem with code generation is to place separators between
+the items of a list. Ribosome provides /! operator to help with the problem.
+The line with the operator must precede Ruby loop (for, while, each or similar).
+Any whitespace preceding the operator is silently ignored. Any text following
+the operator is used as a separator:
 
 ```
-{1,2,3,4,5,6,7,8,9}
+.Hello $
+./!, $
+for i in ["Alice", "Bob", "Carol"]
+.   /+@{i}
+end
+./+!
 ```
 
-Syntax highlighting
------------------
+### Strict embedded expressions
+
+You may have noticed that embedded expressions trim any whitespace from the
+text to output. To keep the whitespace intact, use &{} instead of @{}:
+
+```
+s = " 2 "
+.1@{s}3
+.a&{s}3
+```
+
+The above script produces following output:
+
+```
+123
+1 2 3
+```
+
+### Nested embedded expressions
+
+Producing output that is a DNA file itself can be tricky. The main problem is
+that you would have to use a lot of escape sequences. To solve that, ribosome
+provides a tool called nested embedded expressions.
+
+The embedded expressions that have been introduced so far are embedded
+expressions of first level. They can be written either as @{} and &{} or,
+alternatively, as @1{} and &1{}. During compilation the expression is evaluated
+and the result is written to the output.
+
+Embedded expressions of second level are written @2{} and &2{}. During
+compilation they are replaced by embedded expressions of first level. Similarly,
+embedded expressions of the third level are replaced by embedded expressions
+of second level. Et c.
+
+Consider, for exmaple, this script:
+
+```
+.name = "Alice"
+..Hello, @2{name}!
+```
+
+It compiles to this script:
+
+```
+name = "Alice"
+.Hello, @1{name}!
+```
+
+Which, in turn, is compiled to:
+
+```
+Hello, Alice!
+```
+
+### Escape functions
+
+In the rare cases when you need to generate a sequence of characters that
+accidentally matches a ribosome operator, you'll can use predefined escape
+functions. For example:
+
+```
+.123@{atbrace}456
+```
+
+Results in:
+
+```
+123@{456
+```
+
+Following escape functions are supplied:
+
+    atbrace() => @{
+    atnbrace(N) => @N{    (where N is a digit)
+    ampbrace() => &{
+    ampnbrace(N) => &N{   (where N is a digit)
+    slashplus() => /+
+    slashbang() => /!
+
+### Advanced layout management
+
+TODO
+
+##Syntax highlighting
 
 Given that DNA files contain two overlapping indentations, for good readability
-it is crucial to highlight the lines starting with dot (.) in a different colour
-than the rest of the program.
+it is crucial to highlight the lines starting with dot (.) in a different
+colour.
 
-Currently supported syntax highlighters:
+Currently supported highlighters:
 
     ribosome.vim
 
 In the future, we intend to provide highlighting rules for the most common
 editors. Any help in this area will be highly appreciated!
 
-TODO
-----
+## Ribosome's TODO list
 
 1. Handling of TABs
 
-License
-------
+##License
 
 Ribosome is licensed under MIT/X11 license.
 

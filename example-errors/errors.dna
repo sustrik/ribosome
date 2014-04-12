@@ -1,22 +1,30 @@
 # This generator produces definitions of POSIX errors
 # and implementation of strerror(2) function.
 
-!output errno.h
+output("errno.h")
 
-errnum = 1
-for i in $root
-.#define @{i[0]} @{errnum}
-    errnum += 1
+def names()
+    for i in root
+.       #define @{i[0]}
+    end
 end
+
+def values()
+    for i in 1..root.size
+.       @{i}
+    end
+end
+
+.@{names()} @{values()}
 .
 
-!output strerror.c
+output("strerror.c")
 
 .#include <errno.h>
 .
 .char *strerror(int errnum) {
 .    switch(errnum) {
-for i in $root
+for i in root
 .    case @{i[0]}:
 .        return "@{i[1]}";
 end
