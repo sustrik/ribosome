@@ -3,7 +3,7 @@ RIBOSOME
 
 A simple generic code generation tool.
 
-## In fifty words
+## In 50 words
 
 1. You write standard Ruby scripts.
 2. However, lines starting with a dot (.) go straight to the output file.
