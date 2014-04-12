@@ -93,7 +93,7 @@ Test!
 
 Lines starting with a dot can be terminated by $ sign. The sign is optional,
 unless there's a whitespace at the end of the line. In such case the $ sign
-must be used to ensure that the whitespace cannot be overlooked easily.
+is mandatory to avoid invisible whitespace getting into the output files.
 
 ```
 .Hello!    $
@@ -101,22 +101,22 @@ must be used to ensure that the whitespace cannot be overlooked easily.
 
 ### Redirecting output
 
-By default, the output is directed to stdout. Therefore, you can re-direct it
+By default, the output is directed to stdout. Therefore, it can be re-directed
 using classic UNIX pipes:
 
 ```
 ribosome test.dna > test.txt
 ```
 
-However, you can redirect the output to a specific file directly from
-the DNA file. Use 'output' function in Ruby to accomplish the task:
+However, you can redirect the output to a specific destination directly from
+the DNA file. Use 'output' function to accomplish the task:
 
 ```
 output("test.txt")
 .Test!
 ```
 
-To redirect the output back to stdout use 'stdout' function in Ruby:
+To redirect the output back to stdout use 'stdout' function:
 
 ```
 output("test.txt")
@@ -128,17 +128,17 @@ stdout()
 ### Embedded expressions
 
 Often, you need to insert a computed value to the output. You can do so by
-embedding Ruby expressions to dot-style lines:
+embedding Ruby expressions into dot-style lines:
 
 ```
 name = 'Fred'
 .Hello, @{name}!
 ```
-With straight Ruby functions, the return value is taken, converted into string
+With straight Ruby functions, the return value is converted into a string
 and written to the output.
 
 However, if the enbedded expression produces any ribosome output itself,
-it is inserted into the output file instead of the return value:
+the text is inserted into the output file instead of the return value:
 
 ```
 def greet(name)
@@ -158,10 +158,10 @@ Code generators typically need rich structured input instead of simple
 command line parameters.
 
 Ribosome supports both JSON and XML input files. It distinguishes beween the
-two based on the file extensions. Thus, JSON input files should have .json
+two based on the file extension. Thus, JSON input files should have .json
 extension and XML imput files should have .xml extension.
 
-Imagine a JSON file that contains names of different errors:
+Consider a JSON file that contains names of different errors:
 
 ```
  ["EINVAL", "EMFILE", "EINTR"]
@@ -177,26 +177,26 @@ for i in root
 end
 ```
 
-Note that the root of the input JSON is available as JSON object (JSON class is
-defined by 'json' gem) called 'root'.
+Note that the root node of the JSON input is available as JSON object
+(JSON class is defined by 'json' gem) called 'root'.
 
 While JSON is nice and concise, in the case where you need to supply whole
-blocks of code in the input file, XML fares better:
+blocks of code via the input file, XML fares better:
 
 ```
 <root>
     <function name="foo">
-    printf ("foo");
-    printf ("\n");
+        printf ("foo");
+        printf ("\n");
     </end>
     <function name="bar">
-    printf ("bar");
-    printf ("\n");
+        printf ("bar");
+        printf ("\n");
     </end>
 </root>
 ```
 
-The script can access the root of the XML input as REXML::Element object
+The script can access the root node of the XML input as REXML::Element object
 called 'root':
 
 ```
@@ -210,9 +210,9 @@ end
 
 ### Line concatenation
 
-Typically, each dot-style is translated into a line in the output file.
+Typically, each dot-style line is translated into a line in the output file.
 Sometimes, however, you may want to generate complex stuff into a single
-line in the output file. In such cases you can append the line directly
+line of the output file. In such cases new line can appended directly
 to the previous line. Use /+ operator to achieve such behaviour:
 
 ```
@@ -223,13 +223,17 @@ end
 ./+!
 ```
 
-Note that all the whitespace preceding /+ operator is silently ignored.
+Note that all the whitespace preceding /+ operator is silently ignored:
+
+```
+Hello Alice Bob Carol!
+```
 
 ### Separators
 
-One often occuring problem with code generation is to place separators between
-the items of a list. Ribosome provides /! operator to help with the problem.
-The line with the operator must precede Ruby loop (for, while, each or similar).
+A common task with code generation is to place separators between the items
+of a list. Ribosome provides /! operator to help with the task. The line
+containing the operator must precede Ruby loop (for, while, each or similar).
 Any whitespace preceding the operator is silently ignored. Any text following
 the operator is used as a separator:
 
@@ -242,10 +246,16 @@ end
 ./+!
 ```
 
+Note that separator doesn't appear after the last element of the list:
+
+```
+Hello Alice, Bob, Carol!
+```
+
 ### Strict embedded expressions
 
-You may have noticed that embedded expressions trim any whitespace from the
-text to output. To keep the whitespace intact, use &{} instead of @{}:
+You may have noticed that embedded expressions trim any whitespace that may have
+been generated. To keep the whitespace intact, use &{} instead of @{}:
 
 ```
 s = " 2 "
@@ -253,7 +263,7 @@ s = " 2 "
 .a&{s}3
 ```
 
-The above script produces following output:
+The script above produces following output:
 
 ```
 123
@@ -267,14 +277,14 @@ that you would have to use a lot of escape sequences. To solve that, ribosome
 provides a tool called nested embedded expressions.
 
 The embedded expressions that have been introduced so far are embedded
-expressions of first level. They can be written either as @{} and &{} or,
-alternatively, as @1{} and &1{}. During compilation the expression is evaluated
-and the result is written to the output.
+expressions of first level. They can be written either as @{} and &{}.
+Alternatively, they can be written as @1{} and &1{}. The expression is evaluated
+during the compilation and the result is written to the output.
 
-Embedded expressions of second level are written @2{} and &2{}. During
-compilation they are replaced by embedded expressions of first level. Similarly,
-embedded expressions of the third level are replaced by embedded expressions
-of second level. Et c.
+Embedded expressions of second level are written @2{} and &2{}. They are
+replaced by embedded expressions of first level during the compilation.
+Similarly, embedded expressions of the third level are replaced by embedded
+expressions of second level. Et c.
 
 Consider, for exmaple, this script:
 
@@ -283,14 +293,14 @@ Consider, for exmaple, this script:
 ..Hello, @2{name}!
 ```
 
-It compiles to this script:
+It compiles into this script:
 
 ```
 name = "Alice"
 .Hello, @1{name}!
 ```
 
-Which, in turn, is compiled to:
+Which, in turn, is compiled into:
 
 ```
 Hello, Alice!
@@ -299,8 +309,8 @@ Hello, Alice!
 ### Escape functions
 
 In the rare cases when you need to generate a sequence of characters that
-accidentally matches a ribosome operator, you'll can use predefined escape
-functions. For example:
+accidentally matches a ribosome operator, you'll can use one of the predefined
+escape functions. For example:
 
 ```
 .123@{atbrace}456
@@ -312,7 +322,7 @@ Results in:
 123@{456
 ```
 
-Following escape functions are supplied:
+Full list of escape functions:
 
     atbrace() => @{
     atnbrace(N) => @N{    (where N is a digit)
@@ -327,11 +337,11 @@ TODO
 
 ##Syntax highlighting
 
-Given that DNA files contain two overlapping indentations, for good readability
-it is crucial to highlight the lines starting with dot (.) in a different
-colour.
+Given that DNA files contain two overlapping indentations, it is crucial for
+good readability to highlight the dot-style ribosome lines in a different
+colour than surrounding Ruby code.
 
-Currently supported highlighters:
+Following highlighters are supported at the moment:
 
     ribosome.vim
 
