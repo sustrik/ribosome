@@ -357,8 +357,19 @@ end
 .Colours: @{colours} Shapes: @{shapes}
 ```
 
-It producese the following output (the rectangles show the boundaries of the
-individual text blocks):
+It producese the following output:
+
+```
+Colours: White       Shapes: Triangle
+         Black               Circle
+         Ultramarine
+         Red
+         Green
+         Blue
+```
+
+And here are the boundaries of the individual rectangles that ribosome
+manipulates:
 
 ![](layout.png)
 
