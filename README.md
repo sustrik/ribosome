@@ -334,7 +334,33 @@ Full list of escape functions:
 
 ### Advanced layout management
 
-TODO
+To undestand how ribosome layouts the code, it is necessary to understand
+that it works with rectangular blocks of text rather than with lines.
+
+Consider the following script:
+
+```
+def colours()
+.    White
+.    Black
+.    Ultramarine
+.    Red
+.    Green
+.    Blue
+end
+
+def shapes()
+.    Triangle
+.    Circle
+end
+
+.Colours: @{colours} Shapes: @{shapes}
+```
+
+It producese the following output (the rectangles show the boundaries of the
+individual text blocks):
+
+![](layout.png)
 
 ##Syntax highlighting
 
