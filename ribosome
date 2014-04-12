@@ -225,10 +225,12 @@ module Ribosome
     # Adds one . line from the DNA file.
     def Ribosome.add(line, bind, ln)
 
-        # In this block we will accumulate the expanded line.
+        # If there is no previous line, add one.
         if(@stack.last.empty?)
-            dnaerror("/+ with no preceding line to add the text to", ln) 
+            @stack.last << Block.new("")
         end
+
+        # In this block we will accumulate the expanded line.
         block = @stack.last.last
 
         # Traverse the line and convert it into a block.
