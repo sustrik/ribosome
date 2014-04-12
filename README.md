@@ -357,7 +357,7 @@ end
 .Colours: @{colours} Shapes: @{shapes}
 ```
 
-It producese the following output:
+It produces the following output:
 
 ```
 Colours: White       Shapes: Triangle
