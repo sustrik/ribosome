@@ -246,7 +246,7 @@ end
 ./+!
 ```
 
-Note that separator doesn't appear after the last element of the list:
+Note that the separator doesn't appear after the last element of the list:
 
 ```
 Hello Alice, Bob, Carol!
