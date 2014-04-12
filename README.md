@@ -355,6 +355,8 @@ def shapes()
 end
 
 .Colours: @{colours} Shapes: @{shapes}
+.
+.That's all, folks!
 ```
 
 It produces the following output:
@@ -366,6 +368,8 @@ Colours: White       Shapes: Triangle
          Red
          Green
          Blue
+
+That's all, folks!
 ```
 
 And here are the boundaries of the individual rectangles that ribosome
