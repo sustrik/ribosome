@@ -377,6 +377,23 @@ manipulates:
 
 ![](layout.png)
 
+### Generating tabulators
+
+Ribosome doesn't allow for tabulators in the input, however, when generating
+output it can replace all leading whitespace by tabulators. To switch this
+functionality on use 'tabsize' function:
+
+```
+tabsize(4)
+.for (i = 0; i != 10; ++i)
+.    printf("Hi!\n");
+.}
+```
+
+In the output, initial whitespace in line 3 will be replaced by a tab.
+
+Set tabsize to zero to switch the generation of tabulators off.
+
 ##Syntax highlighting
 
 Given that DNA files contain two overlapping indentations, it is crucial for
@@ -390,9 +407,6 @@ Following highlighters are supported at the moment:
 In the future, we intend to provide highlighting rules for the most common
 editors. Any help in this area will be highly appreciated!
 
-## Ribosome's TODO list
-
-1. Handling of TABs
 
 ##License
 

@@ -142,8 +142,17 @@ module Ribosome
 
         end
 
-        def write(out)
+        def write(out, tabsize)
             for l in @text
+
+                # If required, replace the initial whitespace by tabs.
+                if(tabsize > 0)
+                    ws = l.size - l.lstrip.size
+                    l = "\t" * (ws / tabsize) +
+                        " " * (ws % tabsize) + l.lstrip
+                end
+
+                # Write an individual line to the output file.
                 out.write(l)
                 out.write("\n")
             end
@@ -159,6 +168,9 @@ module Ribosome
 
     # The original DNA file.
     @dnafile = ""
+
+    # Size of a tab. If set to zero, tabs are not generated.
+    @tabsize = 0
 
     # The output file, or, alternativly, stdout.
     @outisafile = false
@@ -213,10 +225,15 @@ module Ribosome
         @out = $stdout
     end
 
+    # Sets the size of the tab.
+    def Ribosome.tabsize(size)
+        @tabsize = size
+    end
+
     # Flush the data to the currently open file and close it.
     def Ribosome.close()
         for b in @stack.last
-            b.write(@out)
+            b.write(@out, @tabsize)
         end
         @stack = [[]]
         @out.close() if @outisafile
@@ -314,6 +331,10 @@ end
 
 def stdout()
     Ribosome.stdout()
+end
+
+def tabsize(size)
+    Ribosome.tabsize(size)
 end
 
 # Escape function for @{
@@ -420,6 +441,11 @@ while(line = dna.gets())
             dnaerror("line ends by whitespace, add '$' sign at the end")
         end
         line = line[0..-2] if line[-1] == ?$
+
+        # Make sure there are no tabs in the line.
+        if(line.index(?\t) != nil)
+            dnaerror("tab found in the output line, replace it by space")
+        end
 
         # Find first two non-whitespace which can possibly form a command.
         firsttwo = line.lstrip[0..1]
