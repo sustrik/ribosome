@@ -1,7 +1,7 @@
 # This generator produces definitions of POSIX errors
 # and implementation of strerror(2) function.
 
-output("errno.h")
+./!output("errno.h")
 
 def names()
     for i in root
@@ -18,7 +18,7 @@ end
 .@{names()} @{values()}
 .
 
-output("strerror.c")
+./!output("strerror.c")
 
 .#include <errno.h>
 .

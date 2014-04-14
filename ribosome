@@ -221,7 +221,7 @@ module Ribosome
     # Redirects output to the stdout.
     def Ribosome.stdout()
         close()
-        @outisafile = flase
+        @outisafile = false
         @out = $stdout
     end
 
@@ -325,18 +325,6 @@ def root()
     return Ribosome.root()
 end
 
-def output(filename)
-    Ribosome.output(filename)
-end
-
-def stdout()
-    Ribosome.stdout()
-end
-
-def tabsize(size)
-    Ribosome.tabsize(size)
-end
-
 # Escape function for @
 def at()
     return "@"
@@ -387,8 +375,11 @@ if($dnafile[-4..-1] == ".dna")
 else
     rnafile = $dnafile + ".rna"
 end
-dna = File.open($dnafile, "r")
 rna = File.open(rnafile, "w")
+
+# Given that we can 'require' other DNA files, we need to keep a stack of
+# open DNA files.
+dnastack = [File.open($dnafile, "r")]
 
 # Import RNA helper functions.
 rna.write(rnahelpers)
@@ -405,8 +396,18 @@ rna.write("# Parse command line arguments.\n")
 rna.write("Ribosome.openroot(ARGV[0]) if ARGV.size > 0")
 rna.write("\n\n")
 
-# Process the DNA file, line-by-line.
-while(line = dna.gets())
+# Process the DNA file.
+loop do
+
+    # Get next line. Unwind the include stack as necessary.
+    line = nil
+    loop do
+        line = dnastack.last.gets()
+        break if line != nil
+        dnastack.pop.close()
+        break if dnastack.empty?
+    end
+    break if line == nil
 
     # We are counting lines so that we can report line numbers in errors.
     $ln += 1
@@ -429,40 +430,70 @@ while(line = dna.gets())
 
         # Make sure there are no tabs in the line.
         if(line.index(?\t) != nil)
-            dnaerror("tab found in the output line, replace it by space")
+            dnaerror("tab found in the line, replace it by space")
         end
 
         # Find first two non-whitespace which can possibly form a command.
         firsttwo = line.lstrip[0..1]
 
-        # Command /+ means that the line is appended to the previous line.
+        # /+ means that the line is appended to the previous line.
         if(firsttwo == "/+")
             rna.write("Ribosome.add(#{line.lstrip[2..-1].inspect()}, binding, #{$ln})\n")
             next
         end
 
-        # Command /! means that the following expression will be added at the
-        # end of each interation of the following loop, except for the last one.
+        # /! means that a command follows.
         if(firsttwo == "/!")
-            separator = line.lstrip[2..-1]
-            cname = "____separate_#{$ln}____"
-            rna.write("#{cname} = true\n")
-            line = dna.gets()
-            $ln += 1
-            if(line[0] == ?. ||
-                  (!line.index('while') && !line.index('until') &&
-                  !line.index('for') && !line.index('each') &&
-                  !line.index('upto') && line.index('downto') &&
-                  !line.index('times') && line.index('loop')))
-                dnaerror("/! command must be followed by a loop")
+            line =  line.lstrip[2..-1]
+            match = /^[0-9A-Za-z_]+/.match(line)
+            if(match == nil)
+                dnaerror("/! should be followed by an identifier")
             end
-            rna.write(line)
-            rna.write("if(#{cname})\n")
-            rna.write("    #{cname} = false\n")
-            rna.write("else\n")
-            rna.write("    Ribosome.add(#{separator.inspect()}, binding, #{$ln})\n")
-            rna.write("end\n")
-            next
+            command = match[0]
+            
+            # A subset of commands is simply translated to corresponding
+            # commands in the RNA file.
+            if(command == "output" || command == "stdout" ||
+                  command == "tabsize")
+                rna.write("Ribosome.#{line}\n")
+                next
+            end
+
+            # The argument string will be added at the end of each interation of
+            # the following loop, except for the last one.
+            if(command == "separate")
+                def identity(x) x end
+		        separator = eval("identity#{line[8..-1]}")
+		        cname = "____separate_#{$ln}____"
+		        rna.write("#{cname} = true\n")
+		        line = dnastack.last.gets()
+		        $ln += 1
+		        if(line == nil || line[0] == ?. ||
+		              (!line.index('while') && !line.index('until') &&
+		              !line.index('for') && !line.index('each') &&
+		              !line.index('upto') && line.index('downto') &&
+		              !line.index('times') && line.index('loop')))
+		            dnaerror("'separate' command must be followed by a loop")
+		        end
+		        rna.write(line)
+		        rna.write("if(#{cname})\n")
+		        rna.write("    #{cname} = false\n")
+		        rna.write("else\n")
+		        rna.write("    Ribosome.add(#{separator.inspect()}, binding, #{$ln})\n")
+		        rna.write("end\n")
+		        next
+            end
+
+            # Open the file and put it on the top of the DNA stack.
+            if(command == "import")
+                def identity(x) x end
+		        filename = eval("identity#{line[6..-1]}")
+                dnastack.push(File.open(filename, "r"))
+                next
+            end
+
+            dnaerror("unknown command '#{command}'")
+            exit
         end
 
         # There's no command in the line. Process it in the standard way.
@@ -480,7 +511,6 @@ rna.write("\nRibosome.close()\n\n")
 
 # Flush the RNA file.
 rna.close()
-dna.close()
 
 # Execute the RNA file.
 system("ruby #{rnafile} #{infile}")

@@ -115,19 +115,29 @@ ribosome test.dna > test.txt
 ```
 
 However, you can redirect the output to a specific destination directly from
-the DNA file. Use 'output' function to accomplish the task:
+the DNA file. Use '/!output' command to accomplish the task:
 
 ```
-output("test.txt")
-.Test!
+.    /!output("test.txt")
+.    Test!
+```
+
+Note that ribosome commands may appear only in lines starting with a dot,
+may be preceded with arbitrary amout of whitespace (which will be ignored) and
+start with slash and exclamation mark. The command behaves like a standard
+Ruby function and uses the same syntax:
+
+```
+.name = "foo"
+./!output name + ".txt"
 ```
 
 To redirect the output back to the console use 'stdout' function:
 
 ```
-output("test.txt")
+./!output("test.txt")
 .This line goes to the file!
-stdout()
+./!stdout()
 .This line goes to the console!
 ```
 
@@ -238,14 +248,13 @@ Hello Alice Bob Carol!
 ### Separators
 
 A common task with code generation is to insert separators between the items
-of a list. Ribosome provides /! operator to help with the task. The line
-containing the operator must precede Ruby loop (for, while, each or similar).
-Any whitespace preceding the operator is silently ignored. Any text following
-the operator is used as a separator:
+of a list. Ribosome provides '/!separate' command to help with the task.
+The command must precede a Ruby loop (for, while, each or similar) and takes
+a single parameter, the text to use as a separator:
 
 ```
 .Hello $
-./!, $
+./!separate(", ")
 for i in ["Alice", "Bob", "Carol"]
 .   /+@{i}
 end
@@ -295,7 +304,7 @@ expressions of the second level. Et c.
 Consider, for exmaple, this script:
 
 ```
-output("greet.dna")
+./!output("greet.dna")
 .name = "Alice"
 ..Hello, @2{name}!
 ```
@@ -384,10 +393,10 @@ manipulates:
 
 Ribosome doesn't allow for tabs in the input, however, when generating
 output it can, on demand, replace all leading whitespace by tabs. To switch
-this functionality on use 'tabsize' function:
+this functionality on use '/!tabsize' command:
 
 ```
-tabsize(4)
+./!tabsize(4)
 .for (i = 0; i != 10; ++i)
 .    printf("Hi!\n");
 .}
@@ -396,6 +405,16 @@ tabsize(4)
 In the output, leading whitespace in line 3 will be replaced by a tab.
 
 Set tabsize to zero to switch the generation of tabs off.
+
+## Importing DNA files
+
+In case of need you can import a DNA file using '/!import' command.
+The behaviour is the same as if the contents of the imported file was
+copied to the location in question in the importing file:
+
+```
+./!import("foo.dna")
+```
 
 ## Syntax highlighting
 
