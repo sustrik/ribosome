@@ -66,6 +66,12 @@ If not needed, the data file may be ommitted.
 
 ## Documentation
 
+At this point you are ready to use ribosome to do your own code generation.
+However, you may benefit from reading about the finer points of the language
+in the following sections.
+
+### Control language
+
 DNA file is a standard Ruby program (except for the lines starting with
 a dot). Therefore it is possible to just take your existing Ruby program
 and run it with ribosome:
@@ -391,7 +397,7 @@ In the output, leading whitespace in line 3 will be replaced by a tab.
 
 Set tabsize to zero to switch the generation of tabs off.
 
-##Syntax highlighting
+## Syntax highlighting
 
 Given that DNA files contain two overlapping indentations, it is crucial for
 good readability to highlight the dot-style ribosome lines in a different
@@ -404,8 +410,7 @@ Following highlighters are supported at the moment:
 In the future, we intend to provide highlighting rules for the most common
 editors. Any help in this area will be highly appreciated!
 
-
-##License
+## License
 
 Ribosome is licensed under MIT/X11 license.
 
