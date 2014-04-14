@@ -277,9 +277,9 @@ that a lot of escape sequences would have to be used. To solve that, ribosome
 provides a tool called nested embedded expressions.
 
 Embedded expressions that have been introduced so far are embedded expressions
-of first level. They can be written as @{} and &{}. Alternatively, @1{} and &1{}
-can be used. The expression is evaluated during the compilation and the result
-is written to the output.
+of first level. They are written as @{} and &{}. Alternatively, the form @1{}
+and &1{} can be used. The expression is evaluated during the compilation and
+the result is written to the output.
 
 Embedded expressions of second level are written @2{} and &2{}. They are
 replaced by embedded expressions of first level during the compilation.
