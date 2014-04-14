@@ -99,7 +99,7 @@ Test!
 
 Lines starting with a dot can be terminated by $ sign. The sign is optional,
 unless there's a whitespace at the end of the line. In such case the $ sign
-is mandatory to avoid invisible whitespace getting into the output files.
+is mandatory to prevent invisible whitespace getting into the output files.
 
 ```
 .Hello!    $
