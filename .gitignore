@@ -1,0 +1,4 @@
+*.rna
+example-manyfiles/*.txt
+example-errors/errno.h
+example-errors/strerror.c
