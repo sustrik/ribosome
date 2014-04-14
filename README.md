@@ -56,7 +56,7 @@ instal 'json' gem.
 ## Command line
 
 The generator is called 'ribosome'. It takes two arguments. The script file,
-also known as DNA file, and the data file in JSON/XML format:
+also known as DNA file, and the data file in JSON or XML format:
 
 ```
 $ ribosome foo.dna bar.json
@@ -67,7 +67,7 @@ If not needed, the data file may be ommitted.
 ## Documentation
 
 At this point you are ready to use ribosome to do your own code generation.
-However, you may benefit from reading about the finer points of the language
+However, you may benefit from reading about the finer points of the tool
 in the following sections.
 
 ### Control language
