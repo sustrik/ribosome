@@ -406,7 +406,7 @@ In the output, leading whitespace in line 3 will be replaced by a tab.
 
 Set tabsize to zero to switch the generation of tabs off.
 
-## Importing DNA files
+### Importing DNA files
 
 In case of need you can import a DNA file using '/!import' command.
 The behaviour is the same as if the contents of the imported file was
