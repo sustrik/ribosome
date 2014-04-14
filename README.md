@@ -314,10 +314,10 @@ accidentally matches a ribosome operator, you can use one of the predefined
 escape functions. For example:
 
 ```
-.123@{atbrace}456
+.123@{at}{456
 ```
 
-Results in:
+Translates into:
 
 ```
 123@{456
@@ -325,12 +325,9 @@ Results in:
 
 Full list of escape functions:
 
-    atbrace() => @{
-    atnbrace(N) => @N{    (where N is a digit)
-    ampbrace() => &{
-    ampnbrace(N) => &N{   (where N is a digit)
-    slashplus() => /+
-    slashbang() => /!
+    at() => @
+    amp() => &
+    slash() => /
 
 ### Advanced layout management
 
@@ -377,11 +374,11 @@ manipulates:
 
 ![](layout.png)
 
-### Generating tabulators
+### Generating tabs
 
-Ribosome doesn't allow for tabulators in the input, however, when generating
-output it can replace all leading whitespace by tabulators. To switch this
-functionality on use 'tabsize' function:
+Ribosome doesn't allow for tabs in the input, however, when generating
+output it can, on demand, replace all leading whitespace by tabs. To switch
+this functionality on use 'tabsize' function:
 
 ```
 tabsize(4)
@@ -390,9 +387,9 @@ tabsize(4)
 .}
 ```
 
-In the output, initial whitespace in line 3 will be replaced by a tab.
+In the output, leading whitespace in line 3 will be replaced by a tab.
 
-Set tabsize to zero to switch the generation of tabulators off.
+Set tabsize to zero to switch the generation of tabs off.
 
 ##Syntax highlighting
 

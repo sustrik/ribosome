@@ -337,34 +337,19 @@ def tabsize(size)
     Ribosome.tabsize(size)
 end
 
-# Escape function for @{
-def atbrace()
-    return "@{"
+# Escape function for @
+def at()
+    return "@"
 end
 
-# This function for @N{
-def atnbrace(i)
-    return "@#{i.to_i}{"
+# Escape function for &
+def amp()
+    return "&"
 end
 
-# Escape function for &{
-def ampbrace()
-    return "&{"
-end
-
-# This function for &N{
-def ampnbrace(i)
-    return "&#{i.to_i}{"
-end
-
-# Escape function for /+
-def slashplus()
-    return "/+"
-end
-
-# Escape function for /!
-def slashbang()
-    return "/!"
+# Escape function for /
+def slash()
+    return "/"
 end
 
 '
