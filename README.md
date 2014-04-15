@@ -132,7 +132,7 @@ Ruby function and uses the same syntax:
 ./!output name + ".txt"
 ```
 
-To redirect the output back to the console use 'stdout' command:
+To redirect the output back to the console use '/!stdout' command:
 
 ```
 ./!output("test.txt")
@@ -393,7 +393,8 @@ manipulates:
 
 Ribosome doesn't allow for tabs in the input, however, when generating
 output it can, on demand, replace all leading whitespace by tabs. To switch
-this functionality on use '/!tabsize' command:
+this functionality on use '/!tabsize' command, providing desired size of the
+tab as a parameter:
 
 ```
 ./!tabsize(4)
