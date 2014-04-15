@@ -64,8 +64,19 @@ module Ribosome
         attr_accessor :text, :width
 
         def initialize(s)
-            @text = [s]
-            @width = s.size
+            @text = []
+            @width = 0
+            return if s == nil
+
+            # Split the string into individual lines.
+			start = 0
+			loop do
+				i = s.index("\n", start) || s.size
+				@text << (i == start ? "" : s[start..i - 1])
+                @width = [@width, @text.last.size].max
+				start = i + 1
+				break if start > s.size
+			end
         end
 
         # Weld the supplied block to the right side of this block.
