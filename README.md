@@ -408,12 +408,12 @@ Set tabsize to zero to switch the generation of tabs off.
 
 ### Importing DNA files
 
-In case of need you can import a DNA file using '/!import' command.
+In case of need you can import a DNA file using '/!include' command.
 The behaviour is the same as if the contents of the imported file was
 copied to the location in question in the importing file:
 
 ```
-./!import("foo.dna")
+./!include("foo.dna")
 ```
 
 ## Syntax highlighting

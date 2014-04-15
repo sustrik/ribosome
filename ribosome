@@ -485,9 +485,9 @@ loop do
             end
 
             # Open the file and put it on the top of the DNA stack.
-            if(command == "import")
+            if(command == "include")
                 def identity(x) x end
-		        filename = eval("identity#{line[6..-1]}")
+		        filename = eval("identity#{line[7..-1]}")
                 dnastack.push(File.open(filename, "r"))
                 next
             end
