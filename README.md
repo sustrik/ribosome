@@ -132,7 +132,7 @@ Ruby function and uses the same syntax:
 ./!output name + ".txt"
 ```
 
-To redirect the output back to the console use 'stdout' function:
+To redirect the output back to the console use 'stdout' command:
 
 ```
 ./!output("test.txt")
