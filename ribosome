@@ -516,6 +516,5 @@ rna.close()
 system("ruby #{rnafile} #{infile}")
 
 # Delete the RNA file.
-# TODO: For now we are letting the file be to help with debugging of ribosome.
-# File.delete(rnafile)
+File.delete(rnafile)
 
