@@ -403,7 +403,7 @@ tab as a parameter:
 .}
 ```
 
-In the output, leading whitespace in line 3 will be replaced by a tab.
+In the output, leading four spaces in the line 3 will be replaced by a tab.
 
 Set tabsize to zero to switch the generation of tabs off.
 
