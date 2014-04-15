@@ -128,7 +128,7 @@ start with slash and exclamation mark. The command behaves like a standard
 Ruby function and uses the same syntax:
 
 ```
-.name = "foo"
+name = "foo"
 ./!output name + ".txt"
 ```
 
