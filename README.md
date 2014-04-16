@@ -441,8 +441,8 @@ if (is_bob_present) {
 ```
 
 Note how the greeting is properly aligned in both cases. What happens under
-the hood is that the whitespace from line 2 of the script is trimmed and
-ignored, while the whitespace on line 7 is treated as a text literal, i.e.
+the hood is that the whitespace from line 2 of the script is trimmed by @{}
+operator, while the whitespace on line 7 is treated as a text literal, i.e.
 one-line text block and is put on the line before the greeting to Bob.
 
 ### Generating tabs
