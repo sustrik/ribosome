@@ -412,7 +412,13 @@ expression looks like this:
 
 ![](images/block.png)
 
-This feature is extremely important to produce properly aligned code:
+Note that whitespace is trimmed from the block as a whole, not from each
+individual line. That way, the block alway remains rectangular in shape:
+
+![](images/block2.png)
+
+This feature is extremely important to produce properly aligned code.
+Consider this example:
 
 ```
 def greet(name)
