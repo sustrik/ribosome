@@ -387,7 +387,7 @@ That's all, folks!
 And here are the boundaries of the individual rectangles that ribosome
 manipulates:
 
-![](layout.png)
+![](images/layout.png)
 
 ### Generating tabs
 
