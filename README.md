@@ -346,9 +346,6 @@ Full list of escape functions:
 
 ### Advanced layout management
 
-To undestand how ribosome layouts the code, it is necessary to understand
-that it works with rectangular blocks of text rather than with lines.
-
 Consider the following script:
 
 ```
@@ -384,10 +381,63 @@ Colours: White       Shapes: Triangle
 That's all, folks!
 ```
 
-And here are the boundaries of the individual rectangles that ribosome
-manipulates:
+To undestand how ribosome layouts the code, it is necessary to understand
+that it's not characters that are placed on a line, but rather rectangular
+blocks of text.
+
+Every literal string is considered to be a block of text (consisting of a single
+line) and so is every embedded expression. However, given that embedded
+expressions can generate multiple lines they are treated as multi-line
+blocks of text.
+
+The blocks are aligned to the top of the line:
+
+Thus, the line:
+
+```
+.Colours: @{colours} Shapes: @{shapes}
+```
+
+Is laid out like this:
+
+![](images/line.png)
+
+Every next line is laid out bellow the highest block on the previous line:
 
 ![](images/layout.png)
+
+Note that @-style embedded expressions trim the whitespace from the left, right,
+top and bottom of the block. Therefore, the block produced by '@{colours}'
+expression looks like this:
+
+![](images/block.png)
+
+This feature is extremely important to produce properly aligned code:
+
+```
+def greet(name)
+.    printf ("Hello, @{name}!\n");
+end
+
+.@{greet("Alice")}
+.if (is_bob_present) {
+.    @{greet("Bob")}
+.}
+```
+
+The script above produces following output:
+
+```
+printf ("Hello, Alice!\n");
+if (is_bob_present) {
+    printf ("Hello, Bob!\n");
+}
+```
+
+Note how the greeting is properly aligned in both cases. What happens under
+the hood is that the whitespace from line 2 of the script is trimmed and
+ignored, while the whitespace on line 7 is treated as a text literal, i.e.
+one-line text block and is put on the line before the greeting to Bob.
 
 ### Generating tabs
 
