@@ -211,8 +211,11 @@ module Ribosome
             require "rubygems"
             require "json"
             @root = JSON.parse(File.read(name))
+        elsif(name[-5..-1] == ".yaml")
+            require "yaml"
+            @root = YAML::load(File.open(name))
         else
-            $stderr.puts("input file must be either .json or .xml")
+            $stderr.puts("input file must be either .json, .xml or .yaml")
             exit()
         end
     end
