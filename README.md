@@ -8,7 +8,7 @@ A simple generic code generation tool.
 1. You write standard Ruby scripts.
 2. However, lines starting with a dot (.) go straight to the output file.
 3. To expand Ruby expressions within dot-style lines use @{expr} construct.
-4. Support for reading input data from JSON or XML file is provided.
+4. Support for reading input data from JSON, YAML or XML file is provided.
 
 ## Example
 
@@ -56,7 +56,7 @@ instal 'json' gem.
 ## Command line
 
 The generator is called 'ribosome'. It takes two arguments. The script file,
-also known as DNA file, and the data file in JSON or XML format:
+also known as DNA file, and the data file in JSON, YAML or XML format:
 
 ```
 $ ribosome foo.dna bar.json
@@ -173,9 +173,10 @@ end
 Code generators typically need rich structured input instead of simple
 command line parameters.
 
-Ribosome supports both JSON and XML input files. It uses file extension to
-distinguish beween the two. Thus, JSON input files should have .json
-extension and XML imput files should have .xml extension.
+Ribosome supports JSON, YAML and XML input files. It uses file extension to
+distinguish beween them. Thus, JSON input files should have .json extension,
+YAML input files should have .yaml (or .yml) extension and XML input files
+should have .xml extension.
 
 Consider a JSON file that contains names of different errors:
 

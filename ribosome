@@ -211,7 +211,7 @@ module Ribosome
             require "rubygems"
             require "json"
             @root = JSON.parse(File.read(name))
-        elsif(name[-5..-1] == ".yaml")
+        elsif(name[-5..-1] == ".yaml" || name [-4..-1] == ".yml")
             require "yaml"
             @root = YAML::load(File.open(name))
         else
