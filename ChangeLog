@@ -7,7 +7,7 @@ Initial release
 ===
 
 Explicit commands for loading input files added:
-- /!jsoninput
-- /!yamlinput
-- /!xmlinput
+- /!loadjson
+- /!loadyaml
+- /!loadxml
 

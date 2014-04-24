@@ -5,6 +5,6 @@ endif
 
 syn match dot	    "^\..*$"
 
-highlight link dot      Identifier
+highlight dot ctermfg=DarkBlue guifg=DarkBlue
 
 let b:current_syntax = "ribosome"
