@@ -233,6 +233,13 @@ root.elements.each("function") do |m|
 end
 ```
 
+You can also access the name of the input file using 'input' function:
+
+```
+./!yamlinput()
+.Processing file @{input}
+```
+
 ### Line concatenation
 
 Typically, each dot-style line is translated into a separate line in the

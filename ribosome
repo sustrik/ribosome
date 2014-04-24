@@ -207,23 +207,31 @@ module Ribosome
         return @root
     end
 
+    # Retrieves the name of the input file.
+    def Ribosome.input()
+        return @input
+    end
+
     # Open the JSON input file.
     def Ribosome.jsoninput()
         require "rubygems"
         require "json"
         @root = JSON.parse(File.read(ARGV[0]))
+        @input = ARGV[0]
     end
 
     # Open the XML input file.
     def Ribosome.xmlinput()
         require "rexml/document"
         @root = REXML::Document.new(File.new(ARGV[0])).root
+        @input = ARGV[0]
     end
 
     # Open the YAML input file.
     def Ribosome.yamlinput()
         require "yaml"
         @root = YAML::load(File.open(ARGV[0]))
+        @input = ARGV[0]
     end
 
     # Redirects output to the specified file.
@@ -338,6 +346,10 @@ end
 
 def root()
     return Ribosome.root()
+end
+
+def input()
+    return Ribosome.input()
 end
 
 # Escape function for @
