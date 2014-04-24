@@ -217,21 +217,21 @@ module Ribosome
         require "rubygems"
         require "json"
         @root = JSON.parse(File.read(ARGV[0]))
-        @input = ARGV[0]
+        @input = File.basename(ARGV[0])
     end
 
     # Open the XML input file.
     def Ribosome.xmlinput()
         require "rexml/document"
         @root = REXML::Document.new(File.new(ARGV[0])).root
-        @input = ARGV[0]
+        @input = File.basename(ARGV[0])
     end
 
     # Open the YAML input file.
     def Ribosome.yamlinput()
         require "yaml"
         @root = YAML::load(File.open(ARGV[0]))
-        @input = ARGV[0]
+        @input = File.basename(ARGV[0])
     end
 
     # Redirects output to the specified file.
