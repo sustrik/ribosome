@@ -1,7 +1,7 @@
 # This example demonstrates how to dynamically create arbitrary number
 # of files from a single input file.
 
-./!jsoninput
+./!yamlinput
 
 for n in root
 ./!output(n + ".txt")
