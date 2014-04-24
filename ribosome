@@ -202,6 +202,27 @@ module Ribosome
         @dnafile = filename
     end
 
+    # Open the input file.
+    def Ribosome.openroot(name)
+        if(name[-4..-1] == ".xml")
+            require "rexml/document"
+            @root = REXML::Document.new(File.new(name)).root
+            @input = File.basename(name)
+        elsif(name[-5..-1] == ".json")
+            require "rubygems"
+            require "json"
+            @root = JSON.parse(File.read(name))
+            @input = File.basename(name)
+        elsif(name[-5..-1] == ".yaml" || name [-4..-1] == ".yml")
+            require "yaml"
+            @root = YAML::load(File.open(name))
+            @input = File.basename(name)
+        else
+            @name = nil
+            @root = nil
+        end
+    end
+
     # Retrieves the root of the input file.
     def Ribosome.root()
         return @root
@@ -213,7 +234,7 @@ module Ribosome
     end
 
     # Open the JSON input file.
-    def Ribosome.jsoninput()
+    def Ribosome.loadjson()
         require "rubygems"
         require "json"
         @root = JSON.parse(File.read(ARGV[0]))
@@ -221,14 +242,14 @@ module Ribosome
     end
 
     # Open the XML input file.
-    def Ribosome.xmlinput()
+    def Ribosome.loadxml()
         require "rexml/document"
         @root = REXML::Document.new(File.new(ARGV[0])).root
         @input = File.basename(ARGV[0])
     end
 
     # Open the YAML input file.
-    def Ribosome.yamlinput()
+    def Ribosome.loadyaml()
         require "yaml"
         @root = YAML::load(File.open(ARGV[0]))
         @input = File.basename(ARGV[0])
@@ -415,6 +436,9 @@ rna.write(rnahelpers)
 rna.write("# Specify the original DNA filename.\n")
 rna.write("Ribosome.dnafile(#{$dnafile.inspect()})\n")
 rna.write("\n")
+rna.write("# Parse command line arguments.\n")
+rna.write("Ribosome.openroot(ARGV[0]) if ARGV.size > 0")
+rna.write("\n")
 rna.write("# The code that belongs to the ribosome project as well as\n")
 rna.write("# the associated license ends at this point.\n")
 rna.write("\n")
@@ -476,7 +500,7 @@ loop do
             
             # A subset of commands is simply translated to corresponding
             # commands in the RNA file.
-            if (["jsoninput", "xmlinput", "yamlinput", "output", "stdout",
+            if (["loadjson", "loadxml", "loadyaml", "output", "stdout",
                     "tabsize"].include?(command))
                 rna.write("Ribosome.#{line}\n")
                 next

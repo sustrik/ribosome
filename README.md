@@ -173,13 +173,18 @@ end
 Code generators typically need rich structured input instead of simple
 command line parameters.
 
-Ribosome supports JSON, YAML and XML input files. Use following commands
-to specify the type of the input file:
+Ribosome supports JSON, YAML and XML input files. Ribosome uses file extension
+to determine what kind of input file is used. Thus, XML files should have .xml
+extension, JSON files should have .json extension and YAML files should have
+either .yml or .yaml extension.
+
+If the supplied file has none of the above extensions, it will be ignored.
+However, you can still load it explicitly using one of the following commands:
 
 ```
-./!jsoninput
-./!yamlinput
-./!xmlinput
+./!loadjson
+./!loadyaml
+./!loadxml
 ```
 
 If none is specified, no input file will be used.

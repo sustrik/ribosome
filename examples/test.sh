@@ -8,5 +8,5 @@ cd toxml
 ../../ribosome toxml.dna input.json > output.xml
 cd ..
 cd manyfiles
-../../ribosome manyfiles.dna manyfiles.yaml
+../../ribosome manyfiles.dna manyfiles.txt
 cd ..

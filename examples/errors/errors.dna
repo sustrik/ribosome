@@ -1,8 +1,6 @@
 # This generator produces definitions of POSIX errors
 # and implementation of strerror(2) function.
 
-./!jsoninput
-
 ./!output("errno.h")
 
 def names()
