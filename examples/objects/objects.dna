@@ -1,5 +1,7 @@
 # This generator creates C++ objects from the definitions in the XML file.
 
+./!xmlinput
+
 .class @{root.attributes["name"]} {
 root.elements.each("method") do |m|
 .
