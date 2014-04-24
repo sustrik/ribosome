@@ -1,4 +1,6 @@
 *.rna
-example/manyfiles/*.txt
-example/errors/errno.h
-example/errors/strerror.c
+examples/manyfiles/*.txt
+examples/errors/errno.h
+examples/errors/strerror.c
+examples/objects/complex.cpp
+examples/toxml/output.xml
