@@ -1,0 +1,13 @@
+1.0
+===
+
+Initial release
+
+1.1
+===
+
+Explicit commands for loading input files added:
+- /!jsoninput
+- /!yamlinput
+- /!xmlinput
+
