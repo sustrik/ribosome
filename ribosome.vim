@@ -18,7 +18,7 @@ endfunction
 
 function OutputView()
     unlet b:current_syntax
-    if b:current_output != ""
+    if b:current_output != "none"
         execute 'syntax include @CSYN syntax/' . b:current_output . '.vim'
         syntax region cSnip matchgroup=Snip start=/^\./ end=/$/ keepend contains=@CSYN
         highlight Snip ctermfg=Grey guifg=Grey
@@ -43,6 +43,6 @@ map <F4> :call OutputView()<CR>
 command -nargs=1 O call SetCurrentOutput(<f-args>)
 
 let b:current_syntax = ""
-let b:current_output = ""
+let b:current_output = "none"
 call CommonView()
 
