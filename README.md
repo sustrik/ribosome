@@ -496,13 +496,62 @@ copied to the location in question in the importing file:
 
 ## Syntax highlighting
 
-Given that DNA files contain two overlapping indentations, it is crucial for
-good readability to highlight the dot-style ribosome lines in a different
-colour than surrounding Ruby code.
+Given that DNA files contain two overlapping indentations, syntax highlighting
+is crucial for good code readability.
 
-Following highlighters are supported at the moment:
+### Vim
 
-    ribosome.vim
+To install ribosome syntax highlighting for vim, copy the ribosome.vim file
+from the root directory to vim's syntax directory. For example:
+
+```
+sudo cp ribosome.vim /usr/share/vim/vim73/syntax
+```
+
+Afterwards, open vim's filetype file:
+
+```
+sudo vim /usr/share/vim/vim73/filetype.vim
+```
+
+And add the following line to it:
+
+```
+au BufNewFile,BufRead *.dna setf ribosome
+```
+
+Now you are ready to open a DNA file in vim:
+
+![](images/vim1.png)
+
+What you see is so called "common view" where control language (Ruby) and
+generated language (C) are highlighted in such a way as to allow inspection
+of both.
+
+You can switch to common view using F2 key.
+
+Press F3 key to switch to the "Ruby view":
+
+![](images/vim2.png)
+
+Here the control language has its native syntax colouring, while generated
+code is shaded as not to distract from inspecting the control language.
+
+Press F4 key to switch to thr "Output view":
+
+![](images/vim3.png)
+
+In this view the control language is shaded and output language is fully
+visible.
+
+However, vim does not know what syntax highlighting to use for the generated
+language. You can instruct it to use particular syntax highlighting algorithm
+using O (capital letter O) command. Pass the name of the language as an
+argument:
+
+![](images/vim4.png)
+
+### Other editors
 
 In the future, we intend to provide highlighting rules for the most common
 editors. Any help in this area will be highly appreciated!
