@@ -537,7 +537,7 @@ Press F3 key to switch to the "Ruby view":
 Here the control language has its native syntax colouring, while generated
 code is shaded as not to distract from inspecting the control language.
 
-Press F4 key to switch to thr "Output view":
+Press F4 key to switch to the "Output view":
 
 ![](images/vim3.png)
 
