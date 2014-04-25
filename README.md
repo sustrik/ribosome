@@ -170,10 +170,10 @@ end
 
 ### Input files
 
-Code generators typically need rich structured input instead of simple
-command line parameters.
+Code generators typically need rich structured input rather than simple command
+line parameters.
 
-Ribosome supports JSON, YAML and XML input files. Ribosome uses file extension
+Ribosome supports JSON, YAML and XML input files. It uses file extension
 to determine what kind of input file is used. Thus, XML files should have .xml
 extension, JSON files should have .json extension and YAML files should have
 either .yml or .yaml extension.
@@ -198,7 +198,6 @@ Consider a JSON file that contains names of different errors:
 Following DNA script will convert it into a C header file:
 
 ```
-./!jsoninput
 errno = 1
 for i in root
 .#define @{i} @{errno}
@@ -229,7 +228,6 @@ The script can access the root node of the XML input as REXML::Element object
 called 'root':
 
 ```
-./!xmlinput
 root.elements.each("function") do |m|
 .void @{m.attributes["name"]}() {
 .    @{m.texts.join}
@@ -238,10 +236,9 @@ root.elements.each("function") do |m|
 end
 ```
 
-You can also access the name of the input file using 'input' function:
+You can also retrieve the name of the input file using 'input' function:
 
 ```
-./!yamlinput()
 .Processing file @{input}
 ```
 
