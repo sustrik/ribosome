@@ -433,7 +433,7 @@ expression looks like this:
 
 ![](images/block.png)
 
-Note that whitespace is trimmed from the block as a whole, not from each
+Also note that whitespace is trimmed from the block as a whole, not from each
 individual line. That way, the block alway remains rectangular in shape:
 
 ![](images/block2.png)
