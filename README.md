@@ -528,7 +528,7 @@ What you see is so called "common view" where control language (Ruby) and
 generated language (C) are highlighted in such a way as to allow inspection
 of both.
 
-You can switch to common view using F2 key.
+When in other views, you can switch to common view using F2 key.
 
 Press F3 key to switch to the "Ruby view":
 
