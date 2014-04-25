@@ -420,7 +420,8 @@ Is laid out like this:
 
 ![](images/line.png)
 
-Every next line is laid out bellow the highest block on the previous line:
+Every next line is laid out directly bellow the longest block on the previous
+line:
 
 ![](images/layout.png)
 
