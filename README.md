@@ -260,7 +260,7 @@ end
 Note that all the whitespace preceding /+ operator is silently ignored:
 
 ```
-Hello Alice Bob Carol!
+Hello Alice Bob Carol !
 ```
 
 ### Separators
