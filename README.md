@@ -8,7 +8,6 @@ A simple generic code generation tool.
 1. You write standard Ruby scripts.
 2. However, lines starting with a dot (.) go straight to the output file.
 3. To expand Ruby expressions within dot-style lines use @{expr} construct.
-4. Support for reading input data from JSON, YAML or XML file is provided.
 
 ## Example
 
