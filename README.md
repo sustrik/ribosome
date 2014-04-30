@@ -152,7 +152,7 @@ name = 'Fred'
 With straight Ruby functions, the return value is converted into a string
 and written to the output.
 
-If the enbedded expression produces ribosome output itself, the text is
+If the embedded expression produces ribosome output itself, the text is
 inserted into the output file instead of the return value:
 
 ```
