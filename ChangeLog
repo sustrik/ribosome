@@ -11,3 +11,9 @@ Explicit commands for loading input files added:
 - /!loadyaml
 - /!loadxml
 
+1.2
+===
+
+- improved Vim support
+- input() function added
+
