@@ -466,9 +466,9 @@ as one-line text block) and is appended to the line before the greeting to Bob.
 ### Generating tabs
 
 Ribosome doesn't allow for tabs in the input, however, when generating
-output it can, on demand, replace all leading whitespace by tabs. To switch
-this functionality on use '/!tabsize' command, providing desired size of the
-tab as a parameter:
+output it can, on demand, replace as much of the leading whitespace as possible
+by tabs. To switch this functionality on use '/!tabsize' command, providing
+desired size of the tab as a parameter:
 
 ```
 ./!tabsize(4)
