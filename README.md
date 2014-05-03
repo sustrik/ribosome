@@ -235,10 +235,12 @@ root.elements.each("function") do |m|
 end
 ```
 
-You can also retrieve the name of the input file using 'input' function:
+You can also retrieve the name of the input file using 'input' function.
+For example, it is a good style to start the generated file with a comment
+about how it was generated:
 
 ```
-.Processing file @{input}
+./*  @{Time.now}: This file was generated from @{input} */
 ```
 
 ### Line concatenation
