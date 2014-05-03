@@ -123,8 +123,8 @@ the DNA file. Use '/!output' command to accomplish the task:
 
 Note that ribosome commands may appear only in lines starting with a dot,
 may be preceded with arbitrary amout of whitespace (which will be ignored) and
-start with slash and exclamation mark. The command behaves like a standard
-Ruby function and uses the same syntax:
+start with slash and exclamation mark. Commands behave like standard
+Ruby functions and use the same syntax:
 
 ```
 name = "foo"
