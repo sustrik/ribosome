@@ -204,19 +204,17 @@ module Ribosome
 
     # Open the input file.
     def Ribosome.openroot(name)
+        @input = File.basename(name)
         if(name[-4..-1] == ".xml")
             require "rexml/document"
             @root = REXML::Document.new(File.new(name)).root
-            @input = File.basename(name)
         elsif(name[-5..-1] == ".json")
             require "rubygems"
             require "json"
             @root = JSON.parse(File.read(name))
-            @input = File.basename(name)
         elsif(name[-5..-1] == ".yaml" || name [-4..-1] == ".yml")
             require "yaml"
             @root = YAML::load(File.open(name))
-            @input = File.basename(name)
         else
             @name = nil
             @root = nil
