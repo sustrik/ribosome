@@ -203,8 +203,10 @@ module Ribosome
             l = e.backtrace[i]
             if l.start_with?(@rnafile + ":")
                 num = l[@rnafile.size + 1..-1].to_i
-                l = "#{@dnafile}:#{num - @dnaoffset + 1}"
-                e.backtrace[i] = l
+                if (num >= @dnaoffset)
+                    l = "#{@dnafile}:#{num - @dnaoffset + 1}"
+                    e.backtrace[i] = l
+                end
             end
         end
         raise e
@@ -398,8 +400,9 @@ end
 Ribosome.openroot(ARGV[0]) if ARGV.size > 0
 
 ################################################################################
-# The code that belongs to the ribosome project ends at this point and so does #
-# so does the associated license. What follows is the code generated from DNA. #
+# The code that belongs to the ribosome project ends at this point of the      #
+# RNA file and so does so does the associated license. What follows is the     #
+# code generated from the DNA file.                                            #
 ################################################################################
 
 begin
