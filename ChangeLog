@@ -17,3 +17,9 @@ Explicit commands for loading input files added:
 - improved Vim support
 - input() function added
 
+1.3
+===
+
+- input() is available even before the input file is loaded
+- errors are reported as if they happened in DNA file, not RNA file
+
