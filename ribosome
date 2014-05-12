@@ -30,7 +30,7 @@
 # the RNA lean and tidy, however, embedding the whole thing into each RNA
 # file makes the ribosome dependencies and deployment much simpler.
 
-rnahelpers = '#!/usr/bin/ruby
+PROLOGUE = '#!/usr/bin/ruby
 
 #
 # The initial part of this file belongs to the ribosome project.
@@ -171,14 +171,8 @@ module Ribosome
 
     end
 
-    # Name of the DNA file that generated this RNA file.
-    @dnafile = ""
-
     # This is the variable to hold the parsed content of the input file.
     @root = nil
-
-    # The original DNA file.
-    @dnafile = ""
 
     # Size of a tab. If set to zero, tabs are not generated.
     @tabsize = 0
@@ -190,17 +184,6 @@ module Ribosome
     # This is the ribosome call stack. At each level there is a list of
     # text blocks generated up to that point.
     @stack = [[]]
-
-    # Print out the error and terminate the generation.
-    def Ribosome.dnaerror(s, ln)
-        $stderr.write("#{@dnafile}.dna:#{ln} - #{s}\n")
-        exit()
-    end
-
-    # Set DNA filename.
-    def Ribosome.dnafile(filename)
-        @dnafile = filename
-    end
 
     # Open the input file.
     def Ribosome.openroot(name)
@@ -386,6 +369,15 @@ def slash()
     return "/"
 end
 
+# Parse command line arguments.
+Ribosome.openroot(ARGV[0]) if ARGV.size > 0
+
+################################################################################
+# The code that belongs to the ribosome project ends at this point of the      #
+# RNA file and so does so does the associated license. What follows is the     #
+# code generated from the DNA file.                                            #
+################################################################################
+
 '
 
 ################################################################################
@@ -427,19 +419,8 @@ rna = File.open(rnafile, "w")
 # open DNA files.
 dnastack = [File.open($dnafile, "r")]
 
-# Import RNA helper functions.
-rna.write(rnahelpers)
-
-# Add RNA initialisation code.
-rna.write("# Specify the original DNA filename.\n")
-rna.write("Ribosome.dnafile(#{$dnafile.inspect()})\n")
-rna.write("\n")
-rna.write("# Parse command line arguments.\n")
-rna.write("Ribosome.openroot(ARGV[0]) if ARGV.size > 0")
-rna.write("\n")
-rna.write("# The code that belongs to the ribosome project as well as\n")
-rna.write("# the associated license ends at this point.\n")
-rna.write("\n")
+# Generate RNA prologue code.
+rna.write(PROLOGUE)
 
 # Process the DNA file.
 loop do
