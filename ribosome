@@ -23,13 +23,14 @@
 #
 
 ################################################################################
-#  RNA helper functions.                                                       #
+#  RNA prologue and epilogue code.                                             #
 ################################################################################
 
 # In theory, helpers could be placed into a separate module file to keep
 # the RNA lean and tidy, however, embedding the whole thing into each RNA
 # file makes the ribosome dependencies and deployment much simpler.
 
+PROLOGUE_LINE = __LINE__
 PROLOGUE = '#!/usr/bin/ruby
 
 #
@@ -206,6 +207,9 @@ module Ribosome
 
     # Retrieves the root of the input file.
     def Ribosome.root()
+        if @root == nil
+            raise Exception.new "Input file not available."
+        end
         return @root
     end
 
@@ -265,7 +269,7 @@ module Ribosome
     end
 
     # Adds one . line from the DNA file.
-    def Ribosome.add(line, bind, ln)
+    def Ribosome.add(line, bind)
 
         # If there is no previous line, add one.
         if(@stack.last.empty?)
@@ -339,9 +343,28 @@ module Ribosome
     end
 
     # Adds newline followed by one . line from the DNA file.
-    def Ribosome.dot(line, bind, ln)
+    def Ribosome.dot(line, bind)
         @stack.last << Block.new("")
-        add(line, bind, ln)
+        add(line, bind)
+    end
+
+    #  Report an error that happened when executing RNA file.
+    def Ribosome.rethrow(e, rnafile, linemap)
+        i = 0
+        for i in 0..e.backtrace.size - 1
+            l = e.backtrace[i]
+            if l.start_with?(rnafile + ":")
+                num = l[rnafile.size + 1..-1].to_i
+                for j in 0..linemap.size - 1
+                    break if linemap[j][0] == nil || linemap[j][0] > num
+                end
+                j -= 1
+                num = num - linemap[j][0] + linemap[j][2]
+                l = "#{linemap[j][1]}:#{num}"
+                e.backtrace[i] = l
+            end
+        end
+        raise e
     end
 
 end
@@ -378,10 +401,7 @@ Ribosome.openroot(ARGV[0]) if ARGV.size > 0
 # code generated from the DNA file.                                            #
 ################################################################################
 
-'
-
-EPILOGUE = '
-Ribosome.close()
+begin
 
 '
 
@@ -391,8 +411,15 @@ Ribosome.close()
 
 # Print out the error and terminate the generation.
 def dnaerror(s)
-    $stderr.write("#{$dnafile}:#{$ln} - #{s}\n")
+    $stderr.write("#{$dnastack.last[1]}:#{$dnastack.last[2]} - #{s}\n")
     exit()
+end
+
+# Generate new line(s) into the RNA file.
+def rnawrite(s)
+    $linemap << [$rnaln, $dnastack.last[1], $dnastack.last[2]]
+    $rna.write(s)
+    $rnaln += s.count("\n")
 end
 
 ################################################################################
@@ -401,51 +428,54 @@ end
 
 # Parse the command line arguments.
 if(ARGV.size() != 1 && ARGV.size() != 2)
-    puts("usage: ribosome <dna-file> [<input-file>]")
-    exit()
+    puts "usage: ribosome <dna-file> [<input-file>]"
+    exit
 end
-$dnafile = ARGV[0]
-if (ARGV.size == 1)
+dnafile = ARGV[0]
+if ARGV.size == 1
     infile = ""
 else
     infile = ARGV[1]
 end
 
-# Open the files for the DNA-to-RNA translation step.
-$ln = 0
-if($dnafile[-4..-1] == ".dna")
-    rnafile = $dnafile[0..-5] + ".rna"
-else
-    rnafile = $dnafile + ".rna"
-end
-rna = File.open(rnafile, "w")
-
 # Given that we can 'require' other DNA files, we need to keep a stack of
-# open DNA files.
-dnastack = [File.open($dnafile, "r")]
+# open DNA files. We also keep the name of the file and the line number to
+# be able to report errors.
+$dnastack = [[nil, "ribosome", PROLOGUE_LINE + 1]]
+
+# Create the RNA file.
+if(dnafile[-4..-1] == ".dna")
+    $rnafile = dnafile[0..-5] + ".rna"
+else
+    $rnafile = dnafile + ".rna"
+end
+$rna = File.open($rnafile, "w")
+$rnaln = 1
+$linemap = []
 
 # Generate RNA prologue code.
-rna.write(PROLOGUE)
+rnawrite(PROLOGUE)
 
 # Process the DNA file.
+$dnastack.push [File.open(dnafile, "r"), dnafile, 0]
 loop do
 
     # Get next line. Unwind the include stack as necessary.
     line = nil
     loop do
-        line = dnastack.last.gets()
+        line = $dnastack.last[0].gets()
         break if line != nil
-        dnastack.pop.close()
-        break if dnastack.empty?
+        $dnastack.pop[0].close()
+        break if $dnastack.size == 1
     end
     break if line == nil
 
     # We are counting lines so that we can report line numbers in errors.
-    $ln += 1
+    $dnastack.last[2] += 1
 
     # All Ruby lines are copied to the RNA file verbatim.
     if line.size == 0 || line[0] != ?\.
-        rna.write(line)
+        rnawrite(line)
         next
     end
 
@@ -467,7 +497,7 @@ loop do
 
     # /+ means that the line is appended to the previous line.
     if(firsttwo == "/+")
-        rna.write("Ribosome.add(#{line.lstrip[2..-1].inspect()}, binding, #{$ln})\n")
+        rnawrite("Ribosome.add(#{line.lstrip[2..-1].inspect()}, binding)\n")
         next
     end
 
@@ -484,7 +514,7 @@ loop do
         # commands in the RNA file.
         if (["loadjson", "loadxml", "loadyaml", "output", "stdout",
                 "tabsize"].include?(command))
-            rna.write("Ribosome.#{line}\n")
+            rnawrite("Ribosome.#{line}\n")
             next
         end
 
@@ -493,10 +523,10 @@ loop do
         if(command == "separate")
             def identity(x) x end
 	        separator = eval("identity#{line[8..-1]}")
-	        cname = "____separate_#{$ln}____"
-	        rna.write("#{cname} = true\n")
-	        line = dnastack.last.gets()
-	        $ln += 1
+	        cname = "____separate_#{$rnaln}____"
+	        rnawrite("#{cname} = true\n")
+	        line = $dnastack.last[0].gets()
+	        $dnastack.last[2] += 1
 	        if(line == nil || line[0] == ?. ||
 	              (!line.index('while') && !line.index('until') &&
 	              !line.index('for') && !line.index('each') &&
@@ -504,12 +534,12 @@ loop do
 	              !line.index('times') && line.index('loop')))
 	            dnaerror("'separate' command must be followed by a loop")
 	        end
-	        rna.write(line)
-	        rna.write("if(#{cname})\n")
-	        rna.write("    #{cname} = false\n")
-	        rna.write("else\n")
-	        rna.write("    Ribosome.add(#{separator.inspect()}, binding, #{$ln})\n")
-	        rna.write("end\n")
+	        rnawrite(line)
+	        rnawrite("if(#{cname})\n")
+	        rnawrite("    #{cname} = false\n")
+	        rnawrite("else\n")
+	        rnawrite("    Ribosome.add(#{separator.inspect()}, binding)\n")
+	        rnawrite("end\n")
 	        next
         end
 
@@ -517,7 +547,7 @@ loop do
         if(command == "include")
             def identity(x) x end
 	        filename = eval("identity#{line[7..-1]}")
-            dnastack.push(File.open(filename, "r"))
+            $dnastack.push([File.open(filename, "r"), filename, 0])
             next
         end
 
@@ -526,19 +556,37 @@ loop do
     end
 
     # There's no command in the line. Process it in the standard way.
-    rna.write("Ribosome.dot(#{line.inspect()}, binding, #{$ln})\n")
+    rnawrite("Ribosome.dot(#{line.inspect()}, binding)\n")
 
 end
 
 # Generate RNA epilogue code.
-rna.write(EPILOGUE)
+$dnastack = [[nil, "ribosome", __LINE__ + 1]]
+$rna.write("\n")
+$rna.write("\n")
+$rna.write("rescue Exception =>e\n")
+$rna.write("    LINEMAP = [\n");
+last = nil
+for le in $linemap
+    if last == nil || le[1] != last[1] || le[0] - last [0] != le[2] - last[2]
+        $rna.write("        [#{le[0]}, #{le[1].inspect}, #{le[2]}],\n")
+        last = le
+    end
+end
+$rna.write("        [nil]\n")
+$rna.write("    ]\n");
+$rna.write("    Ribosome.rethrow(e, " + $rnafile.inspect + ", LINEMAP)\n")
+$rna.write("end\n")
+$rna.write("\n")
+$rna.write("Ribosome.close()\n")
+$rna.write("\n")
 
 # Flush the RNA file.
-rna.close()
+$rna.close()
 
 # Execute the RNA file.
-system("ruby #{rnafile} #{infile}")
+system("ruby #{$rnafile} #{infile}")
 
 # Delete the RNA file.
-#File.delete(rnafile)
+#File.delete($rnafile)
 
