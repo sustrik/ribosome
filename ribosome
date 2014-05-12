@@ -30,7 +30,7 @@
 # the RNA lean and tidy, however, embedding the whole thing into each RNA
 # file makes the ribosome dependencies and deployment much simpler.
 
-PROLOGUE = '#!/usr/bin/ruby
+rnahelpers = '#!/usr/bin/ruby
 
 #
 # The initial part of this file belongs to the ribosome project.
@@ -171,13 +171,14 @@ module Ribosome
 
     end
 
-    # Error info.
-    @rnafile = ""
+    # Name of the DNA file that generated this RNA file.
     @dnafile = ""
-    @dnaoffset = 0
 
     # This is the variable to hold the parsed content of the input file.
     @root = nil
+
+    # The original DNA file.
+    @dnafile = ""
 
     # Size of a tab. If set to zero, tabs are not generated.
     @tabsize = 0
@@ -190,24 +191,15 @@ module Ribosome
     # text blocks generated up to that point.
     @stack = [[]]
 
-    # Set DNA filename.
-    def Ribosome.errorinfo(rnafile, dnafile, dnaoffset)
-        @rnafile = rnafile
-        @dnafile = dnafile
-        @dnaoffset = dnaoffset
+    # Print out the error and terminate the generation.
+    def Ribosome.dnaerror(s, ln)
+        $stderr.write("#{@dnafile}.dna:#{ln} - #{s}\n")
+        exit()
     end
 
-    #  Report an error that happened when executing RNA file.
-    def Ribosome.rethrow(e)
-        for i in 0..e.backtrace.size - 1
-            l = e.backtrace[i]
-            if l.start_with?(@rnafile + ":")
-                num = l[@rnafile.size + 1..-1].to_i
-                l = "#{@dnafile}:#{num - @dnaoffset + 1}"
-                e.backtrace[i] = l
-            end
-        end
-        raise e
+    # Set DNA filename.
+    def Ribosome.dnafile(filename)
+        @dnafile = filename
     end
 
     # Open the input file.
@@ -290,7 +282,7 @@ module Ribosome
     end
 
     # Adds one . line from the DNA file.
-    def Ribosome.add(line, bind)
+    def Ribosome.add(line, bind, ln)
 
         # If there is no previous line, add one.
         if(@stack.last.empty?)
@@ -364,9 +356,9 @@ module Ribosome
     end
 
     # Adds newline followed by one . line from the DNA file.
-    def Ribosome.dot(line, bind)
+    def Ribosome.dot(line, bind, ln)
         @stack.last << Block.new("")
-        add(line, bind)
+        add(line, bind, ln)
     end
 
 end
@@ -392,23 +384,6 @@ end
 # Escape function for /
 def slash()
     return "/"
-end
-
-# Parse command line arguments.
-Ribosome.openroot(ARGV[0]) if ARGV.size > 0
-
-################################################################################
-# The code that belongs to the ribosome project ends at this point and so does #
-# so does the associated license. What follows is the code generated from DNA. #
-################################################################################
-
-begin
-
-'
-
-EPILOGUE = '
-rescue Exception => e
-    Ribosome.rethrow(e)
 end
 
 '
@@ -452,11 +427,19 @@ rna = File.open(rnafile, "w")
 # open DNA files.
 dnastack = [File.open($dnafile, "r")]
 
-# Add RNA prologue code.
-rna.write(PROLOGUE)
+# Import RNA helper functions.
+rna.write(rnahelpers)
 
-# Let the ribosome know the DNA filename. It will be used to report errors.
-rna.write("Ribosome.errorinfo(#{rnafile.inspect}, #{$dnafile.inspect}, #{PROLOGUE.lines.count + 3})\n\n")
+# Add RNA initialisation code.
+rna.write("# Specify the original DNA filename.\n")
+rna.write("Ribosome.dnafile(#{$dnafile.inspect()})\n")
+rna.write("\n")
+rna.write("# Parse command line arguments.\n")
+rna.write("Ribosome.openroot(ARGV[0]) if ARGV.size > 0")
+rna.write("\n")
+rna.write("# The code that belongs to the ribosome project as well as\n")
+rna.write("# the associated license ends at this point.\n")
+rna.write("\n")
 
 # Process the DNA file.
 loop do
@@ -474,97 +457,109 @@ loop do
     # We are counting lines so that we can report line numbers in errors.
     $ln += 1
 
-    # All Ruby lines are copied to the RNA file verbatim.
-    if(line.size == 0 || line[0] != ?.)
-        rna.write(line)
+    # Empty lines are ignored.
+    if(line.size() == 0 || line[0] == ?\n)
         next
     end
 
-    # Removes dot from the beginning of the line, newline from the end and
-    # possibly trailing $ sign, if present.
-    line = line[1..-2]
-    if(line != line.rstrip)
-        dnaerror("line ends by whitespace, add '$' sign at the end")
-    end
-    line = line[0..-2] if line[-1] == ?$
+    # Lines starting with dot are ribosome output lines.
+    if(line[0] == ?.)
 
-    # Make sure there are no tabs in the line.
-    if(line.index(?\t) != nil)
-        dnaerror("tab found in the line, replace it by space")
-    end
+        # Removes dot from the beginning of the line, newline from the end and
+        # possibly trailing $ sign, if present.
+        line = line[1..-2]
+        if(line != line.rstrip)
+            dnaerror("line ends by whitespace, add '$' sign at the end")
+        end
+        line = line[0..-2] if line[-1] == ?$
 
-    # Find first two non-whitespace which can possibly form a command.
-    firsttwo = line.lstrip[0..1]
+        # Make sure there are no tabs in the line.
+        if(line.index(?\t) != nil)
+            dnaerror("tab found in the line, replace it by space")
+        end
 
-    # /+ means that the line is appended to the previous line.
-    if(firsttwo == "/+")
-        rna.write("Ribosome.add(#{line.lstrip[2..-1].inspect()}, binding)\n")
+        # Find first two non-whitespace which can possibly form a command.
+        firsttwo = line.lstrip[0..1]
+
+        # /+ means that the line is appended to the previous line.
+        if(firsttwo == "/+")
+            rna.write("Ribosome.add(#{line.lstrip[2..-1].inspect()}, binding, #{$ln})\n")
+            next
+        end
+
+        # /! means that a command follows.
+        if(firsttwo == "/!")
+            line =  line.lstrip[2..-1]
+            match = /^[0-9A-Za-z_]+/.match(line)
+            if(match == nil)
+                dnaerror("/! should be followed by an identifier")
+            end
+            command = match[0]
+            
+            # A subset of commands is simply translated to corresponding
+            # commands in the RNA file.
+            if (["loadjson", "loadxml", "loadyaml", "output", "stdout",
+                    "tabsize"].include?(command))
+                rna.write("Ribosome.#{line}\n")
+                next
+            end
+
+            # The argument string will be added at the end of each interation of
+            # the following loop, except for the last one.
+            if(command == "separate")
+                def identity(x) x end
+		        separator = eval("identity#{line[8..-1]}")
+		        cname = "____separate_#{$ln}____"
+		        rna.write("#{cname} = true\n")
+		        line = dnastack.last.gets()
+		        $ln += 1
+		        if(line == nil || line[0] == ?. ||
+		              (!line.index('while') && !line.index('until') &&
+		              !line.index('for') && !line.index('each') &&
+		              !line.index('upto') && line.index('downto') &&
+		              !line.index('times') && line.index('loop')))
+		            dnaerror("'separate' command must be followed by a loop")
+		        end
+		        rna.write(line)
+		        rna.write("if(#{cname})\n")
+		        rna.write("    #{cname} = false\n")
+		        rna.write("else\n")
+		        rna.write("    Ribosome.add(#{separator.inspect()}, binding, #{$ln})\n")
+		        rna.write("end\n")
+		        next
+            end
+
+            # Open the file and put it on the top of the DNA stack.
+            if(command == "include")
+                def identity(x) x end
+		        filename = eval("identity#{line[7..-1]}")
+                dnastack.push(File.open(filename, "r"))
+                next
+            end
+
+            dnaerror("unknown command '#{command}'")
+            exit
+        end
+
+        # There's no command in the line. Process it in the standard way.
+        rna.write("Ribosome.dot(#{line.inspect()}, binding, #{$ln})\n")
         next
     end
 
-    # /! means that a command follows.
-    if(firsttwo == "/!")
-        line =  line.lstrip[2..-1]
-        match = /^[0-9A-Za-z_]+/.match(line)
-        if(match == nil)
-            dnaerror("/! should be followed by an identifier")
-        end
-        command = match[0]
-        
-        # A subset of commands is simply translated to corresponding
-        # commands in the RNA file.
-        if (["loadjson", "loadxml", "loadyaml", "output", "stdout",
-                "tabsize"].include?(command))
-            rna.write("Ribosome.#{line}\n")
-            next
-        end
-
-        # The argument string will be added at the end of each interation of
-        # the following loop, except for the last one.
-        if(command == "separate")
-            def identity(x) x end
-	        separator = eval("identity#{line[8..-1]}")
-	        cname = "____separate_#{$ln}____"
-	        line = dnastack.last.gets()
-	        $ln += 1
-	        if(line == nil || line[0] == ?. ||
-	              (!line.index('while') && !line.index('until') &&
-	              !line.index('for') && !line.index('each') &&
-	              !line.index('upto') && line.index('downto') &&
-	              !line.index('times') && line.index('loop')))
-	            dnaerror("'separate' command must be followed by a loop")
-	        end
-            rna.write("#{cname} = true; ")
-	        rna.write(line.strip)
-	        rna.write("; if #{cname} then #{cname} = false; else Ribosome.add(#{separator.inspect()}, binding); end\n")
-	        next
-        end
-
-        # Open the file and put it on the top of the DNA stack.
-        # TODO: Includes mess up with line numbers in errors!
-        if(command == "include")
-            def identity(x) x end
-	        filename = eval("identity#{line[7..-1]}")
-            dnastack.push(File.open(filename, "r"))
-            next
-        end
-
-        dnaerror("unknown command '#{command}'")
-        exit
-    end
-
-    # There's no command in the line. Process it in the standard way.
-    rna.write("Ribosome.dot(#{line.inspect()}, binding)\n")
+    # All other lines are copied to the RNA file verbatim.
+    rna.write(line)
 
 end
 
-# Add the RNA epilogue.
-rna.write(EPILOGUE)
+# Add the RNA footer code.
+rna.write("\nRibosome.close()\n\n")
+
+# Flush the RNA file.
 rna.close()
 
 # Execute the RNA file.
 system("ruby #{rnafile} #{infile}")
 
-# RNA file won't be needed any more.
-# File.delete(rnafile)
+# Delete the RNA file.
+#File.delete(rnafile)
 
