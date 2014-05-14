@@ -147,6 +147,7 @@ module Ribosome
             # Strip off the whitespace on the left and on the right.
             for i in 0..@text.size() - 1
                 @text[i] = @text[i].rstrip()[left..right]
+                @text[i] = "" if @text[i] == nil
             end
 
             # Adjust the overall width of the block.
