@@ -23,3 +23,8 @@ Explicit commands for loading input files added:
 - input() is available even before the input file is loaded
 - errors are reported as if they happened in DNA file, not RNA file
 
+1.4
+===
+
+- couple of bug fixes
+
