@@ -323,7 +323,6 @@ expressions of the second level. Et c.
 Consider, for exmaple, this script:
 
 ```
-./!output("greet.dna")
 .name = "Alice"
 ..Hello, @2{name}!
 ```
@@ -332,7 +331,7 @@ It compiles into this script:
 
 ```
 name = "Alice"
-.Hello, @1{name}!
+.Hello, @{name}!
 ```
 
 Which, in turn, is compiled into:
