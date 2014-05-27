@@ -310,21 +310,22 @@ Producing output that is a DNA file itself can be tricky. The main problem is
 that a lot of escape sequences would have to be used. To solve that, ribosome
 provides a tool called nested embedded expressions.
 
-Embedded expressions that have been introduced so far are embedded expressions
-of first level. They are written as @{} and &{}. Alternatively, the form @1{}
-and &1{} can be used. The expression is evaluated during the compilation and
-the result is written to the output.
+Nested embedded expressions are written @N{} or &N{}, where N is a digit from
+1 to 9. The number is called the 'level' of the nested expression. During the
+compilation nested expressions of first level are replaced by ordinary embedded
+expressions. Nested expressions of second level are replaced by nested
+expressions of first level, nested expressions of third level are replaced by
+nested expressions of second level et c.
 
-Embedded expressions of second level are written @2{} and &2{}. They are
-replaced by embedded expressions of first level during the compilation.
-Similarly, embedded expressions of the third level are replaced by embedded
-expressions of the second level. Et c.
+```
+@9{x} => @8{c} => @7{x} => ... => @2{x} => @1{x} => @{x}
+```
 
 Consider, for exmaple, this script:
 
 ```
 .name = "Alice"
-..Hello, @2{name}!
+..Hello, @1{name}!
 ```
 
 It compiles into this script:
