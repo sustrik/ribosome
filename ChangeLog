@@ -28,3 +28,10 @@ Explicit commands for loading input files added:
 
 - couple of bug fixes
 
+1.5
+===
+
+- change the logic of nested embedded expressions to allow for generation
+  of @1{} and &1{}
+- multiple bugs in nested embedded expressions fixed
+
