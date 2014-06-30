@@ -1,7 +1,0 @@
-[
-    ["EINVAL", "Invalid value"],
-    ["EMFILE", "Too many open files"],
-    ["EINTR", "Interrupted by a signal"],
-    ["EADDRINUSE", "Address already in use"],
-    ["EFAULT", "Bad address"]
-]

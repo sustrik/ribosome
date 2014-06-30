@@ -1,16 +1,24 @@
 # This generator produces definitions of POSIX errors
 # and implementation of strerror(2) function.
 
+$errors = [
+    ["EINVAL", "Invalid value"],
+    ["EMFILE", "Too many open files"],
+    ["EINTR", "Interrupted by a signal"],
+    ["EADDRINUSE", "Address already in use"],
+    ["EFAULT", "Bad address"]
+]
+
 ./!output("errno.h")
 
 def names()
-    for i in root
+    for i in $errors
 .       #define @{i[0]}
     end
 end
 
 def values()
-    for i in 1..root.size
+    for i in 1..$errors.size
 .       @{i}
     end
 end
@@ -24,7 +32,7 @@ end
 .
 .char *strerror(int errnum) {
 .    switch(errnum) {
-for i in root
+for i in $errors
 .    case @{i[0]}:
 .        return "@{i[1]}";
 end

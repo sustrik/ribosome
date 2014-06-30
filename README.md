@@ -49,19 +49,15 @@ int main() {
 Ribosome is a single Ruby script, thus all you need is to install Ruby
 beforehand.
 
-However, if you are going to use JSON input, you'll additionally have to
-instal 'json' gem.
-
 ## Command line
 
-The generator is called 'ribosome'. It takes two arguments. The script file,
-also known as DNA file, and the data file in JSON, YAML or XML format:
+The generator is called 'ribosome'. It takes one argument. The script file,
+also known as DNA file. All the remaining arguments are passed unmodified
+to the script.
 
 ```
-$ ribosome foo.dna bar.json
+$ ribosome foo.dna
 ```
-
-If not needed, the data file may be ommitted.
 
 ## Documentation
 
@@ -97,8 +93,9 @@ Test!
 ```
 
 Lines starting with a dot can be terminated by $ sign. The sign is optional,
-unless there's a whitespace at the end of the line. In such case the $ sign
-is mandatory to prevent invisible whitespace getting into the output files.
+however, if there's whitespace at the end of the line it is recommended to
+finish the line with $ to prevent invisible whitespace getting into the output
+files.
 
 ```
 .Hello!    $
@@ -113,7 +110,7 @@ using classic UNIX pipes:
 ribosome test.dna > test.txt
 ```
 
-However, you can redirect the output to a specific destination directly from
+You can also redirect the output to a specific destination directly from
 the DNA file. Use '/!output' command to accomplish the task:
 
 ```
@@ -165,82 +162,6 @@ end
 .    @{greet("Bob")}
 .    return 0;
 .}
-```
-
-### Input files
-
-Code generators typically need rich structured input rather than simple command
-line parameters.
-
-Ribosome supports JSON, YAML and XML input files. It uses file extension
-to determine what kind of input file is used. Thus, XML files should have .xml
-extension, JSON files should have .json extension and YAML files should have
-either .yml or .yaml extension.
-
-If the supplied file has none of the above extensions, it will be ignored.
-However, you can still load it explicitly using one of the following commands:
-
-```
-./!loadjson
-./!loadyaml
-./!loadxml
-```
-
-If none is specified, no input file will be used.
-
-Consider a JSON file that contains names of different errors:
-
-```
- ["EINVAL", "EMFILE", "EINTR"]
-```
-
-Following DNA script will convert it into a C header file:
-
-```
-errno = 1
-for i in root
-.#define @{i} @{errno}
-    errno += 1
-end
-```
-
-Note that the root node of the JSON input is available as JSON object
-(JSON class defined by 'json' gem) called 'root'.
-
-In the case where you need to supply whole blocks of code via the input file,
-XML fares better than JSON:
-
-```
-<root>
-    <function name="foo">
-        printf ("foo");
-        printf ("\n");
-    </end>
-    <function name="bar">
-        printf ("bar");
-        printf ("\n");
-    </end>
-</root>
-```
-
-The script can access the root node of the XML input as REXML::Element object
-called 'root':
-
-```
-root.elements.each("function") do |m|
-.void @{m.attributes["name"]}() {
-.    @{m.texts.join}
-.}
-.
-end
-```
-
-You can also retrieve the name of the input file using 'input' function.
-For example, it is a good style to start the generated file with a comment
-about how it was generated:
-
-```
-./*  @{Time.now}: This file was generated from @{input} */
 ```
 
 ### Line concatenation
