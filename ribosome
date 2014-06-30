@@ -485,12 +485,9 @@ loop do
         next
     end
 
-    # Removes dot from the beginning of the line, newline from the end and
-    # possibly trailing $ sign, if present.
+    # Removes dot from the beginning of the line and
+    # trailing $ sign, if present.
     line = line[1..-2]
-    if(line != line.rstrip)
-        dnaerror("line ends by whitespace, add '$' sign at the end")
-    end
     line = line[0..-2] if line[-1] == ?$
 
     # Make sure there are no tabs in the line.
