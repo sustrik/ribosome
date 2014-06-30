@@ -35,3 +35,10 @@ Explicit commands for loading input files added:
   of @1{} and &1{}
 - multiple bugs in nested embedded expressions fixed
 
+1.6
+===
+
+- no more explicit support for input files, all command line parameters are
+  passed to the DNA script, which can in turn open the input file itself 
+- $ symbol at the end of the line made fully optional
+
