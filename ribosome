@@ -280,7 +280,7 @@ module Ribosome
                 val = Block.new(val.to_s)
             else
                 val = Block.new("")
-                for b in top[1..-1]
+                for b in top
                     val.add_bottom(b)
                 end
             end
