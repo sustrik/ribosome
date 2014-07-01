@@ -255,6 +255,9 @@ module Ribosome
                 end
                 break if par == 0
                 j += 1
+                if j >= line.size
+                    raise SyntaxError.new("Unmatched {")
+                end
             end
 
             # Expression of higher indirection levels are simply brought
