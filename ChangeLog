@@ -42,3 +42,8 @@ Explicit commands for loading input files added:
   passed to the DNA script, which can in turn open the input file itself 
 - $ symbol at the end of the line made fully optional
 
+1.7
+===
+
+- bug fix release
+
