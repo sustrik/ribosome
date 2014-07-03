@@ -9,6 +9,18 @@ A simple generic code generation tool.
 2. However, lines starting with a dot (.) go straight to the output file.
 3. To expand Ruby expressions within dot-style lines use @{expr} construct.
 
+## How it differs
+
+Any non-trivial code generating code is hard to read, understand and maintain.
+While most code generating tools do the technical part of the job all right,
+they fail on the manageability aspect. Ribosome tries to address it using
+following measures:
+
+- Generated code is properly indented (also think of generating Python code!)
+- No escape sequences or other visual smog in the source.
+- Flexibility in indentation of the source.
+- Colouring support in editors.
+
 ## Example
 
 ```
