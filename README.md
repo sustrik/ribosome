@@ -333,7 +333,7 @@ Colours: White       Shapes: Triangle
 That's all, folks!
 ```
 
-To undestand how ribosome layouts the code, it is necessary to understand
+To undestand how ribosome layouts the code, it is necessary to keep in mind
 that it's not characters that are placed on a line, but rather rectangular
 blocks of text.
 
