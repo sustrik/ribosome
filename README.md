@@ -227,7 +227,7 @@ is trimmed. To keep the whitespace intact, use &{} operator instead of @{}:
 ```
 s = " 2 "
 .1@{s}3
-.a&{s}3
+.1&{s}3
 ```
 
 The script above produces following output:
