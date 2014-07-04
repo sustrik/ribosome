@@ -56,7 +56,7 @@ following measures:
 - Flexibility in indentation of the source.
 - Colouring support in editors.
 
-Note that ribosome trades readability/maintainability for speed and thus isn't
+Note that ribosome trades speed for readability/maintainability and thus isn't
 well suited for performance-critical tasks such as, for example, generaing HTML
 on the fly.
 
