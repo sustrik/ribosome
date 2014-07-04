@@ -56,6 +56,10 @@ following measures:
 - Flexibility in indentation of the source.
 - Colouring support in editors.
 
+Note that ribosome trades readability/maintainability for speed and thus isn't
+well suited for performance-critical tasks such as, for example, generaing HTML
+on the fly.
+
 ## Installation
 
 Ribosome is a single Ruby script, thus all you need is to install Ruby
