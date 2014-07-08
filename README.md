@@ -430,6 +430,21 @@ copied to the location in question in the importing file:
 ./!include("foo.dna")
 ```
 
+## Distributing the code generator
+
+Ribosome is a compiler-compiler. It first compiles DNA file into a straight
+Ruby program (called RNA script) which is then executed to produce the generated
+code.
+
+That works great for ad-hoc and throw-away code generation, however, if you
+want to distribute the code generator to the users it is better to generate
+the RNA first and distribute that instead of DNA script -- that way there's
+no dependency on ribosome itself (the user will do with only Ruby installed):
+
+```
+ribosome --rna foo.dna > foo.rb
+```
+
 ## Syntax highlighting
 
 Given that DNA files contain two overlapping indentations, syntax highlighting
