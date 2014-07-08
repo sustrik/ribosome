@@ -47,3 +47,9 @@ Explicit commands for loading input files added:
 
 - bug fix release
 
+1.8
+===
+
+- It is possible to generate the code generator (RNA script) separately, so that
+  it can be distributed to the users without a dependency on ribosome itself.
+
