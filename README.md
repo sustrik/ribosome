@@ -446,6 +446,10 @@ installed):
 ribosome --rna foo.dna > foo.rb
 ```
 
+Also note that if your DNA script is composed of multiple DNA files (using
+/!include command) only a single RNA script is generated, making the
+distribution to the users easier.
+
 ## Syntax highlighting
 
 Given that DNA files contain two overlapping indentations, syntax highlighting
