@@ -1,4 +1,15 @@
+.*.sw?
 *.rna
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache/
+config.log
+config.status
+configure
+install-sh
+missing
+
 examples/manyfiles/*.txt
 examples/errors/errno.h
 examples/errors/strerror.c
