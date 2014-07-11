@@ -63,7 +63,7 @@ on the fly.
 ## Installation
 
 Ribosome is a single Ruby script, thus all you need is to install Ruby
-beforehand.
+beforehand and copy 'ribosome' script onto your path.
 
 ## Command line
 
