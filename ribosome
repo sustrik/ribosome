@@ -350,7 +350,7 @@ end
 
 def usage()
     $stderr.write "usage: ribosome [options] <dna-file> <args-passed-to-dna-script>\n"
-    exit
+    exit(1)
 end
 
 # Print out the error and terminate the generation.
