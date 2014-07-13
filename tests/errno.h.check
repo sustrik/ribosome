@@ -1,0 +1,6 @@
+#define EINVAL     1
+#define EMFILE     2
+#define EINTR      3
+#define EADDRINUSE 4
+#define EFAULT     5
+

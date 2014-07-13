@@ -1,0 +1,19 @@
+#include <errno.h>
+
+char *strerror(int errnum) {
+    switch(errnum) {
+    case EINVAL:
+        return "Invalid value";
+    case EMFILE:
+        return "Too many open files";
+    case EINTR:
+        return "Interrupted by a signal";
+    case EADDRINUSE:
+        return "Address already in use";
+    case EFAULT:
+        return "Bad address";
+    default:
+        return "Unknown error";
+    }
+}
+

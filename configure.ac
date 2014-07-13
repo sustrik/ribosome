@@ -7,4 +7,6 @@ AS_IF([test x"$RUBY" = "x"],[
 ])
       
 AM_INIT_AUTOMAKE([foreign])
-AC_OUTPUT([Makefile])
+
+AC_CONFIG_FILES([Makefile tests/Makefile])
+AC_OUTPUT
