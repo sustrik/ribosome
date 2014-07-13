@@ -356,7 +356,7 @@ end
 # Print out the error and terminate the generation.
 def dnaerror(s)
     $stderr.write("#{$dnastack.last[1]}:#{$dnastack.last[2]} - #{s}\n")
-    exit()
+    exit(1)
 end
 
 # Generate new line(s) into the RNA file.
@@ -503,7 +503,6 @@ loop do
         end
 
         dnaerror("unknown command '#{command}'")
-        exit
     end
 
     # There's no command in the line. Process it in the standard way.
