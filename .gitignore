@@ -15,3 +15,5 @@ examples/errors/errno.h
 examples/errors/strerror.c
 examples/objects/complex.cpp
 examples/toxml/output.xml
+
+tests/*.txt

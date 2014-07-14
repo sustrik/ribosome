@@ -1,3 +1,0 @@
-#!/bin/sh
-
-./runtest.sh errors.dna errno.h strerror.c

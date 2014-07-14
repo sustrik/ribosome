@@ -1,2 +1,3 @@
 
-TESTS = errors
+TESTS = \
+    basic1
