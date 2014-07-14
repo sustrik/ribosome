@@ -1,3 +1,4 @@
 
 TESTS = \
-    basic1
+    basic1\
+    basic2
