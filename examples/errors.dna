@@ -1,0 +1,73 @@
+#
+# Copyright (c) 2014 Martin Sustrik  All rights reserved.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom
+# the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+# IN THE SOFTWARE.
+#
+
+#
+# This generator produces definitions of POSIX errors
+# and implementation of strerror(2) function.
+#
+# Usage: ribosome errors.dna
+#
+# Output: errno.h
+#         strerror.c
+#
+
+$errors = [
+    ["EINVAL", "Invalid value"],
+    ["EMFILE", "Too many open files"],
+    ["EINTR", "Interrupted by a signal"],
+    ["EADDRINUSE", "Address already in use"],
+    ["EFAULT", "Bad address"]
+]
+
+./!output("errno.h")
+
+def names()
+    for i in $errors
+.       #define @{i[0]}
+    end
+end
+
+def values()
+    for i in 1..$errors.size
+.       @{i}
+    end
+end
+
+.@{names()} @{values()}
+.
+
+./!output("strerror.c")
+
+.#include <errno.h>
+.
+.char *strerror(int errnum) {
+.    switch(errnum) {
+for i in $errors
+.    case @{i[0]}:
+.        return "@{i[1]}";
+end
+.    default:
+.        return "Unknown error";
+.    }
+.}
+.
+
