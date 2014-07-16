@@ -1,0 +1,18 @@
+# Test how functions within embedded expressions are evaluated.
+
+def f1()
+    return "abc"
+end
+
+def f2()
+    return 1
+end
+
+def f3()
+.def
+.ghi
+end
+
+.@{f1()}
+.@{f2()}
+.@{f3()}

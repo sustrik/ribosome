@@ -1,0 +1,22 @@
+# Test whether line concatenation works.
+
+def f1()
+.1
+.2
+end
+
+./!separate ","
+for i in 1..5
+./+@{i}
+end
+
+.
+./!separate ","
+for i in 1..5
+end
+
+.
+./!separate ","
+for i in 1..5
+./+@{f1()}
+end

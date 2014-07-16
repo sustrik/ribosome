@@ -4,6 +4,13 @@
 	chmod +x $@
 
 TESTS = \
-    basic1.sh\
-    basic2.sh
+    embedded.sh\
+    precise.sh \
+    dollar.sh \
+    functions.sh \
+    concatenation.sh \
+    separate.sh \
+    nested.sh \
+    escape.sh \
+    tabs.sh
 

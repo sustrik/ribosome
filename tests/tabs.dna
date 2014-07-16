@@ -1,0 +1,8 @@
+# Test tab generation
+
+./!tabsize 4
+.abc
+.    abc
+.     abc
+.        abc
+.abc        def
