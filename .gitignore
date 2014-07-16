@@ -10,11 +10,14 @@ configure
 install-sh
 missing
 
-examples/manyfiles/*.txt
-examples/errors/errno.h
-examples/errors/strerror.c
-examples/objects/complex.cpp
-examples/toxml/output.xml
+examples/blue.txt
+examples/green.txt
+examples/red.txt
+examples/yellow.txt
+examples/complex.cpp
+examples/mycompiler
+examples/errno.h
+examples/strerror.c
 
 tests/*.sh
 tests/*.out
