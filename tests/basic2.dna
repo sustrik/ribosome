@@ -1,5 +1,4 @@
 # Test elementary generation of lines with strict embedded expressions.
-./!output("basic2.txt")
 
 for i in 1..3
 .

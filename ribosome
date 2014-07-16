@@ -541,7 +541,7 @@ if !rnaopt
     system("ruby #{$rnafile} " + ARGV[1..-1].join(' '))
 
     # Delete the RNA file.
-    # File.delete($rnafile)
+    File.delete($rnafile)
 
 end
 

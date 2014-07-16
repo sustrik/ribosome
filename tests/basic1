@@ -1,3 +1,0 @@
-#!/bin/sh
-
-./runtest.sh basic1.dna basic1.txt
