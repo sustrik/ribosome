@@ -65,6 +65,16 @@ on the fly.
 Ribosome is a single Ruby script, thus all you need is to install Ruby
 beforehand and copy 'ribosome' script onto your path.
 
+However, on UNIX systems you can use more standard way of installing the
+software:
+
+```
+$ ./autogen.sh
+$ ./configure
+$ make check
+$ sudo make install
+```
+
 ## Command line
 
 The generator is called 'ribosome'. It takes one argument. The script file,
