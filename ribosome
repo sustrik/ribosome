@@ -191,6 +191,14 @@ module Ribosome
         @out = File.open(filename, "w")
     end
 
+    # Redirects output to the specified file.
+    # New stuff is added to the existing content of the file.
+    def Ribosome.append(filename)
+        close()
+        @outisafile = true
+        @out = File.open(filename, "a")
+    end
+
     # Redirects output to the stdout.
     def Ribosome.stdout()
         close()
@@ -463,8 +471,7 @@ loop do
         
         # A subset of commands is simply translated to corresponding
         # commands in the RNA file.
-        if (["loadjson", "loadxml", "loadyaml", "output", "stdout",
-                "tabsize"].include?(command))
+        if (["output", "append", "stdout", "tabsize"].include?(command))
             rnawrite("Ribosome.#{line}\n")
             next
         end
