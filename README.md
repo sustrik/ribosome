@@ -163,6 +163,16 @@ To redirect the output back to the console use '/!stdout' command:
 .This line goes to the console!
 ```
 
+Finally, you can append new text to existing file using '/!append' command:
+
+```
+./!append("test.txt")
+.Stuff
+./!stdout()
+./!append("test.txt")
+.More stuff
+```
+
 ### Embedded expressions
 
 Often, you need to insert a computed value into the output. You can do so by
