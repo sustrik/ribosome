@@ -166,7 +166,7 @@ To redirect the output back to the console use '/!stdout' command:
 Finally, you can append new text to existing file using '/!append' command:
 
 ```
-./!append("test.txt")
+./!output("test.txt")
 .Stuff
 ./!stdout()
 ./!append("test.txt")
