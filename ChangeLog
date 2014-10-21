@@ -65,3 +65,8 @@ Explicit commands for loading input files added:
 - /!append command implemented. It appends to the output file rather than
   overwriting it.
 
+1.11
+====
+
+- Bugfix release (proper handling of relative paths in /!include command.
+
