@@ -395,8 +395,9 @@ end
 
 # Given that we can 'require' other DNA files, we need to keep a stack of
 # open DNA files. We also keep the name of the file and the line number to
-# be able to report errors.
-$dnastack = [[nil, "ribosome", PROLOGUE_LINE + 1]]
+# be able to report errors. We'll also keep track of the directory the DNA file
+# is in to be able to correctly expand relative paths in /!include commands.
+$dnastack = [[nil, "ribosome", PROLOGUE_LINE + 1, Dir.pwd]]
 
 if rnaopt
     $rna = $stdout
@@ -419,7 +420,8 @@ if (!rnaopt)
 end
 
 # Process the DNA file.
-$dnastack.push [File.open(dnafile, "r"), dnafile, 0]
+dirname = File.expand_path(File.dirname(dnafile))
+$dnastack.push [File.open(dnafile, "r"), dnafile, 0, dirname]
 loop do
 
     # Get next line. Unwind the include stack as necessary.
@@ -501,11 +503,15 @@ loop do
 	        next
         end
 
-        # Open the file and put it on the top of the DNA stack.
+        # Open the file and put it on the top of the DNA stack. Relative paths
+        # are expanded using the directory the parent DNA file resides in as
+        # a starting point.
         if(command == "include")
             def identity(x) x end
 	        filename = eval("identity#{line[7..-1]}")
-            $dnastack.push([File.open(filename, "r"), filename, 0])
+            filename = File.expand_path(filename, $dnastack.last[3])
+            dirname = File.dirname(filename)
+            $dnastack.push([File.open(filename, "r"), filename, 0, dirname])
             next
         end
 
