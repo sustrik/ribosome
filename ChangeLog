@@ -59,3 +59,9 @@ Explicit commands for loading input files added:
 - automake build system added
 - tests added
 
+1.10
+====
+
+- /!append command implemented. It appends to the output file rather than
+  overwriting it.
+
