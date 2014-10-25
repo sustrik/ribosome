@@ -171,6 +171,12 @@ module Ribosome
             end
         end
 
+        # Returns offset of the last line in the block.
+        def last_offset()
+            return 0 if @text.empty?
+            return @text.last.size - @text.last.lstrip.size
+        end
+
     end
 
     # Size of a tab. If set to zero, tabs are not generated.
@@ -209,6 +215,18 @@ module Ribosome
     # Sets the size of the tab.
     def Ribosome.tabsize(size)
         @tabsize = size
+    end
+
+    # Add a line consisting only of whitespace. The amount of whitespace will
+    # be equal to the amount of initial whitespace found on the previous line.
+    def Ribosome.align()
+        if @stack.last.empty?
+            n = 0
+        else
+            n = @stack.last.last.last_offset
+        end
+        @stack.last << Block.new("")
+        add(" " * n, nil)
     end
 
     # Flush the data to the currently open file and close it.
@@ -473,7 +491,7 @@ loop do
         
         # A subset of commands is simply translated to corresponding
         # commands in the RNA file.
-        if (["output", "append", "stdout", "tabsize"].include?(command))
+        if (["output", "append", "stdout", "tabsize", "align"].include?(command))
             rnawrite("Ribosome.#{line}\n")
             next
         end
