@@ -217,18 +217,6 @@ module Ribosome
         @tabsize = size
     end
 
-    # Add a line consisting only of whitespace. The amount of whitespace will
-    # be equal to the amount of initial whitespace found on the previous line.
-    def Ribosome.align()
-        if @stack.last.empty?
-            n = 0
-        else
-            n = @stack.last.last.last_offset
-        end
-        @stack.last << Block.new("")
-        add(" " * n, nil)
-    end
-
     # Flush the data to the currently open file and close it.
     def Ribosome.close()
         for b in @stack.last
@@ -322,6 +310,19 @@ module Ribosome
     # Adds newline followed by one . line from the DNA file.
     def Ribosome.dot(line, bind)
         @stack.last << Block.new("")
+        add(line, bind)
+    end
+
+    # Adds newline followed by leading whitespace copied from the previous line
+    # and one line from the DNA file.
+    def Ribosome.align(line, bind)
+        if @stack.last.empty?
+            n = 0
+        else
+            n = @stack.last.last.last_offset
+        end
+        @stack.last << Block.new("")
+        add(" " * n, nil)
         add(line, bind)
     end
 
@@ -480,6 +481,12 @@ loop do
         next
     end
 
+    # /= means that the line is aligned with the previous line.
+    if(firsttwo == "/=")
+        rnawrite("Ribosome.align(#{line.lstrip[2..-1].inspect()}, binding)\n")
+        next
+    end
+
     # /! means that a command follows.
     if(firsttwo == "/!")
         line =  line.lstrip[2..-1]
@@ -491,7 +498,7 @@ loop do
         
         # A subset of commands is simply translated to corresponding
         # commands in the RNA file.
-        if (["output", "append", "stdout", "tabsize", "align"].include?(command))
+        if (["output", "append", "stdout", "tabsize"].include?(command))
             rnawrite("Ribosome.#{line}\n")
             next
         end

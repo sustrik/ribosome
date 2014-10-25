@@ -424,26 +424,26 @@ as one-line text block) and is appended to the line before the greeting to Bob.
 
 ### Aligning text
 
-Sometimes the layout management described above proves insufficient because
-the amount of indentation needed at particular place is not known at the time
-of writing the DNA script. In such cases, '/!align' command may prove useful.
-
-'/!align' command creates a new line containing a copy of any leading whitespace
-from the previous line. It is typically followed by '/+' operator to append the
-following text directly to the whitespace:
+Operator /= aligns the line with the previous line. For example:
 
 ```
-.&{" " * random(40)}Hello,
-./!align
-./+world!
+.        Hello,
+./=world!
 ```
 
-The example generates following output:
+The above code yields the following output:
 
 ```
-             Hello,
-             world!
+        Hello,
+        world!
 ```
+
+WARNING: This operator severely hurts the readability of the DNA script and thus
+it should be avoided. There are some specific use cases though where proper
+indentation of the generated code cannot be achieved by other means.
+Specifically, if a block of code is fetched from an external source, e.g.
+from an XML file, there's no way to know how it is indented. /= operator can
+then be used to align subsequent code with this external block of code.
 
 ### Generating tabs
 
