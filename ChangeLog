@@ -70,3 +70,8 @@ Explicit commands for loading input files added:
 
 - Bugfix release (proper handling of relative paths in /!include command.
 
+1.12
+====
+
+- Operator /= introduced.
+
