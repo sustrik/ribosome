@@ -422,6 +422,29 @@ the hood is that the whitespace from line 2 of the script is trimmed by @{}
 operator, while the whitespace on line 7 is treated as a text literal (i.e.
 as one-line text block) and is appended to the line before the greeting to Bob.
 
+### Aligning text
+
+Sometimes the layout management described above proves insufficient because
+the amount of indentation needed at particular place is not known at the time
+of writing the DNA script. In such cases, '/!align' command may prove useful.
+
+'/!align' command creates a new line containing a copy of any leading whitespace
+from the previous line. It is typically followed by '/+' operator to append the
+following text directly to the whitespace:
+
+```
+.&{" " * random(40)}Hello,
+./!align
+./+world!
+```
+
+The example generates following output:
+
+```
+             Hello,
+             world!
+```
+
 ### Generating tabs
 
 Ribosome doesn't allow for tabs in the input, however, when generating
