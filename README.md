@@ -443,7 +443,7 @@ it should be avoided. There are some specific use cases though where proper
 indentation of the generated code cannot be achieved by other means.
 Specifically, if a block of code is fetched from an external source, e.g.
 from an XML file, there's no way to know how it is indented. /= operator can
-then be used to align subsequent code with this external block of code.
+be then used to align subsequent code with this external block of code.
 
 ### Generating tabs
 
