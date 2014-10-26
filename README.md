@@ -424,7 +424,7 @@ as one-line text block) and is appended to the line before the greeting to Bob.
 
 ### Aligning text
 
-Operator /= aligns the line with the previous line.
+Operator /= aligns a line with the previous line.
 
 ```
 .        Hello,
