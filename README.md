@@ -6,7 +6,7 @@ A simple generic code generation tool.
 ## In 50 words
 
 1. You write standard Ruby scripts.
-2. However, lines starting with a dot (.) go straight to the output file.
+2. However, lines starting with a dot (.) go straight to the output.
 3. To expand Ruby expressions within dot-style lines use @{expr} construct.
 
 ## Example
