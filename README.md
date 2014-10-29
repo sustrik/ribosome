@@ -275,7 +275,7 @@ expressions of first level, nested expressions of third level are replaced by
 nested expressions of second level et c.
 
 ```
-@9{x} => @8{c} => @7{x} => ... => @2{x} => @1{x} => @{x}
+@9{x} => @8{x} => @7{x} => ... => @2{x} => @1{x} => @{x}
 ```
 
 Consider, for exmaple, this script:
