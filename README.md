@@ -3,6 +3,10 @@ RIBOSOME
 
 A simple generic code generation tool.
 
+NOTE: If you are interested in JavaScript rather than Ruby version of this tool look here:
+
+https://github.com/xekoukou/protein
+
 ## In 50 words
 
 1. You write standard Ruby scripts.
