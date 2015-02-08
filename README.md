@@ -122,7 +122,7 @@ ribosome.rb foo.rb arg1 arg2 arg3
 
 Lines starting with a dot (.) are copied directly to the output:
 
-*JavsScript:*
+*JavaScript:*
 ```
 for(var i=0; i<2; i++){
 .Test!
