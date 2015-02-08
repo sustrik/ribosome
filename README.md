@@ -86,12 +86,12 @@ arguments are passed unmodified to the script.
 
 *JavaScript:*
 ```
-$ ribosome.js foo.js.dna arg1 arg2 arg3
+$ ribosome.js foo.js.dna
 ```
 
 *Ruby:*
 ```
-$ ribosome.rb foo.rb.dna arg1 arg2 arg3
+$ ribosome.rb foo.rb.dna
 ```
 
 ## Documentation
@@ -104,16 +104,17 @@ in the following sections.
 
 DNA file is a standard JavaScript/Ruby program (except for the lines starting
 with a dot). Therefore it is possible to just take your existing JavaScript/Ruby
-program and run it with ribosome:
+program and run it with ribosome. Note that all the arguments past the DNA
+script name are passed unmodified to the JavaScript/Ruby program:
 
 *JavaScript:*
 ```
-ribosome.js foo.js
+ribosome.js foo.js arg1 arg2 arg3
 ```
 
 *Ruby:* 
 ```
-ribosome.rb foo.rb
+ribosome.rb foo.rb arg1 arg2 arg3
 ```
 
 ### Simple output
