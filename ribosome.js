@@ -1,3 +1,5 @@
+#!/usr/bin/nodejs
+
 /*
 
   Copyright (c) 2014-2015 Contributors as noted in AUTHORS file.
