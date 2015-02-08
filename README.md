@@ -104,7 +104,7 @@ in the following sections.
 
 DNA file is a standard JavaScript/Ruby program (except for the lines starting
 with a dot). Therefore it is possible to just take your existing JavaScript/Ruby
-program and run it with ribosome. Note that all the arguments past the DNA
+program and run it with ribosome. Note that all the arguments following the
 script name are passed unmodified to the JavaScript/Ruby program:
 
 *JavaScript:*
@@ -213,6 +213,12 @@ Finally, you can append new text to existing file using '/!append' command:
 Often, you need to insert a computed value into the output. You can do so by
 embedding Ruby expressions into dot-style lines:
 
+*JavaScript:*
+```
+var name = "Fred";
+.Hello, @{name}!
+```
+
 *Ruby:*
 ```
 name = 'Fred'
@@ -223,6 +229,19 @@ and written to the output.
 
 If the embedded expression produces ribosome output itself, the text is
 inserted into the output file instead of the return value:
+
+*JavaScript:*
+```
+function greet(name){
+.printf ("Hello, @{name}!\n");
+}
+
+.int main () {
+.    @{greet("Alice")}
+.    @{greet("Bob")}
+.    return 0;
+.}
+```
 
 *Ruby:*
 ```
