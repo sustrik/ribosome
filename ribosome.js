@@ -415,7 +415,7 @@ function addslashes(str) {
 
 
 function usage() {
-    process.stderr.write("usage: ribosome.js <dna-file> <args-passed-to-dna-script>\n");
+    process.stderr.write("usage: ribosome.js [options] <dna-file> <args-passed-to-dna-script>\n");
     process.exit(1);
 }
 
