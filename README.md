@@ -25,7 +25,8 @@ for(i=0; i<10; i++) {
 .}
 ```
 
-The script above produces the following output:
+The script above produces the following output (which happens to be a
+C program):
 
 ```
 #include <stdio.h>
