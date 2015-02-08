@@ -365,15 +365,14 @@ nested expressions of second level et c.
 @9{x} => @8{x} => @7{x} => ... => @2{x} => @1{x} => @{x}
 ```
 
-Consider, for exmaple, this script:
+Consider, for exmaple, this Ruby script:
 
-*Ruby:*
 ```
 .name = "Alice"
 ..Hello, @1{name}!
 ```
 
-It compiles into this script:
+It compiles into this Ruby script:
 
 *Ruby:*
 ```
@@ -392,6 +391,11 @@ Hello, Alice!
 In the rare cases when you need to generate a sequence of characters that
 accidentally matches a ribosome operator, you can use one of the predefined
 escape functions. For example:
+
+*JavaScript:*
+```
+.123@{at()}{456
+```
 
 *Ruby:*
 ```
@@ -413,6 +417,27 @@ Full list of escape functions:
 ### Advanced layout management
 
 Consider the following script:
+
+*JavaScipt:*
+```
+function colours() {
+.    White
+.    Black
+.    Ultramarine
+.    Red
+.    Green
+.    Blue
+}
+
+function shapes() {
+.    Triangle
+.    Circle
+}
+
+.Colours: @{colours()} Shapes: @{shapes()}
+.
+.That's all, folks!
+```
 
 *Ruby:*
 ```
@@ -488,6 +513,18 @@ individual line. That way, the block alway remains rectangular in shape:
 This feature is extremely important to produce properly aligned code.
 Consider this example:
 
+*JavaScript:*
+```
+function greet(name) {
+.    printf ("Hello, @{name}!\n");
+}
+
+.@{greet("Alice")}
+.if (is_bob_present) {
+.    @{greet("Bob")}
+.}
+```
+
 *Ruby:*
 ```
 def greet(name)
@@ -518,6 +555,7 @@ as one-line text block) and is appended to the line before the greeting to Bob.
 
 Operator /= aligns a line with the previous line.
 
+*Both JavaScript and Ruby:*
 ```
 .        Hello,
 ./=world!
@@ -544,6 +582,7 @@ output it can, on demand, replace as much of the leading whitespace as possible
 by tabs. To switch this functionality on use '/!tabsize' command, providing
 desired size of the tab as a parameter:
 
+*Both JavaScript and Ruby:*
 ```
 ./!tabsize(4)
 .for (i = 0; i != 10; ++i)
@@ -561,6 +600,7 @@ In case of need you can import a DNA file using '/!include' command.
 The behaviour is the same as if the contents of the imported file was
 copied to the location in question in the importing file:
 
+*Both JavaScript and Ruby:*
 ```
 ./!include("foo.dna")
 ```
@@ -568,18 +608,23 @@ copied to the location in question in the importing file:
 ## Distributing the code generator
 
 Ribosome is a compiler-compiler. It first compiles DNA file into a straight
-Ruby program (called RNA script) which is then executed to produce the generated
-code. The intermediate step is fully hidden from the user.
+JavaScript or Ruby program (called RNA script) which is then executed to produce
+the generated code. The intermediate step is fully hidden from the user.
 
 The above works well for ad-hoc and throw-away code generation, however, if you
 want to distribute the code generator to the users it is better to generate
 the RNA script first and distribute that instead of the DNA script -- that way
-there's no dependency on ribosome itself (the user will do with only Ruby
-installed):
+there's no dependency on ribosome itself (the user will do with only
+node.js and/or Ruby installed):
+
+*JavaScript:*
+```
+ribosome.js --rna foo.js.dna > foo.js
+```
 
 *Ruby:*
 ```
-ribosome.rb --rna foo.dna > foo.rb
+ribosome.rb --rna foo.rb.dna > foo.rb
 ```
 
 Also note that if your DNA script is composed of multiple DNA files (using
