@@ -64,7 +64,7 @@ function Ribosome() {\n\
         this.width = 0;\n\
 \n\
         if (s != null) {\n\
-            this.text = s.split('\n');\n\
+            this.text = s.split('\\n');\n\
             this.text.forEach(function(line) {\n\
                 self.width = Math.max(self.width, line.length);\n\
             });\n\
@@ -147,10 +147,10 @@ function Ribosome() {\n\
                 }\n\
                 if (outisafile == true) {\n\
                     fs.appendFileSync(out, line);\n\
-                    fs.appendFileSync(out, '\n');\n\
+                    fs.appendFileSync(out, '\\n');\n\
                 } else {\n\
                     out.write(line);\n\
-                    out.write('\n');\n\
+                    out.write('\\n');\n\
                 }\n\
             });\n\
 \n\
@@ -367,7 +367,7 @@ function Ribosome() {\n\
         }\n\
         msg.forEach(function(item) {\n\
             process.stderr.write(item);\n\
-            process.stderr.write(\"\n\");\n\
+            process.stderr.write(\"\\n\");\n\
         });\n\
 \n\
         process.exit(1);\n\
@@ -456,7 +456,7 @@ if (process.argv[2] == "--rna") {
 }
 
 var dnastack = [
-    [null, prefix + "ribosome.js", 25, prefix]
+    [null, "ribosome.js", 25, ""]
 ];
 
 if (!rnaopt) {
@@ -469,6 +469,7 @@ if (!rnaopt) {
 rnaln = 1;
 linemap = [];
 
+fs.unlinkSync(rnafile)
 rnawrite(PROLOGUE);
 rnawrite('\n\n//-------------Begin-------------\n\n');
 
@@ -621,10 +622,10 @@ if (rnaopt) {
 
 if (!rnaopt) {
 
-    exec("node " + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
+    exec("nodejs " + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
         process.stdout.write(stdout);
         process.stderr.write(stderr);
-        fs.unlinkSync(rnafile);
+        //fs.unlinkSync(rnafile);
     });
 }
 
