@@ -212,7 +212,7 @@ Finally, you can append new text to existing file using '/!append' command:
 ### Embedded expressions
 
 Often, you need to insert a computed value into the output. You can do so by
-embedding Ruby expressions into dot-style lines:
+embedding JavaScript/Ruby expressions into dot-style lines:
 
 *JavaScript:*
 ```
@@ -225,8 +225,8 @@ var name = "Fred";
 name = 'Fred'
 .Hello, @{name}!
 ```
-With straight Ruby functions, the return value is converted into a string
-and written to the output.
+With straight JavaScript/Ruby functions, the return value is converted into
+a string and written to the output.
 
 If the embedded expression produces ribosome output itself, the text is
 inserted into the output file instead of the return value:
@@ -261,7 +261,7 @@ end
 
 Typically, each dot-style line is translated into a separate line in the
 output file. Sometimes, however, you may want to generate complex stuff into
-a single line of the output file. In such case new line can appended directly
+a single line of the output file. In such case new line can be appended directly
 to the previous line. Use /+ operator to achieve the behaviour:
 
 *JavaScript:*
@@ -293,8 +293,8 @@ Hello Alice Bob Carol !
 
 A common task with code generation is to insert separators between the items
 of a list. Ribosome provides '/!separate' command to help with the task.
-The command must precede a Ruby loop (for, while, each or similar) and takes
-a single parameter, the text to use as a separator:
+The command must precede a JavaScript/Ruby loop (for, while or similar) and
+takes a single parameter, the text to use as a separator:
 
 *JavaScript:*
 ```
@@ -375,7 +375,6 @@ Consider, for exmaple, this Ruby script:
 
 It compiles into this Ruby script:
 
-*Ruby:*
 ```
 name = "Alice"
 .Hello, @{name}!
