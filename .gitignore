@@ -21,3 +21,5 @@ examples/strerror.c
 
 tests/*.sh
 tests/*.out
+tests/*.log
+tests/*.trs

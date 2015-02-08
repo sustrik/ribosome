@@ -12,5 +12,8 @@ TESTS = \
     separate.sh \
     nested.sh \
     escape.sh \
-    tabs.sh
+    tabs.sh \
+    align.sh \
+    trim.sh\
+    include.sh
 
