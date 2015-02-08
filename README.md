@@ -17,7 +17,7 @@ A simple generic code generation tool.
 .
 .int main() {
 var i;
-for(i=0; i < 10; i++) {
+for(i=0; i<10; i++) {
 .    printf("@{11-i}!\n");
 }
 .    printf("Go!\n");
@@ -84,8 +84,14 @@ The generator is called 'ribosome.js' or 'ribosome.rb', respectively. It takes
 one argument. The script file, also known as DNA file. All the remaining
 arguments are passed unmodified to the script.
 
+*JavaScript:*
 ```
-$ ribosome.js foo.dna
+$ ribosome.js foo.js.dna arg1 arg2 arg3
+```
+
+*Ruby:*
+```
+$ ribosome.rb foo.rb.dna arg1 arg2 arg3
 ```
 
 ## Documentation
@@ -114,6 +120,13 @@ ribosome.rb foo.rb
 
 Lines starting with a dot (.) are copied directly to the output:
 
+*JavsScript:*
+```
+for(var i=0; i<2; i++){
+.Test!
+}
+```
+
 *Ruby:*
 ```
 for i in 1..2
@@ -133,6 +146,7 @@ however, if there's whitespace at the end of the line it is recommended to
 finish the line with $ to prevent invisible whitespace getting into the output
 files.
 
+*Both JavaScript and Ruby:*
 ```
 .Hello!    $
 ```
@@ -142,14 +156,20 @@ files.
 By default, the output is directed to stdout. Therefore, it can be re-directed
 using classic UNIX pipes:
 
+*JavaScript:*
+```
+ribosome.js test.js.dna > test.txt
+```
+
 *Ruby:*
 ```
-ribosome.rb test.dna > test.txt
+ribosome.rb test.rb.dna > test.txt
 ```
 
 You can also redirect the output to a specific destination directly from
 the DNA file. Use '/!output' command to accomplish the task:
 
+*Both JavaScript and Ruby:*
 ```
 .    /!output("test.txt")
 .    Test!
@@ -158,7 +178,7 @@ the DNA file. Use '/!output' command to accomplish the task:
 Note that ribosome commands may appear only in lines starting with a dot,
 may be preceded with arbitrary amout of whitespace (which will be ignored) and
 start with slash and exclamation mark. Commands behave like standard
-Ruby functions and use the same syntax:
+JavaScript/Ruby functions and use the same syntax:
 
 *Ruby:*
 ```
@@ -168,6 +188,7 @@ name = "foo"
 
 To redirect the output back to the console use '/!stdout' command:
 
+*Both JavaScript and Ruby:*
 ```
 ./!output("test.txt")
 .This line goes to the file!
@@ -177,6 +198,7 @@ To redirect the output back to the console use '/!stdout' command:
 
 Finally, you can append new text to existing file using '/!append' command:
 
+*Both JavaScript and Ruby:*
 ```
 ./!output("test.txt")
 .Stuff
