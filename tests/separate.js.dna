@@ -1,0 +1,21 @@
+// Test whether line concatenation works.
+
+function f1(){
+.1
+.2
+}
+
+var i;
+./!separate(",")
+for(i=1;i<6;i++){
+./+@{i}
+}
+.
+./!separate(",")
+for(i=1;i<6;i++){
+}
+.
+./!separate(",")
+for(i=1;i<6;i++){
+./+@{f1()}
+}

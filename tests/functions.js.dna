@@ -1,0 +1,18 @@
+// Test how functions within embedded expressions are evaluated.
+
+function f1(){
+    return "abc";
+}
+
+function f2(){
+    return 1;
+}
+
+function f3(){
+.def
+.ghi
+}
+
+.@{f1()}
+.@{f2()}
+.@{f3()}

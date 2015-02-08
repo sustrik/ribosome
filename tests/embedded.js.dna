@@ -1,0 +1,17 @@
+// Test elementary generation of lines with embedded expressions.
+var i;
+for(i=1;i<4;i++){
+.
+}
+for(i=1;i<4;i++){
+.@{i}
+}
+for(i=1;i<4;i++){
+.-@{i}
+}
+for(i=1;i<4;i++){
+.@{i}-
+}
+for(i=1;i<4;i++){
+.-@{i}-
+}
