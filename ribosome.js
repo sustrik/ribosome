@@ -22,6 +22,380 @@
 
 */
 
+var PROLOGUE = "\
+/*\n\
+\n\
+  Copyright (c) 2014-2015 Contributors as noted in AUTHORS file.\n\
+\n\
+  Permission is hereby granted, free of charge, to any person obtaining a copy\n\
+  of this software and associated documentation files (the \"Software\"),\n\
+  to deal in the Software without restriction, including without limitation\n\
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,\n\
+  and/or sell copies of the Software, and to permit persons to whom\n\
+  the Software is furnished to do so, subject to the following conditions:\n\
+\n\
+  The above copyright notice and this permission notice shall be included\n\
+  in all copies or substantial portions of the Software.\n\
+\n\
+  THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n\
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n\
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL\n\
+  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n\
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\n\
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS\n\
+  IN THE SOFTWARE.\n\
+\n\
+*/\n\
+\n\
+//Small changes to Basic classes to make life easier.\n\
+Array.prototype.last = function() {\n\
+    return this[this.length - 1];\n\
+}\n\
+\n\
+function Ribosome() {\n\
+\n\
+    var fs = require('fs');\n\
+\n\
+    function Block(s) {\n\
+        var self = this;\n\
+        this.text = [];\n\
+        this.width = 0;\n\
+\n\
+        if (s != null) {\n\
+            this.text = s.split('\n');\n\
+            this.text.forEach(function(line) {\n\
+                self.width = Math.max(self.width, line.length);\n\
+            });\n\
+        }\n\
+\n\
+        this.add_right = function(block) {\n\
+            var i = 0;\n\
+            var self = this;\n\
+            block.text.forEach(function(line) {\n\
+                if (self.text.length > i) {\n\
+                    self.text[i] = self.text[i] +\n\
+                        Array(self.width - self.text[i].length + 1).join(' ') + line;\n\
+                } else {\n\
+                    self.text[i] = Array(self.width + 1).join(' ') + line;\n\
+                }\n\
+                i++;\n\
+            });\n\
+            this.width += block.width;\n\
+\n\
+        };\n\
+\n\
+        this.add_bottom = function(block) {\n\
+            this.text = this.text.concat(block.text);\n\
+            this.width = Math.max(this.width, block.width);\n\
+\n\
+        };\n\
+\n\
+        this.trim = function() {\n\
+\n\
+            var top = -1;\n\
+            var bottom = -1;\n\
+            var left = -1;\n\
+            var right = -1;\n\
+\n\
+            this.text.forEach(function(line, index) {\n\
+\n\
+                if (line.trim() != '') {\n\
+                    if (top == -1) {\n\
+                        top = index;\n\
+                    }\n\
+                    bottom = index;\n\
+                    if (left == -1) {\n\
+                        left = line.length - (line + 'W').trim().length + 1;\n\
+                    } else {\n\
+                        left = Math.min(left, line.length - (line + 'W').trim().length + 1);\n\
+                    }\n\
+                    if (right == -1) {\n\
+                        right = ('W' + line).trim().length - 1;\n\
+                    } else {\n\
+                        right = Math.max(right, ('W' + line).trim().length - 1);\n\
+                    }\n\
+\n\
+                }\n\
+\n\
+            });\n\
+\n\
+            if (bottom == -1) {\n\
+                this.text = [];\n\
+                this.width = 0;\n\
+                return;\n\
+            }\n\
+\n\
+            this.text = this.text.slice(top, bottom + 1);\n\
+\n\
+            this.text.forEach(function(line, index, array) {\n\
+                array[index] = line.slice(left, right);\n\
+            });\n\
+\n\
+            this.width = right - left;\n\
+\n\
+        };\n\
+\n\
+        this.write = function(out, outisafile, tabsize) {\n\
+            this.text.forEach(function(line) {\n\
+\n\
+                if (tabsize > 0) {\n\
+                    var ws = line.length - (line + 'w').trim().length + 1;\n\
+                    var line = Array(Math.floor(ws / tabsize) + 1).join('\t') +\n\
+                        Array((ws % tabsize) + 1).join(' ') + (line + 'W').trim().slice(0, -1);\n\
+                }\n\
+                if (outisafile == true) {\n\
+                    fs.appendFileSync(out, line);\n\
+                    fs.appendFileSync(out, '\n');\n\
+                } else {\n\
+                    out.write(line);\n\
+                    out.write('\n');\n\
+                }\n\
+            });\n\
+\n\
+        };\n\
+\n\
+        this.last_offset = function() {\n\
+            if (this.text.length == 0) {\n\
+                return 0;\n\
+            } else {\n\
+                var last = this.text[this.text.length - 1];\n\
+                return last.length - (last + \"w\").trim().length + 1;\n\
+            }\n\
+        };\n\
+\n\
+    }\n\
+\n\
+    var tabsize = 0;\n\
+\n\
+    var outisafile = false;\n\
+    var out = process.stdout;\n\
+    var append_flag = false;\n\
+\n\
+    var stack = [\n\
+        []\n\
+    ];\n\
+\n\
+    this.output = output;\n\
+\n\
+    function output(filename) {\n\
+        close();\n\
+        outisafile = true;\n\
+        append_flag = false;\n\
+        out = filename;\n\
+    };\n\
+\n\
+    this.append = append;\n\
+\n\
+    function append(filename) {\n\
+        close();\n\
+        outisafile = true;\n\
+        append_flag = true;\n\
+        out = filename;\n\
+    };\n\
+\n\
+    this.stdout = stdout;\n\
+\n\
+    function stdout() {\n\
+        close();\n\
+        outisafile = false;\n\
+        out = process.stdout;\n\
+    };\n\
+\n\
+    this.tabsize = change_tabsize;\n\
+\n\
+    function change_tabsize(size) {\n\
+        tabsize = size;\n\
+    };\n\
+\n\
+    this.close = close;\n\
+\n\
+    function close() {\n\
+        if (append_flag == false && typeof out === \"string\") {\n\
+            if (fs.existsSync(out)) {\n\
+                fs.unlinkSync(out);\n\
+            }\n\
+        }\n\
+        stack.last().forEach(function(b) {\n\
+            b.write(out, outisafile, tabsize);\n\
+        });\n\
+        stack = [\n\
+            []\n\
+        ];\n\
+    }\n\
+\n\
+    this.add = add;\n\
+\n\
+    function add(line, leval) {\n\
+\n\
+        if (stack.last().length == 0) {\n\
+            stack.last().push(new Block(''));\n\
+        }\n\
+\n\
+        var block = stack.last().last();\n\
+\n\
+        var i = 0;\n\
+\n\
+        while (true) {\n\
+            var j = line.substr(i).search(/[@&][1-9]?\\{/);\n\
+            if (j == -1) {\n\
+                j = line.length;\n\
+            } else {\n\
+                j += i;\n\
+            }\n\
+\n\
+            if (i != j) {\n\
+                block.add_right(new Block(line.slice(i, j)));\n\
+            }\n\
+            if (j == line.length) {\n\
+                break;\n\
+            }\n\
+\n\
+            i = j;\n\
+            j++;\n\
+\n\
+            var level = parseInt(line.charAt(j), 10);\n\
+            if (isNaN(level)) {\n\
+                level = 0;\n\
+            } else {\n\
+                j++;\n\
+            }\n\
+\n\
+            var par = 0;\n\
+\n\
+            while (true) {\n\
+                if (line.charAt(j) == '{') {\n\
+                    par++;\n\
+                } else {\n\
+                    if (line.charAt(j) == '}') {\n\
+                        par--;\n\
+                    }\n\
+                }\n\
+\n\
+                if (par == 0) {\n\
+                    break;\n\
+                }\n\
+                j++;\n\
+\n\
+                if (j >= line.length) {\n\
+                    process.stderr.write('SyntaxError: Unmatched {');\n\
+                }\n\
+            }\n\
+\n\
+            if (level > 0) {\n\
+                if (line.charAt(i + 1) == '1') {\n\
+                    block.add_right(new Block('@' + line.slice(i + 2, j + 1)));\n\
+                } else {\n\
+                    line = line.slice(0, i + 1) + (parseInt(line.charAt(i + 1)) - 1) + line.slice(i + 2);\n\
+                    block.add_right(new Block(line.slice(i, j + 1)));\n\
+                }\n\
+                i = j + 1;\n\
+                continue;\n\
+            }\n\
+\n\
+            //TODO level can only be zero here.\n\
+            var expr = line.slice((level == 0) ? i + 2 : i + 3, j);\n\
+\n\
+            stack.push([]);\n\
+            var val = leval(expr);\n\
+            var top = stack.pop();\n\
+            if (top.length == 0) {\n\
+                val = new Block(val.toString());\n\
+            } else {\n\
+                val = new Block('');\n\
+                top.forEach(function(b) {\n\
+                    val.add_bottom(b);\n\
+                });\n\
+            }\n\
+\n\
+            if (line.charAt(i) == '@') {\n\
+                val.trim();\n\
+            }\n\
+            block.add_right(val);\n\
+            i = j + 1;\n\
+\n\
+        }\n\
+\n\
+    }\n\
+\n\
+    this.dot = dot;\n\
+\n\
+    function dot(line, leval) {\n\
+        stack.last().push(new Block(''));\n\
+        add(line, leval);\n\
+    }\n\
+\n\
+    this.align = align;\n\
+\n\
+    function align(line, leval) {\n\
+        var n;\n\
+        if (stack.last().length == 0) {\n\
+            n = 0;\n\
+        } else {\n\
+            n = stack.last().last().last_offset();\n\
+        }\n\
+\n\
+        stack.last().push(new Block(''));\n\
+\n\
+        add(Array(n + 1).join(' '));\n\
+        add(line, leval);\n\
+    }\n\
+\n\
+    this.rethrow = rethrow;\n\
+\n\
+    function rethrow(e, rnafile, linemap) {\n\
+\n\
+        var msg = e.stack.split(\"\\n\");\n\
+        for (var i = 1; i < msg.length; i++) {\n\
+            if (msg[i].indexOf(\".rna:\") != -1) {\n\
+                var lindexes = msg[i].split(\":\");\n\
+                var rrow = parseInt(lindexes[lindexes.length - 1]);\n\
+                var column = parseInt(lindexes[lindexes.length - 2]);\n\
+                var rcolumn = 0;\n\
+                var filename;\n\
+                for (var j = 0; j < linemap.length - 1; j++) {\n\
+                    if (linemap[j][0] <= column) {\n\
+                        rcolumn = column - linemap[j][0] + 1;\n\
+                        filename = linemap[j][1];\n\
+                    } else {\n\
+                        break;\n\
+                    }\n\
+                }\n\
+                msg[i] = msg[i].replace(/\\(.*\\)$/, \"(\" + filename + \":\" + rcolumn + \":\" + rrow + \")\");\n\
+            }\n\
+        }\n\
+        msg.forEach(function(item) {\n\
+            process.stderr.write(item);\n\
+            process.stderr.write(\"\n\");\n\
+        });\n\
+\n\
+        process.exit(1);\n\
+    }\n\
+\n\
+}\n\
+\n\
+var ribosome = new Ribosome();\n\
+\n\
+function at() {\n\
+    return '@';\n\
+}\n\
+\n\
+function amp() {\n\
+    return '&';\n\
+}\n\
+\n\
+function slash() {\n\
+    return '/';\n\
+}\n\
+\n\
+///////////////////////////////////////////////////////////////////////\n\
+//\n\
+//  The code that belongs to the protein project ends at this point of the\n\
+//  RNA file and so does the associated license. What follows is the code\n\
+//  generated from the DNA file.\n\
+//\n\
+///////////////////////////////////////////////////////////////////////\n\
+"
+
 //Small changes to Basic classes to make life easier.
 Array.prototype.last = function() {
     return this[this.length - 1];
@@ -39,7 +413,7 @@ function addslashes(str) {
 
 
 function usage() {
-    process.stderr.write("usage: meta [options] <dna-file> <args-passed-to-dna-script>\n");
+    process.stderr.write("usage: ribosome.js <dna-file> <args-passed-to-dna-script>\n");
     process.exit(1);
 }
 
@@ -80,7 +454,7 @@ if (process.argv[2] == "--rna") {
 }
 
 var dnastack = [
-    [null, prefix + "/lib/node_modules/proteinjs/rna_prologue.js", 0, prefix + "/lib/node_modules/proteinjs/"]
+    [null, prefix + "ribosome.js", 25, prefix]
 ];
 
 if (!rnaopt) {
@@ -93,15 +467,12 @@ if (!rnaopt) {
 rnaln = 1;
 linemap = [];
 
-var PROLOGUE = fs.readFileSync(prefix + "/lib/node_modules/proteinjs/rna_prologue.js", "utf8");
-
 rnawrite(PROLOGUE);
 rnawrite('\n\n//-------------Begin-------------\n\n');
 
 if (!rnaopt) {
     rnawrite('try {\n');
 }
-
 
 var dirname = path.normalize(path.dirname(dnafile));
 var file;

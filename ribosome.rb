@@ -376,7 +376,7 @@ end
 ################################################################################
 
 def usage()
-    $stderr.write "usage: ribosome [options] <dna-file> <args-passed-to-dna-script>\n"
+    $stderr.write "usage: ribosome.rb [options] <dna-file> <args-passed-to-dna-script>\n"
     exit(1)
 end
 
