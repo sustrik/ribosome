@@ -1,16 +1,14 @@
 .#!/bin/sh
 .
-.../ribosome.rb @{ARGV[0]}.dna > @{ARGV[0]}.out
+.../ribosome.rb @{ARGV[0]}.rb.dna > @{ARGV[0]}.rb.out
 .if test ! $? = 0
 .then
 .    exit 1
 .fi
-.if test -n "$(diff @{ARGV[0]}.out @{ARGV[0]}.check)"
+.if test -n "$(diff @{ARGV[0]}.rb.out @{ARGV[0]}.check)"
 .then
-.    echo "Generated file @{ARGV[0]}.out differs from expected output:"
-.    echo "$(diff @{ARGV[0]}.out @{ARGV[0]}.check)"
+.    echo "Generated file @{ARGV[0]}.rb.out differs from expected output:"
+.    echo "$(diff @{ARGV[0]}.rb.out @{ARGV[0]}.check)"
 .    exit 1
 .fi
-
-
 
