@@ -1,4 +1,4 @@
-#!/usr/bin/nodejs
+#!/usr/bin/env nodejs
 
 /*
 
@@ -24,7 +24,8 @@
 
 */
 
-var PROLOGUE = "\
+var PROLOGUE = "#!/usr/bin/env nodejs\n\
+\n\
 /*\n\
 \n\
   Copyright (c) 2014-2015 Contributors as noted in AUTHORS file.\n\
