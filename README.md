@@ -81,12 +81,12 @@ $ sudo make install
 
 ## Command line
 
-The generator is called 'ribosome'. It takes one argument. The script file,
+The generator is called 'ribosome.rb'. It takes one argument. The script file,
 also known as DNA file. All the remaining arguments are passed unmodified
 to the script.
 
 ```
-$ ribosome foo.dna
+$ ribosome.rb foo.dna
 ```
 
 ## Documentation
@@ -102,7 +102,7 @@ a dot). Therefore it is possible to just take your existing Ruby program
 and run it with ribosome:
 
 ```
-ribosome foo.rb
+ribosome.rb foo.rb
 ```
 
 ### Simple output
@@ -137,7 +137,7 @@ By default, the output is directed to stdout. Therefore, it can be re-directed
 using classic UNIX pipes:
 
 ```
-ribosome test.dna > test.txt
+ribosome.rb test.dna > test.txt
 ```
 
 You can also redirect the output to a specific destination directly from
@@ -490,7 +490,7 @@ there's no dependency on ribosome itself (the user will do with only Ruby
 installed):
 
 ```
-ribosome --rna foo.dna > foo.rb
+ribosome.rb --rna foo.dna > foo.rb
 ```
 
 Also note that if your DNA script is composed of multiple DNA files (using

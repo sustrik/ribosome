@@ -1,6 +1,6 @@
 .#!/bin/sh
 .
-.../ribosome @{ARGV[0]}.dna > @{ARGV[0]}.out
+.../ribosome.rb @{ARGV[0]}.dna > @{ARGV[0]}.out
 .if test ! $? = 0
 .then
 .    exit 1

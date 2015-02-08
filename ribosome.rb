@@ -416,7 +416,7 @@ end
 # open DNA files. We also keep the name of the file and the line number to
 # be able to report errors. We'll also keep track of the directory the DNA file
 # is in to be able to correctly expand relative paths in /!include commands.
-$dnastack = [[nil, "ribosome", PROLOGUE_LINE + 1, Dir.pwd]]
+$dnastack = [[nil, "ribosome.rb", PROLOGUE_LINE + 1, Dir.pwd]]
 
 if rnaopt
     $rna = $stdout

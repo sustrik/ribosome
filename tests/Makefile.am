@@ -1,6 +1,6 @@
 
-%.sh: %.dna ../ribosome runtest.dna
-	../ribosome runtest.dna $* > $@
+%.sh: %.dna ../ribosome.rb runtest.dna
+	../ribosome.rb runtest.dna $* > $@
 	chmod +x $@
 
 TESTS = \
