@@ -470,7 +470,11 @@ if (!rnaopt) {
 rnaln = 1;
 linemap = [];
 
-//fs.unlinkSync(rnafile)
+try {
+    fs.unlinkSync(rnafile)
+}
+catch (e) {
+}
 rnawrite(PROLOGUE);
 rnawrite('\n\n//-------------Begin-------------\n\n');
 
