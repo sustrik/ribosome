@@ -470,7 +470,7 @@ if (!rnaopt) {
 rnaln = 1;
 linemap = [];
 
-fs.unlinkSync(rnafile)
+//fs.unlinkSync(rnafile)
 rnawrite(PROLOGUE);
 rnawrite('\n\n//-------------Begin-------------\n\n');
 
@@ -626,7 +626,7 @@ if (!rnaopt) {
     exec("nodejs " + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
         process.stdout.write(stdout);
         process.stderr.write(stderr);
-        //fs.unlinkSync(rnafile);
+        fs.unlinkSync(rnafile);
     });
 }
 
