@@ -345,28 +345,34 @@ function Ribosome() {\n\
 \n\
     this.rethrow = rethrow;\n\
 \n\
-    function rethrow(e, rnafile, linemap) {\n\
+    function rethrow(e, linemap) {\n\
 \n\
+        var new_msg=[];\n\
         var msg = e.stack.split(\"\\n\");\n\
+        new_msg.push(msg[0]);\n\
         for (var i = 1; i < msg.length; i++) {\n\
             if (msg[i].indexOf(\".rna:\") != -1) {\n\
-                var lindexes = msg[i].split(\":\");\n\
-                var rrow = parseInt(lindexes[lindexes.length - 1]);\n\
-                var column = parseInt(lindexes[lindexes.length - 2]);\n\
+                var lindexes = msg[i].split(\".rna:\")[1].split(\":\");\n\
+                var rrow = parseInt(lindexes[1]);\n\
+                var rna_column = parseInt(lindexes[0]);\n\
                 var rcolumn = 0;\n\
                 var filename;\n\
                 for (var j = 0; j < linemap.length - 1; j++) {\n\
-                    if (linemap[j][0] <= column) {\n\
-                        rcolumn = column - linemap[j][0] + 1;\n\
+                    if (linemap[j][0] <= rna_column) {\n\
                         filename = linemap[j][1];\n\
                     } else {\n\
                         break;\n\
                     }\n\
                 }\n\
-                msg[i] = msg[i].replace(/\\(.*\\)$/, \"(\" + filename + \":\" + rcolumn + \":\" + rrow + \")\");\n\
+                j--\n\
+                rcolumn = rna_column - linemap[j][0] + linemap[j][2];\n\
+                var new_line = msg[i].replace(/\\(.*\\)$/, \"(\" + filename + \":\" + rcolumn + \":\" + rrow + \")\");\n\
+		if (new_line != msg[i]) {\n\
+		    new_msg.push(new_line);\n\
+		}\n\
             }\n\
         }\n\
-        msg.forEach(function(item) {\n\
+        new_msg.forEach(function(item) {\n\
             process.stderr.write(item);\n\
             process.stderr.write(\"\\n\");\n\
         });\n\
@@ -457,7 +463,7 @@ if (process.argv[2] == "--rna") {
 }
 
 var dnastack = [
-    [null, "ribosome.js", 25, ""]
+    [null, "ribosome.js", 27, ""]
 ];
 
 if (!rnaopt) {
@@ -612,7 +618,7 @@ if (!rnaopt) {
 
     fs.appendFileSync(rnafile, "        [null]\n");
     fs.appendFileSync(rnafile, "    ];\n");
-    fs.appendFileSync(rnafile, "ribosome.rethrow(e, '" + addslashes(rnafile) + "', LINEMAP);\n");
+    fs.appendFileSync(rnafile, "ribosome.rethrow(e, LINEMAP);\n");
 
 
     fs.appendFileSync(rnafile, "}\n");
