@@ -75,3 +75,9 @@ Explicit commands for loading input files added:
 
 - Operator /= introduced.
 
+1.13
+====
+
+- JavaScript version of ribosome added
+
+
