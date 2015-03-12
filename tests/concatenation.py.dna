@@ -1,0 +1,13 @@
+# Test whether line concatenation works.
+
+def f1():
+   .1
+   .2
+
+./+a
+./+b
+.
+./+c
+./+@{"d"}
+./+@{f1()}
+./+3

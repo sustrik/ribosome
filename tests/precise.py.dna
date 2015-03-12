@@ -1,0 +1,16 @@
+# Test elementary generation of lines with strict embedded expressions.
+
+for i in [1, 2, 3]:
+    .
+
+for i in [1, 2, 3]:
+    .&{i}
+
+for i in [1, 2, 3]:
+    .-&{i}
+
+for i in [1, 2, 3]:
+    .&{i}-
+
+for i in [1, 2, 3]:
+    .-&{i}-
