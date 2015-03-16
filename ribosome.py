@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# Copyright (c) 2014 Martin Sustrik  All rights reserved.
+# Copyright (c) 2015 Ali Zaidi  All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"),
@@ -22,22 +22,21 @@
 # IN THE SOFTWARE.
 #
 
-################################################################################
-#  RNA prologue code.                                                          #
-################################################################################
-
-# In theory, helpers could be placed into a separate module file to keep
-# the RNA lean and tidy, however, embedding the whole thing into each RNA
-# file makes the ribosome dependencies and deployment much simpler.
+####################
+# Helper functions #
+####################
 
 def __line__():
-    """
-    Return the line number from which this got called.
-    http://stackoverflow.com/q/6810999
-    """
+    """Return the line number from which this functions got called.
+    http://stackoverflow.com/q/6810999"""
     import inspect
     frame = inspect.stack()[1][0]
     return inspect.getframeinfo(frame).lineno
+
+
+#################
+# Prologue code #
+#################
 
 PROLOGUE_LINE = __line__()
 PROLOGUE = """#!/usr/bin/env python
@@ -45,7 +44,7 @@ PROLOGUE = """#!/usr/bin/env python
 #
 # The initial part of this file belongs to the ribosome project.
 #
-# Copyright (c) 2014 Martin Sustrik  All rights reserved.
+# Copyright (c) 2015 Ali Zaidi  All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"),
@@ -69,28 +68,24 @@ PROLOGUE = """#!/usr/bin/env python
 import sys
 import re
 
-# Block represents a rectangular area of text.
+
 class Block:
+    # Block represents a rectangular area of text.
 
     def __init__(self, s):
-        self.text = []
+        self.text = ['']
         self.width = 0
-        # deal with the special case of empty block
-        if s == '': self.text.append("")
-        else:
-            # break string into lines
+        if len(s) > 0:
             self.text = s.splitlines()
             self.width = max(map(lambda x: len(x), self.text))
 
     # Weld the supplied block to the right of this block
     def add_right(self, block):
-        i = 0
-        for l in block.text:
+        for i, l in enumerate(block.text):
             try:
                 self.text[i] += ' ' * (self.width - len(self.text[i])) + l
             except:
                 self.text.append((' ' * self.width) + l)
-            i += 1
         self.width += block.width
 
     # Weld the supplied block to the bottom of this block
@@ -100,9 +95,10 @@ class Block:
 
     # Trim the whitespace from the block
     def trim(self):
-        top = -1; bottom = -1; left = -1; right = -1;
+        top = bottom = left = right = -1
         for i, l in enumerate(self.text):
             if not l.strip() == '':
+                # line is not empty
                 if top == -1: top = i
                 bottom = i
                 ls = len(l) - len(l.lstrip())
@@ -110,9 +106,9 @@ class Block:
                 rs = len(l.rstrip())
                 right = rs if right == -1 else max([right, rs])
         if bottom == -1:
-            self.text = []
+            # empty block
+            self.text = ['']
             self.width = 0
-
         self.text = self.text[top:bottom+1]
         self.text = [l.rstrip()[left:right+1] for l in self.text]
         
@@ -121,10 +117,9 @@ class Block:
             # If required, replace the initial whitespace by tabs.
             if tabsize > 0:
                 ws = len(l) - len(l.lstrip())
-                l = "\t" * (ws / tabsize) + " " * (ws % tabsize) + l.lstrip()
+                l = '\t' * (ws / tabsize) + ' ' * (ws % tabsize) + l.lstrip()
             # Write an individual line to the output file.
-            out.write(l)
-            out.write('\\n')
+            out.write(l + '\\n')
 
     # Returns offset of the last line in block
     def last_offset(self):
@@ -138,7 +133,7 @@ class Block:
     outisafile = False
     out = sys.stdout
 
-    # This is ribosome call stack. At each level thre is a list of
+    # This is ribosome call stack. At each level there is a list of
     # text blocks generated up to that point.
     stack = [[]]
 
@@ -201,7 +196,7 @@ class Block:
             i = j
             j += 1
             level = 0
-            if line[j] in ['1', '2', '3', '4', '5', '6', '7', '8', '9']:
+            if line[j] in [str(x) for x in range(1, 10)]:
                 level = int(line[j])
                 j += 1
             # Find corresponding }.
@@ -383,15 +378,13 @@ while True:
     # Neither does this work:
     # for i in [1, 2, 3]:
     #     .@{i}
-
     # I want to be able to support the former.
 
     # Lets save the left and right spaces, if any
     lspace = line.replace(line.lstrip(), '')
-    # Add 4 spaces to accomodate our try except clause if not rna
+    # Add 4 spaces to accommodate our try except clause if not rna
     if not args.rna:
         lspace = lspace + ' ' * 4
-
     rspace = line.replace(line.rstrip(), '')
     # followed by stripping the line
     line = line.strip()
