@@ -1,0 +1,19 @@
+# Test whether line concatenation works.
+
+def f1():
+    .1
+    .2
+
+./!separate ","
+for i in [1, 2, 3, 4, 5]:
+    ./+@{i}
+
+.
+./!separate ","
+for i in [1, 2, 3, 4, 5]:
+	pass
+
+.
+./!separate ","
+for i in [1, 2, 3, 4, 5]:
+    ./+@{f1()}

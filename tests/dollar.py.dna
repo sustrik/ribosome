@@ -1,0 +1,8 @@
+# Test $ sign as line terminator
+.xxx
+.xxx$
+.
+.$
+.xxx$$
+.$$
+
