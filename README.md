@@ -5,9 +5,9 @@ A simple generic code generation tool.
 
 ## In 50 words
 
-1. You write standard JavaScript or Ruby scripts.
+1. You write standard JavaScript/Ruby/Python scripts.
 2. However, lines starting with a dot (.) go straight to the output.
-3. To expand JavaScript/Ruby expressions within dot-style lines use @{expr} construct.
+3. To expand JavaScript/Ruby/Python expressions within dot-style lines use @{expr} construct.
 
 ## Example
 
@@ -59,15 +59,15 @@ following measures:
 - Flexibility in indentation of the source.
 - Colouring support in editors.
 
-Note that ribosome trades speed for readability/maintainability and thus isn't
-well suited for performance-critical tasks such as, for example, generaing HTML
-on the fly.
+Note that ribosome trades speed for readability/maintainability and thus it
+isn't well suited for performance-critical tasks such as, for example,
+generating HTML on the fly.
 
 ## Installation
 
-Ribosome is a single JavaScript or Ruby script, thus all you need is to install
-node.js and/or Ruby beforehand and copy 'ribosome.js' or 'ribosome.rb' script
-onto your path.
+Ribosome is a single JavaScript/Ruby/Python script, thus all you need is
+to install node.js, Ruby and/or Python beforehand and copy 'ribosome.js',
+'ribosome.rb' or 'ribosome.py' script onto your path.
 
 However, on UNIX systems you can use more standard way of installing the
 software:
@@ -81,9 +81,9 @@ $ sudo make install
 
 ## Command line
 
-The generator is called 'ribosome.js' or 'ribosome.rb', respectively. It takes
-one argument. The script file, also known as DNA file. All the remaining
-arguments are passed unmodified to the script.
+The generator is called 'ribosome.js', 'ribosome.rb' or 'ribosome.py',
+respectively. It takes one argument. The script file, also known as DNA file.
+All the remaining arguments are passed unmodified to the script.
 
 *JavaScript:*
 ```
@@ -95,6 +95,11 @@ $ ribosome.js foo.js.dna
 $ ribosome.rb foo.rb.dna
 ```
 
+*Python:*
+```
+$ ribosome.py foo.py.dna
+```
+
 ## Documentation
 
 At this point you are ready to use ribosome to do your own code generation.
@@ -103,10 +108,11 @@ in the following sections.
 
 ### Control language
 
-DNA file is a standard JavaScript/Ruby program (except for the lines starting
-with a dot). Therefore it is possible to just take your existing JavaScript/Ruby
-program and run it with ribosome. Note that all the arguments following the
-script name are passed unmodified to the JavaScript/Ruby program:
+DNA file is a standard JavaScript/Ruby/Python program (except for the lines
+starting with a dot). Therefore it is possible to just take your existing
+JavaScript/Ruby/Python program and run it with ribosome. Note that all
+the arguments following the script name are passed unmodified
+to the JavaScript/Ruby/Python program:
 
 *JavaScript:*
 ```
@@ -116,6 +122,11 @@ ribosome.js foo.js arg1 arg2 arg3
 *Ruby:* 
 ```
 ribosome.rb foo.rb arg1 arg2 arg3
+```
+
+*Python:* 
+```
+ribosome.py foo.py arg1 arg2 arg3
 ```
 
 ### Simple output
@@ -136,6 +147,12 @@ for i in 1..2
 end
 ```
 
+*Pyhon:*
+```
+for i in range(2):
+    .Test!
+```
+
 The above script produces the following output:
 
 ```
@@ -148,7 +165,7 @@ however, if there's whitespace at the end of the line it is recommended to
 finish the line with $ to prevent invisible whitespace getting into the output
 files.
 
-*Both JavaScript and Ruby:*
+*All languages:*
 ```
 .Hello!    $
 ```
@@ -168,10 +185,15 @@ ribosome.js test.js.dna > test.txt
 ribosome.rb test.rb.dna > test.txt
 ```
 
+*Python:*
+```
+ribosome.py test.py.dna > test.txt
+```
+
 You can also redirect the output to a specific destination directly from
 the DNA file. Use '/!output' command to accomplish the task:
 
-*Both JavaScript and Ruby:*
+*All languages:*
 ```
 .    /!output("test.txt")
 .    Test!
@@ -180,7 +202,7 @@ the DNA file. Use '/!output' command to accomplish the task:
 Note that ribosome commands may appear only in lines starting with a dot,
 may be preceded with arbitrary amout of whitespace (which will be ignored) and
 start with slash and exclamation mark. Commands behave like standard
-JavaScript/Ruby functions and use the same syntax:
+JavaScript/Ruby/Python functions and use the same syntax:
 
 *Ruby:*
 ```
@@ -188,9 +210,15 @@ name = "foo"
 ./!output name + ".txt"
 ```
 
+*Python:*
+```
+name = "foo"
+./!output (name + ".txt")
+```
+
 To redirect the output back to the console use '/!stdout' command:
 
-*Both JavaScript and Ruby:*
+*All languages:*
 ```
 ./!output("test.txt")
 .This line goes to the file!
@@ -200,7 +228,7 @@ To redirect the output back to the console use '/!stdout' command:
 
 Finally, you can append new text to existing file using '/!append' command:
 
-*Both JavaScript and Ruby:*
+*All languages:*
 ```
 ./!output("test.txt")
 .Stuff
@@ -212,7 +240,7 @@ Finally, you can append new text to existing file using '/!append' command:
 ### Embedded expressions
 
 Often, you need to insert a computed value into the output. You can do so by
-embedding JavaScript/Ruby expressions into dot-style lines:
+embedding JavaScript/Ruby/Python expressions into dot-style lines:
 
 *JavaScript:*
 ```
@@ -220,13 +248,13 @@ var name = "Fred";
 .Hello, @{name}!
 ```
 
-*Ruby:*
+*Ruby and Python:*
 ```
 name = 'Fred'
 .Hello, @{name}!
 ```
-With straight JavaScript/Ruby functions, the return value is converted into
-a string and written to the output.
+With straight JavaScript/Ruby/Python functions, the return value is converted
+into a string and written to the output.
 
 If the embedded expression produces ribosome output itself, the text is
 inserted into the output file instead of the return value:
@@ -246,9 +274,21 @@ function greet(name){
 
 *Ruby:*
 ```
-def greet(name)
-.printf ("Hello, @{name}!\n");
-end
+    def greet(name)
+    .printf ("Hello, @{name}!\n");
+    end
+
+    .int main () {
+    .    @{greet("Alice")}
+    .    @{greet("Bob")}
+    .    return 0;
+    .}
+```
+
+*Python:*
+```
+def greet(name):
+    .printf ("Hello, @{name}!\n");
 
 .int main () {
 .    @{greet("Alice")}
@@ -280,6 +320,14 @@ students.forEach(function(item){
 for i in ["Alice", "Bob", "Carol"]
 .   /+@{i} $
 end
+./+!
+```
+
+*Python:*
+```
+.Hello $
+for i in ["Alice", "Bob", "Carol"]:
+    ./+@{i} $
 ./+!
 ```
 
@@ -317,6 +365,15 @@ end
 ./+!
 ```
 
+*Python:*
+```
+.Hello $
+./!separate(", ")
+for i in ["Alice", "Bob", "Carol"]:
+    .   /+@{i}
+./+!
+```
+
 Note that the separator doesn't appear after the last element of the list:
 
 ```
@@ -335,7 +392,7 @@ var s = " 2 "
 .1&{s}3
 ```
 
-*Ruby:*
+*Ruby and Python:*
 ```
 s = " 2 "
 .1@{s}3
@@ -360,7 +417,7 @@ Nested embedded expressions are written @N{} or &N{}, where N is a digit from
 compilation nested expressions of first level are replaced by ordinary embedded
 expressions. Nested expressions of second level are replaced by nested
 expressions of first level, nested expressions of third level are replaced by
-nested expressions of second level et c.
+nested expressions of second level and so on.
 
 ```
 @9{x} => @8{x} => @7{x} => ... => @2{x} => @1{x} => @{x}
@@ -455,7 +512,26 @@ def shapes()
 .    Circle
 end
 
-.Colours: @{colours} Shapes: @{shapes}
+.Colours: @{colours()} Shapes: @{shapes()}
+.
+.That's all, folks!
+```
+
+*Python:*
+```
+def colours():
+    .    White
+    .    Black
+    .    Ultramarine
+    .    Red
+    .    Green
+    .    Blue
+
+def shapes():
+    .    Triangle
+    .    Circle
+
+.Colours: @{colours()} Shapes: @{shapes()}
 .
 .That's all, folks!
 ```
@@ -487,7 +563,7 @@ The blocks are aligned to the top of the line:
 Thus, the line:
 
 ```
-.Colours: @{colours} Shapes: @{shapes}
+.Colours: @{colours()} Shapes: @{shapes()}
 ```
 
 Is laid out like this:
@@ -525,18 +601,6 @@ function greet(name) {
 .}
 ```
 
-*Ruby:*
-```
-def greet(name)
-.    printf ("Hello, @{name}!\n");
-end
-
-.@{greet("Alice")}
-.if (is_bob_present) {
-.    @{greet("Bob")}
-.}
-```
-
 The script above produces following output:
 
 ```
@@ -555,7 +619,7 @@ as one-line text block) and is appended to the line before the greeting to Bob.
 
 Operator /= aligns a line with the previous line.
 
-*Both JavaScript and Ruby:*
+*All languages:*
 ```
 .        Hello,
 ./=world!
@@ -582,7 +646,7 @@ output it can, on demand, replace as much of the leading whitespace as possible
 by tabs. To switch this functionality on use '/!tabsize' command, providing
 desired size of the tab as a parameter:
 
-*Both JavaScript and Ruby:*
+*All languages:*
 ```
 ./!tabsize(4)
 .for (i = 0; i != 10; ++i)
@@ -600,7 +664,7 @@ In case of need you can import a DNA file using '/!include' command.
 The behaviour is the same as if the contents of the imported file was
 copied to the location in question in the importing file:
 
-*Both JavaScript and Ruby:*
+*All languages:*
 ```
 ./!include("foo.dna")
 ```
@@ -615,7 +679,7 @@ The above works well for ad-hoc and throw-away code generation, however, if you
 want to distribute the code generator to the users it is better to generate
 the RNA script first and distribute that instead of the DNA script -- that way
 there's no dependency on ribosome itself (the user will do with only
-node.js and/or Ruby installed):
+node.js, Ruby and/or Python installed):
 
 *JavaScript:*
 ```
@@ -625,6 +689,11 @@ ribosome.js --rna foo.js.dna > foo.js
 *Ruby:*
 ```
 ribosome.rb --rna foo.rb.dna > foo.rb
+```
+
+*Python:*
+```
+ribosome.py --rna foo.py.dna > foo.py
 ```
 
 Also note that if your DNA script is composed of multiple DNA files (using

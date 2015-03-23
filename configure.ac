@@ -10,6 +10,11 @@ AC_PATH_PROG([RUBY], [ruby])
 AS_IF([test x"$RUBY" = "x"],[
     AC_MSG_ERROR([Ribosome requires ruby to operate, please install it])
 ])
+
+AC_PATH_PROG([PYTHON], [python])
+AS_IF([test x"$PYTHON" = "x"],[
+    AC_MSG_ERROR([Ribosome requires python to operate, please install it])
+])
       
 AM_INIT_AUTOMAKE([foreign])
 
