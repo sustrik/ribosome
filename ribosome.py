@@ -280,17 +280,14 @@ class Block:
         sys.exit(1)
 
             
-# Escape function for @
-def at():
-    return '@'
+# Escape sequence for @
+at = '@'
 
-# Escape function for &
-def amp():
-    return '&'
+# Escape sequence for &
+amp = '&'
 
-# Escape function for /
-def slash():
-    return '/'
+# Escape sequence for /
+slash = '/'
     
 
 """

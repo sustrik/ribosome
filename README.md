@@ -447,14 +447,9 @@ Hello, Alice!
 
 In the rare cases when you need to generate a sequence of characters that
 accidentally matches a ribosome operator, you can use one of the predefined
-escape functions. For example:
+escape sequences. For example:
 
-*JavaScript:*
-```
-.123@{at()}{456
-```
-
-*Ruby:*
+*All languages:*
 ```
 .123@{at}{456
 ```
@@ -465,11 +460,11 @@ Translates into:
 123@{456
 ```
 
-Full list of escape functions:
+Full list of escape sequences:
 
-    at() => @
-    amp() => &
-    slash() => /
+    @{at} => @
+    @{amp} => &
+    @{slash} => /
 
 ### Advanced layout management
 

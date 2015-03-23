@@ -384,17 +384,9 @@ function Ribosome() {\n\
 \n\
 var ribosome = new Ribosome();\n\
 \n\
-function at() {\n\
-    return '@';\n\
-}\n\
-\n\
-function amp() {\n\
-    return '&';\n\
-}\n\
-\n\
-function slash() {\n\
-    return '/';\n\
-}\n\
+var at = \"@\";\n\
+var amp = \"&\";\n\
+var slash = \"/\";\n\
 \n\
 ///////////////////////////////////////////////////////////////////////\n\
 //\n\
