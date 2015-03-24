@@ -15,5 +15,6 @@ TESTS = \
     tabs.sh \
     align.sh \
     trim.sh\
-    include.sh
+    include.sh\
+    weird.sh
 

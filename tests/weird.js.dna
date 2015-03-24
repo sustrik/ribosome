@@ -1,5 +1,5 @@
-# This test tests whether weird characters in dot-lines don't interact with
-# the control language.
+// This test tests whether weird characters in dot-lines don't interact with
+// the control language.
 
 .}
 .{
