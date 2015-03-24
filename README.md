@@ -443,7 +443,7 @@ Which, in turn, is compiled into:
 Hello, Alice!
 ```
 
-### Escape functions
+### Escape sequences
 
 In the rare cases when you need to generate a sequence of characters that
 accidentally matches a ribosome operator, you can use one of the predefined
