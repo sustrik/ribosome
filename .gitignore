@@ -9,6 +9,7 @@ config.status
 configure
 install-sh
 missing
+*~
 
 examples/blue.txt
 examples/green.txt
