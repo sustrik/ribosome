@@ -464,7 +464,7 @@ while True:
 
     else:
         # There's no command in the line. Process it in the standard way.
-        rnawrite('''%sBlock.dot('%s', locals())%s''' % (lspace, line, rspace))
+        rnawrite("""%sBlock.dot(%s, locals())%s""" % (lspace, repr(line), rspace))
 
 # Generate RNA epilogue code.
 dnastack = [[None, 'ribosome', __line__() + 1]]
