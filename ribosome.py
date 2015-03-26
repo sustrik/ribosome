@@ -109,8 +109,12 @@ class Block:
             # empty block
             self.text = ['']
             self.width = 0
+        # Strip off the top and bottom whitespace.
         self.text = self.text[top:bottom+1]
+        # Strip off the whitespace on the left and on the right.
         self.text = [l.rstrip()[left:right+1] for l in self.text]
+        # Adjust the overall width of the block.
+        self.width = max([len(l) for l in self.text])
         
     def write(self, out, tabsize):
         for l in self.text:
@@ -140,6 +144,7 @@ class Block:
     # Redirects output to the specified file.
     @staticmethod
     def output(filename):
+        Block.close()
         Block.outisafile = True
         Block.out = open(filename, "w")
     
@@ -147,12 +152,14 @@ class Block:
     # New stuff is added to the existing content of the file.
     @staticmethod
     def append(filename):
+        Block.close()
         Block.outisafile = True
         Block.out = open(filename, "a")
 
     # Redirect output to the stdout.
     @staticmethod
     def stdout():
+        Block.close()
         Block.outisafile = False
         Block.out = sys.stdout
 
