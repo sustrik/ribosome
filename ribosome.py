@@ -109,8 +109,12 @@ class Block:
             # empty block
             self.text = ['']
             self.width = 0
+        # Strip off the top and bottom whitespace.
         self.text = self.text[top:bottom+1]
+        # Strip off the whitespace on the left and on the right.
         self.text = [l.rstrip()[left:right+1] for l in self.text]
+        # Adjust the overall width of the block.
+        self.width = max([len(l) for l in self.text])
         
     def write(self, out, tabsize):
         for l in self.text:
