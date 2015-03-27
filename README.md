@@ -118,7 +118,7 @@ ribosome.js foo.js
 ### Additional arguments
 
 Note that all the arguments following the DNA script name are passed unmodified
-to the script. For example:
+to the script. Here's a Ruby-based example:
 
 *greet.rb.dna:*
 ```
