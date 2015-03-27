@@ -5,9 +5,9 @@ A simple generic code generation tool.
 
 ## In 50 words
 
-1. You write standard JavaScript/Ruby/Python scripts.
+1. You write standard JavaScript, Ruby or Python scripts.
 2. However, lines starting with a dot (.) go straight to the output.
-3. To expand JavaScript/Ruby/Python expressions within dot-style lines use @{expr} construct.
+3. To expand JavaScript/Ruby/Python expressions within dotted lines use @{expr} construct.
 
 ## Example
 
@@ -65,24 +65,14 @@ generating HTML on the fly.
 
 ## Installation
 
-Ribosome is a single JavaScript/Ruby/Python script, thus all you need is
-to install node.js, Ruby and/or Python beforehand and copy 'ribosome.js',
-'ribosome.rb' or 'ribosome.py' script onto your path.
-
-However, on UNIX systems you can use more standard way of installing the
-software:
-
-```
-$ ./autogen.sh
-$ ./configure
-$ make check
-$ sudo make install
-```
+Ribosome is a single JavaScript, Ruby or Python script, depending on the control
+language you wish to use. Therefore, all you need to do is to install node.js,
+Ruby or Python, as required, and copy 'ribosome.js', 'ribosome.rb' or
+'ribosome.py' onto your path.
 
 ## Command line
 
-The generator is called 'ribosome.js', 'ribosome.rb' or 'ribosome.py',
-respectively. It takes one argument. The script file, also known as DNA file.
+The generator takes one argument, the script file, also known as DNA file.
 All the remaining arguments are passed unmodified to the script.
 
 *JavaScript:*
@@ -100,6 +90,14 @@ $ ribosome.rb foo.rb.dna
 $ ribosome.py foo.py.dna
 ```
 
+NOTE: JavaScript interpreter may be called either 'node' or 'nodejs', depending
+on the distro in use. ribosome.js happens to use 'nodejs'. Therefore, if the
+interpreter is called 'node' on your system, create a symlink for it:
+
+```
+ln -s /usr/bin/node /usr/bin/nodejs
+```
+
 ## Documentation
 
 At this point you are ready to use ribosome to do your own code generation.
@@ -108,25 +106,33 @@ in the following sections.
 
 ### Control language
 
-DNA file is a standard JavaScript/Ruby/Python program (except for the lines
+DNA file is a standard JavaScript, Ruby or Python program (except for the lines
 starting with a dot). Therefore it is possible to just take your existing
-JavaScript/Ruby/Python program and run it with ribosome. Note that all
-the arguments following the script name are passed unmodified
-to the JavaScript/Ruby/Python program:
+program and run it with ribosome:
 
-*JavaScript:*
+*JavaScript:* 
 ```
-ribosome.js foo.js arg1 arg2 arg3
+ribosome.js foo.js
 ```
 
-*Ruby:* 
+### Additional arguments
+
+Note that all the arguments following the DNA script name are passed unmodified
+to the script. For example:
+
+*greet.rb.dna:*
 ```
-ribosome.rb foo.rb arg1 arg2 arg3
+.Hello, @{ARGV[0]}!
 ```
 
-*Python:* 
+*Command line:*
 ```
-ribosome.py foo.py arg1 arg2 arg3
+ribosome.rb greet.rb.dna Alice
+```
+
+*Output:*
+```
+Hello, Alice!
 ```
 
 ### Simple output
