@@ -7,7 +7,8 @@ A simple generic code generation tool.
 
 1. You write standard JavaScript, Ruby or Python scripts.
 2. However, lines starting with a dot (.) go straight to the output.
-3. To expand JavaScript/Ruby/Python expressions within dotted lines use @{expr} construct.
+3. To expand JavaScript/Ruby/Python expressions within dotted lines
+   use @{expr} construct.
 
 ## Example
 
@@ -67,8 +68,8 @@ generating HTML on the fly.
 
 Ribosome is a single JavaScript, Ruby or Python script, depending on the control
 language you wish to use. Therefore, all you need to do is to install node.js,
-Ruby or Python, as required, and copy 'ribosome.js', 'ribosome.rb' or
-'ribosome.py' onto your path.
+Ruby or Python, as required, and copy *ribosome.js*, *ribosome.rb* or
+*ribosome.py* onto your path.
 
 ## Command line
 
@@ -90,9 +91,9 @@ $ ribosome.rb foo.rb.dna
 $ ribosome.py foo.py.dna
 ```
 
-NOTE: JavaScript interpreter may be called either 'node' or 'nodejs', depending
-on the distro in use. ribosome.js happens to use 'nodejs'. Therefore, if the
-interpreter is called 'node' on your system, create a symlink for it:
+NOTE: JavaScript interpreter may be called either *node* or *nodejs*, depending
+on the distro in use. ribosome.js happens to use *nodejs*. Therefore, if the
+interpreter is called *node* on your system, create a symlink for it:
 
 ```
 ln -s /usr/bin/node /usr/bin/nodejs
