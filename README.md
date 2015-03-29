@@ -768,3 +768,8 @@ editors. Any help in this area will be highly appreciated!
 
 Ribosome is licensed under MIT/X11 license.
 
+## Third party resources
+
+A tutorial: http://thrashing.io/tutorial/5515010fdf6f8bd30964e66d
+
+
