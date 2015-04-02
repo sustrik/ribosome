@@ -1,10 +1,40 @@
 
-body {width:50em; padding: 5em; font-family: sans-serif;}
+body {
+    width:50em;
+    padding: 5em;
+    font-family: sans-serif;
+}
 
-a {color: #000000;}
+#toplist {
+    padding-left: 0px;
+}
 
-a.download {color:red;}
+#toplist li {
+    display: inline;
+    list-style-type: none;
+    padding-right: 15px;
+}
 
-pre {padding: 20px; border: 1px dotted;} 
+#toplist a {
+    font-weight: bold;
+    color: red;
+    text-decoration: none;
+}
 
-p.lang {font-style: italic;}
+a {
+    color: black;
+}
+
+a.download {
+    color: red;
+}
+
+p.lang {
+    font-style: italic;
+}
+
+pre {
+    padding: 20px;
+    border: 1px dotted;
+} 
+
