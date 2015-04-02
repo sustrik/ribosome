@@ -1,0 +1,10 @@
+
+body {width:50em; padding: 5em; font-family: sans-serif;}
+
+a {color: #000000;}
+
+a.download {color:red;}
+
+pre {padding: 20px; border: 1px dotted;} 
+
+p.lang {font-style: italic;}

@@ -3,21 +3,9 @@
 <head>
   <meta charset="utf-8">
   <title>ribosome</title>
-  <style>
-  body {font-family:sans-serif;} 
-  #toplist {
-    padding-left: 0px;
-  }
-  #toplist li {
-    display: inline;
-    list-style-type: none;
-    padding-right: 15px;
-  }
-  a {color:#000000;}
-  </style>
+  <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body>
-<div style="width:50em">
 
 <h1>RIBOSOME</h1>
 
@@ -25,48 +13,51 @@
 
 <h2>In 50 words</h2>
 
-1. You write standard JavaScript, Ruby or Python scripts.
-2. However, lines starting with a dot (.) go straight to the output.
-3. To expand JavaScript/Ruby/Python expressions within dotted lines
-   use @{expr} construct.
+<ol>
+  <li>You write standard JavaScript, Ruby or Python scripts.</li>
+  <li>However, lines starting with a dot (.) go straight to the output.</li>
+  <li>To expand JavaScript/Ruby/Python expressions within dotted lines
+      use @{expr} construct.</li>
+</ol>
 
 <h2>Example</h2>
 
-JavaScript:
-```
-.#include <stdio.h>
+<p>This example uses JavaScript as the control language:</p>
+
+<p class="lang">readysteady.js.dna:</p>
+<pre>
+.#include &lt;stdio.h&gt;
 .
 .int main() {
 var i;
-for (i=0; i<10; i++) {
-.    printf("@{11-i}!\n");
+for (i=3; i&gt;0; i--) {
+.    printf("@{i}!\n");
 }
 .    printf("Go!\n");
 .    return 0;
 .}
-```
+</pre>
+
+<p>To generate the code:</p>
+
+<pre>
+$ ribosome.js readysteady.js.dna
+</pre>  
 
 <p>The script above produces the following output (which happens to be a
 C program):</p>
 
-```
-#include <stdio.h>
+<pre>
+#include &lt;stdio.h&gt;
 
 int main() {
-    printf("10!\n");
-    printf("9!\n");
-    printf("8!\n");
-    printf("7!\n");
-    printf("6!\n");
-    printf("5!\n");
-    printf("4!\n");
     printf("3!\n");
     printf("2!\n");
     printf("1!\n");
     printf("Go!\n");
     return 0;
 }
-```
+</pre>
 
 <h2>How it differs</h2>
 
@@ -75,652 +66,35 @@ maintain. While most code generating tools do the technical part of the job all
 right, they fail on the manageability aspect. Ribosome tries to address it using
 following measures:</p>
 
-- Generated code is properly indented (also think of generating Python code!)
-- No escape sequences or other visual smog in the source.
-- Flexibility in indentation of the source.
-- Colouring support in editors.
+<ul>
+  <li>Generated code is properly indented (also think of generating Python
+      code!)</li>
+  <li>No escape sequences or other visual smog in the source.</li>
+  <li>Flexibility in indentation of the source.</li>
+  <li>Colouring support in editors.</li>
+</ul>
 
 <p>NOTE: Ribosome trades speed for readability/maintainability and thus it
 isn't well suited for performance-critical tasks such as, for example,
 generating HTML on the fly.</p>
 
-<h2>Installation</h2>
+<h2>Download</h2>
 
 <p>Ribosome is a single JavaScript, Ruby or Python script, depending on the
 control language you wish to use. Therefore, all you need to do is to install
-node.js, Ruby or Python, as required, and copy ribosome.js, ribosome.rb or
-ribosome.py onto your path.</p>
-
-<h2>Command line</h2>
-
-<p>The generator takes one argument, the script file, also known as
-DNA file.</p>
-
-*JavaScript:*
-```
-$ ribosome.js foo.js.dna
-```
-
-*Ruby:*
-```
-$ ribosome.rb foo.rb.dna
-```
-
-*Python:*
-```
-$ ribosome.py foo.py.dna
-```
-
-<p>NOTE: JavaScript interpreter may be called either "node" or "nodejs",
-depending on the distro in use. ribosome.js happens to use "nodejs". If the
-interpreter is called "node" on your system, create a symlink for it:</p>
-
-```
-ln -s /usr/bin/node /usr/bin/nodejs
-```
-
-<h2>Documentation</h2>
-
-<p>At this point you are ready to use ribosome to do your own code generation.
-However, you may benefit from reading about the finer points of the tool
-in the following sections.</p>
-
-<h3>Control language</h3>
-
-<p>DNA file is a standard JavaScript, Ruby or Python program (except for the
-lines starting with a dot). Therefore it is possible to just take your existing
-program and run it with ribosome. For example:</p>
-
-*JavaScript:* 
-```
-ribosome.js foo.js
-```
-
-<h3>Additional arguments</h3>
-
-<p>All the arguments following the DNA script name are passed unmodified
-to the script.</p>
-
-<p>If you program is invoked like this:</p>
-
-*Ruby:*
-```
-foo.rb 1 2 3
-```
-
-<p>You can run it with ribosome like this:</p>
-
-*Ruby:*
-```
-ribosome.rb foo.rb 1 2 3
-```
-
-<h3>Simple output</h3>
-
-<p>Lines starting with a dot (.) are copied directly to the output:</p>
-
-*JavaScript:*
-```
-for(var i=0; i<2; i++){
-.Test!
-}
-```
-
-*Ruby:*
-```
-for i in 1..2
-.Test!
-end
-```
-
-*Pyhon:*
-```
-for i in range(2):
-    .Test!
-```
-
-<p>All the above scripts produce the same output:</p>
-
-```
-Test!
-Test!
-```
-
-<p>Lines starting with a dot can be terminated by $ sign. The sign is optional,
-however, if there's whitespace at the end of the line it is recommended to
-finish the line with $ to prevent invisible whitespace getting into the output
-files.</p>
-
-*All languages:*
-```
-.Hello!    $
-```
-
-<h3>Redirecting output</h3>
-
-<p>By default, the output is directed to stdout. Therefore, it can be
-re-directed using classic UNIX pipes. For example:</p>
-
-*Ruby:*
-```
-ribosome.rb test.rb.dna > test.txt
-```
-
-<p>You can also redirect the output to a specific destination directly from
-the DNA file. Use '/!output' command to accomplish the task:</p>
-
-*All languages:*
-```
-.    /!output("test.txt")
-.    Test!
-```
-
-<p>Note that ribosome commands may appear only in lines starting with a dot,
-may be preceded with arbitrary amout of whitespace (which will be ignored) and
-start with slash and exclamation mark. The arguments of the command are
-standard expressions in the control language:</p>
-
-*Python:*
-```
-name = "foo"
-./!output(name + ".txt")
-```
-
-<p>To redirect the output back to the console use '/!stdout' command:</p>
-
-*All languages:*
-```
-./!output("test.txt")
-.This line goes to the file!
-./!stdout()
-.This line goes to the console!
-```
-
-<p>Finally, you can append new text to existing file using '/!append'
-command:</p>
-
-*All languages:*
-```
-./!output("test.txt")
-.Stuff
-./!stdout()
-./!append("test.txt")
-.More stuff
-```
-
-<h3>Embedded expressions</h3>
-
-<p>Often, you need to insert a computed value into the output. You can do so by
-embedding JavaScript/Ruby/Python expressions into dot-style lines:</p>
-
-*JavaScript:*
-```
-var name = "Fred";
-.Hello, @{name}!
-```
-
-<p>With standard, non-ribosome-aware functions, the return value is converted
-into a string and written to the output.</p>
-
-<p>If the embedded expression produces ribosome output itself, the text is
-inserted into the output file instead of the return value:</p>
-
-*JavaScript:*
-```
-function greet(name){
-.printf ("Hello, @{name}!\n");
-}
-
-.int main () {
-.    @{greet("Alice")}
-.    @{greet("Bob")}
-.    return 0;
-.}
-```
-
-*Ruby:*
-```
-    def greet(name)
-    .printf ("Hello, @{name}!\n");
-    end
-
-    .int main () {
-    .    @{greet("Alice")}
-    .    @{greet("Bob")}
-    .    return 0;
-    .}
-```
-
-*Python:*
-```
-def greet(name):
-    .printf ("Hello, @{name}!\n");
-
-.int main () {
-.    @{greet("Alice")}
-.    @{greet("Bob")}
-.    return 0;
-.}
-```
-
-<h3>Line concatenation</h3>
-
-<p>Typically, each dot-style line is translated into a separate line in the
-output file. Sometimes, however, you may want to generate complex stuff into
-a single line of the output file. In such case new line can be appended directly
-to the previous line. Use /+ operator to achieve the behaviour:</p>
-
-*JavaScript:*
-```
-.Hello $
-var students = ["Alice", "Bob", "Carol"];
-students.forEach(function(item){
-.   /+@{item} $
-});
-./+!
-```
-
-*Ruby:*
-```
-.Hello $
-for i in ["Alice", "Bob", "Carol"]
-.   /+@{i} $
-end
-./+!
-```
-
-*Python:*
-```
-.Hello $
-for i in ["Alice", "Bob", "Carol"]:
-    ./+@{i} $
-./+!
-```
-
-<p>Note that all the whitespace preceding /+ operator is silently ignored:</p>
-
-```
-Hello Alice Bob Carol !
-```
-
-<h3>Separators</h3>
-
-<p>A common task with code generation is to insert separators between the items
-of a list. Ribosome provides '/!separate' command to help with the task.
-The command must precede a JavaScript/Ruby loop (for, while or similar) and
-takes a single parameter, the text to use as a separator:</p>
-
-*JavaScript:*
-```
-.Hello $
-var students = ["Alice", "Bob", "Carol"];
-./!separate(", ")
-for(var i=0; i<students.length; i++){
-.   /+@{students[i]}
-}
-./+!
-```
-
-*Ruby:*
-```
-.Hello $
-./!separate(", ")
-for i in ["Alice", "Bob", "Carol"]
-.   /+@{i}
-end
-./+!
-```
-
-*Python:*
-```
-.Hello $
-./!separate(", ")
-for i in ["Alice", "Bob", "Carol"]:
-    .   /+@{i}
-./+!
-```
-
-<p>Note that the separator doesn't appear after the last element
-of the list:</p>
-
-```
-Hello Alice, Bob, Carol!
-```
-
-<h3>Strict embedded expressions</h3>
-
-<p>You may have noticed that any whitespace generated by the embedded
-expressions is trimmed. To keep the whitespace intact, use &{} operator
-instead of @{}:</p>
-
-*Python:*
-```
-s = " 2 "
-.1@{s}3
-.1&{s}3
-```
-
-<p>The script above produces following output:</p>
-
-```
-123
-1 2 3
-```
-
-<h3>Nested embedded expressions</h3>
-
-<p>Producing output that is a DNA file itself can be tricky. The main problem is
-that a lot of escape sequences would have to be used. To solve that, ribosome
-provides a tool called nested embedded expressions.</p>
-
-<p>Nested embedded expressions are written @N{} or &N{}, where N is a digit from
-1 to 9. The number is called the 'level' of the nested expression. During the
-compilation nested expressions of first level are replaced by ordinary embedded
-expressions. Nested expressions of second level are replaced by nested
-expressions of first level, nested expressions of third level are replaced by
-nested expressions of second level and so on.</p>
-
-```
-@9{x} => @8{x} => @7{x} => ... => @2{x} => @1{x} => @{x}
-```
-
-<p>Consider, for exmaple, this script:</p>
-
-*Ruby:*
-```
-.name = "Alice"
-..Hello, @1{name}!
-```
-
-<p>It compiles into this script:</p>
-
-*Ruby:*
-```
-name = "Alice"
-.Hello, @{name}!
-```
-
-<p>Which, in turn, is compiled into:</p>
-
-```
-Hello, Alice!
-```
-
-<h3>Escape sequences</h3>
-
-<p>In the rare cases when you need to generate a sequence of characters that
-accidentally matches a ribosome operator, you can use one of the predefined
-escape sequences. For example:</p>
-
-*All languages:*
-```
-.123@{at}{456
-```
-
-<p>Translates into:</p>
-
-```
-123@{456
-```
-
-<p>Full list of escape sequences:</p>
-
-    @{at} => @
-    @{amp} => &
-    @{slash} => /
-
-<h3>Advanced layout management</h3>
-
-<p>Consider the following script:</p>
-
-*JavaScipt:*
-```
-function colours() {
-.    White
-.    Black
-.    Ultramarine
-.    Red
-.    Green
-.    Blue
-}
-
-function shapes() {
-.    Triangle
-.    Circle
-}
-
-.Colours: @{colours()} Shapes: @{shapes()}
-.
-.That's all, folks!
-```
-
-<p>It produces the following output:</p>
-
-```
-Colours: White       Shapes: Triangle
-         Black               Circle
-         Ultramarine
-         Red
-         Green
-         Blue
-
-That's all, folks!
-```
-
-<p>To undestand how ribosome layouts the code, it is necessary to keep in mind
-that it's not characters that are placed on a line, but rather rectangular
-blocks of text.</p>
-
-<p>Every literal string is considered to be a block of text (consisting of
-a single line) and so is every embedded expression. However, given that embedded
-expressions can generate multiple lines they are treated as multi-line
-blocks of text.</p>
-
-<p>The blocks are aligned to the top of the line:</p>
-
-<p>Thus, the line:</p>
-
-```
-.Colours: @{colours()} Shapes: @{shapes()}
-```
-
-<p>Is laid out like this:</p>
-
-![](images/line.png)
-
-<p>Every next line is laid out directly bellow the longest block on the previous
-line:</p>
-
-![](images/layout.png)
-
-<p>Note that @-style embedded expressions trim the whitespace from the left,
-right, top and bottom of the block. Therefore, the block produced by
-'@{colours}' expression looks like this:</p>
-
-![](images/block.png)
-
-<p>Also note that whitespace is trimmed from the block as a whole, not from each
-individual line. That way, the block alway remains rectangular in shape:</p>
-
-![](images/block2.png)
-
-<p>This feature is extremely important to produce properly aligned code.
-Consider this example:</p>
-
-*JavaScript:*
-```
-function greet(name) {
-.    printf ("Hello, @{name}!\n");
-}
-
-.@{greet("Alice")}
-.if (is_bob_present) {
-.    @{greet("Bob")}
-.}
-```
-
-<p>The script above produces following output:</p>
-
-```
-printf ("Hello, Alice!\n");
-if (is_bob_present) {
-    printf ("Hello, Bob!\n");
-}
-```
-
-<p>Note how the greeting is properly aligned in both cases. What happens under
-the hood is that the whitespace from line 2 of the script is trimmed by @{}
-operator, while the whitespace on line 7 is treated as a text literal (i.e.
-as one-line text block) and is appended to the line before the greeting
-to Bob.</p>
-
-<h3>Aligning text</h3>
-
-</p>Operator /= aligns a line with the previous line.</p>
-
-*All languages:*
-```
-.        Hello,
-./=world!
-```
-
-<p>The above code yields the following output:</p>
-
-```
-        Hello,
-        world!
-```
-
-<p>WARNING: This operator severely hurts the readability of the DNA script and
-thus it should be avoided. There are some specific use cases though where proper
-indentation of the generated code cannot be achieved by other means.
-Specifically, if a block of code is fetched from an external source, e.g.
-from an XML file, there's no way to know how it is indented. /= operator can
-be then used to align subsequent code with this external block of code.</p>
-
-<h3>Generating tabs</h3>
-
-<p>Ribosome doesn't allow for tabs in the input, however, when generating
-output it can, on demand, replace as much of the leading whitespace as possible
-by tabs. To switch this functionality on use '/!tabsize' command, providing
-desired size of the tab as a parameter:</p>
-
-*All languages:*
-```
-./!tabsize(4)
-.for (i = 0; i != 10; ++i)
-.    printf("Hi!\n");
-.}
-```
-
-<p>In the output, leading four spaces in the line 3 will be replaced
-by a tab.</p>
-
-<p>Set tabsize to zero to switch the generation of tabs off.</p>
-
-<h3>Importing DNA files</h3>
-
-<p>In case of need you can import a DNA file using '/!include' command.
-The behaviour is the same as if the contents of the imported file was
-copied to the location in question in the importing file:</p>
-
-*All languages:*
-```
-./!include("foo.dna")
-```
-
-<h2>Distributing the code generator</h2>
-
-<p>Ribosome is a compiler-compiler. It first compiles DNA file into a straight
-JavaScript or Ruby program (called RNA script) which is then executed to produce
-the generated code. The intermediate step is fully hidden from the user.</p>
-
-<p>The above works well for ad-hoc and throw-away code generation, however, if
-you want to distribute the code generator to the users it is better to generate
-the RNA script first and distribute that instead of the DNA script -- that way
-there's no dependency on ribosome itself (the user will do with only
-node.js, Ruby and/or Python installed):</p>
-
-*Ruby:*
-```
-ribosome.rb --rna foo.rb.dna > foo.rb
-```
-
-<p>Also note that if your DNA script is composed of multiple DNA files (using
-/!include command) only a single RNA script is generated, making the
-distribution to the users easier.</p>
-
-<h2>Syntax highlighting</h2>
-
-<p>Given that DNA files contain two overlapping indentations, syntax highlighting
-is crucial for good code readability.</p>
-
-<h3>Vim</h3>
-
-<p>To install ribosome syntax highlighting for vim, copy the ribosome.vim file
-from the root directory to vim's syntax directory. For example:</p>
-
-```
-sudo cp ribosome.vim /usr/share/vim/vim73/syntax
-```
-
-<p>Afterwards, open vim's filetype file:</p>
-
-```
-sudo vim /usr/share/vim/vim73/filetype.vim
-```
-
-<p>And add the following line to it:</p>
-
-```
-au BufNewFile,BufRead *.dna setf ribosome
-```
-
-<p>Now you are ready to open a DNA file in vim:</p>
-
-![](images/vim1.png)
-
-What you see is so called "common view" where control language (Ruby) and
-generated language (C) are highlighted in such a way as to allow inspection
-of both.
-
-<p>When in other views, you can switch to common view using F2 key.</p>
-
-<p>Press F3 key to switch to the "Ruby view":</p>
-
-![](images/vim2.png)
-
-<p>Here the control language has its native syntax colouring, while generated
-code is shaded as not to distract from inspecting the control language.</p>
-
-Press F4 key to switch to the "Output view":
-
-![](images/vim3.png)
-
-<p>In this view the control language is shaded and output language is fully
-visible.</p>
-
-<p>However, vim does not know what syntax highlighting to use for the generated
-language. You can instruct it to use particular syntax highlighting algorithm
-using O (capital letter O) command. Pass the name of the language as an
-argument:</p>
-
-![](images/vim4.png)
-
-<h3>Other editors</h3>
-
-<p>In the future, we intend to provide highlighting rules for the most common
-editors. Any help in this area will be highly appreciated!</p>
+node.js, Ruby or Python, as required, and put the script to your path. You can
+download the scripts here:</p>
+
+<a class="download" href="ribosome.js" download>ribosome.js</a>
+&nbsp;
+<a class="download" href="ribosome.rb" download>ribosome.rb</a>
+&nbsp;
+<a class="download" href="ribosome.py" download>ribosome.py</a>
 
 <h2>License</h2>
 
 <p>Ribosome is licensed under MIT/X11 license.</p>
 
-<h2>Third party resources</h2>
-
-<p>A tutorial: http://thrashing.io/tutorial/5515010fdf6f8bd30964e66d</p>
-
-</div>
 </body>
 </html>
 
