@@ -191,7 +191,7 @@ class Block:
         i = 0
         while True:
             j = re.search(r'[@&][1-9]?\{', line[i:])
-            j = len(line) if j == None else j.start()
+            j = len(line) if j == None else j.start()+i
 
             # Process constant blocks of text.
             if i != j:
