@@ -21,6 +21,14 @@ body {
     text-decoration: none;
 }
 
+#toc {
+    list-style-type: none;
+}
+
+#toc a {
+    text-decoration: none;
+}
+
 a {
     color: black;
 }
