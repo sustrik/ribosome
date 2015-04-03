@@ -23,8 +23,6 @@
 
 <ul id="toc">
   <li><a href="#command-line">Command line</a></li>
-  <li><a href="#control-language">Control language</a></li>
-  <li><a href="#additional-arguments">Additional arguments</a></li>
   <li><a href="#simple-output">Simple output</a></li>
   <li><a href="#redirecting-output">Redirecting output</a></li>
   <li><a href="#embedded-expressions">Embedded expressions</a></li>
@@ -43,60 +41,34 @@
 
 <h3 id="command-line">Command line</h3>
 
-<p>The generator takes one argument, the script file, also known as
-DNA file.</p>
+<p>Ribosome command differs based on the control language one wishes to use.
+For JavaScript it is <tt>ribosome.js</tt>, for Ruby it is <tt>ribosome.rb</tt>
+and for Python it is <tt>ribosome.py</tt>.</p>
+
+<p>Given that the input file is a standard JavaScript, Ruby or Python program
+(except for the lines starting with a dot) it is possible to just take your
+existing program and run it with ribosome. For example:</p>
 
 <p class="lang">JavaScript:</p>
 <pre>
-$ ribosome.js foo.js.dna
+$ ribosome.js foo.js
 </pre>
+
+<t>The arguments are passed unmodified to the program. Thus, if your
+program takes three arguments, you can run it like this:</p>
 
 <p class="lang">Ruby:</p>
 <pre>
-$ ribosome.rb foo.rb.dna
+$ ribosome.rb foo.rb arg1 arg2 arg3
 </pre>
+
+<p>However, to distinguish naive programs from ribosome scripts it is customary
+to add <tt>.dna</tt> extension to the script files. Thus, the typical command
+line typically looks like this:</p>
 
 <p class="lang">Python:</p>
 <pre>
-$ ribosome.py foo.py.dna
-</pre>
-
-<p>NOTE: JavaScript interpreter may be called either "node" or "nodejs",
-depending on the distro in use. ribosome.js happens to use "nodejs". If the
-interpreter is called "node" on your system, create a symlink for it:</p>
-
-<pre>
-ln -s /usr/bin/node /usr/bin/nodejs
-</pre>
-
-<h3 id="control-language">Control language</h3>
-
-<p>DNA file is a standard JavaScript, Ruby or Python program (except for the
-lines starting with a dot). Therefore it is possible to just take your existing
-program and run it with ribosome. For example:</p>
-
-<p class="lang">JavaScript:</p> 
-<pre>
-ribosome.js foo.js
-</pre>
-
-<h3 id="additional-arguments">Additional arguments</h3>
-
-<p>All the arguments following the DNA script name are passed unmodified
-to the script.</p>
-
-<p>If you program is invoked like this:</p>
-
-<p class="lang">Ruby:</p>
-<pre>
-foo.rb 1 2 3
-</pre>
-
-<p>You can run it with ribosome like this:</p>
-
-<p class="lang">Ruby:</p>
-<pre>
-ribosome.rb foo.rb 1 2 3
+$ ribosome.py foo.py.dna arg1 arg2 arg3
 </pre>
 
 <h3 id="simple-output">Simple output</h3>
@@ -105,7 +77,7 @@ ribosome.rb foo.rb 1 2 3
 
 <p class="lang">JavaScript:</p>
 <pre>
-for(var i=0; i&lt;2; i++){
+for(var i=0; i&lt;2; i++) {
 .Test!
 }
 </pre>
