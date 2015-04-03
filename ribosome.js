@@ -624,11 +624,17 @@ if (rnaopt) {
 }
 
 if (!rnaopt) {
-
     exec("nodejs " + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
-        process.stdout.write(stdout);
-        process.stderr.write(stderr);
-        fs.unlinkSync(rnafile);
+        if(stderr != "") {
+            exec("node " + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
+                process.stdout.write(stdout);
+                process.stdout.write(stderr);
+                fs.unlinkSync(rnafile);
+            });
+        } else {
+            process.stdout.write(stdout);
+            fs.unlinkSync(rnafile);
+        }
     });
 }
 
