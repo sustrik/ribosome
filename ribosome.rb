@@ -280,7 +280,7 @@ module Ribosome
                 if line [i + 1] == ?1
                     block.add_right(Block.new("@" + line[i + 2..j]))
                 else
-                    line[i + 1] = (line [i + 1].to_i - 1).to_s
+                    line[i + 1] = (line [i + 1].to_i - 1).chr
                     block.add_right(Block.new(line[i..j]))
                 end
                 i = j + 1
