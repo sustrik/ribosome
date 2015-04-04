@@ -10,6 +10,7 @@ endfunction
 
 function RubyView ()
     unlet b:current_syntax
+    set syntax=off
     set syntax=ruby
     syn match dot "^\..*$"
     highlight dot ctermfg=Grey guifg=Grey
