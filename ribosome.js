@@ -435,8 +435,13 @@ function rnawrite(s) {
     rnaln += m == null ? 0 : m.length;
 }
 
-if (process.argv.length < 3) {
+if (process.argv.length < 3 || process.argv[2] == "-h" ||
+      process.argv[2] == "--help") {
     usage();
+}
+if (process.argv[2] == "-v" || process.argv[2] == "--version") {
+    process.stderr.write("ribosome code generator, version 1.14\n");
+    process.exit(1);
 }
 
 var rnaopt;
