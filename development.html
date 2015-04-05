@@ -21,13 +21,54 @@
 
 <h2>Development</h2>
 
+<h3>Repository</h3>
+
 <p>Ribosome development takes place on GitHub:</p>
 
 <p><a href="https://github.com/sustrik/ribosome">https://github.com/sustrik/ribosome</a></p>
 
+<p>To clone the repository:</p>
+
+<pre>
+$ git clone https://github.com/sustrik/ribosome.git
+</pre>
+
+<h3>Bug tracker</h3>
+
 <p>Report the bugs here:</p>
 
 <p><a href="https://github.com/sustrik/ribosome/issues/new">https://github.com/sustrik/ribosome/issues/new</a></p>
+
+<h3>Tests</h3>
+
+<p>To run the tests go to the root directory of the project and do the
+following:</p>
+
+<pre>
+$ ./autogen.sh
+$ ./configure
+$ make check
+</pre>
+
+<h3>Releasing</h3>
+
+<p>To make a release:</p>
+
+<ol>
+  <li>Update <tt>ChangeLog</tt></li>
+  <li>Update version numbers in <tt>ribosome.js</tt>, <tt>ribosome.rb</tt> and
+      <tt>ribosome.py</tt></li>
+  <li>Commit the changes</li>
+  <li>Make a release in GitHub (this will create a git tag)</li>
+  <li>Update <tt>download.html</tt> to point to the correct files</li>
+  <li>Update <tt>documentation.html</tt> to point to the correct syntax
+      colouring configuration files</li>
+</ol>
+
+<h3>Help needed</h3>
+
+<p>As for now, only syntax colouring for Vim is available. Adding syntax
+colouring for other development environments would be highly appreciated.</p>
 
 </body>
 </html>
