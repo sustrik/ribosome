@@ -80,4 +80,12 @@ Explicit commands for loading input files added:
 
 - JavaScript version of ribosome added
 
+1.14
+====
+
+- Python version of ribosome added
+- Version reporting
+- Several bug fixes
+
+
 
