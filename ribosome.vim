@@ -1,5 +1,5 @@
 
-function CommonView ()
+function! CommonView ()
     unlet b:current_syntax
     syn match dot "^\..*$"
     syn match nondot "^[^\.].*$"
@@ -8,7 +8,7 @@ function CommonView ()
     let b:current_syntax = "ribosome-common"
 endfunction
 
-function RubyView ()
+function! RubyView ()
     unlet b:current_syntax
     set syntax=off
     set syntax=ruby
@@ -17,7 +17,7 @@ function RubyView ()
     let b:current_syntax = "ribosome-ruby"
 endfunction
 
-function OutputView()
+function! OutputView()
     unlet b:current_syntax
     if b:current_output != "none"
         execute 'syntax include @CSYN syntax/' . b:current_output . '.vim'
@@ -32,7 +32,7 @@ function OutputView()
     let b:current_syntax = "ribosome-output"
 endfunction
 
-function SetCurrentOutput(s)
+function! SetCurrentOutput(s)
     let b:current_output = a:s
     call OutputView()
 endfunction
@@ -41,7 +41,7 @@ map <F2> :call CommonView()<CR>
 map <F3> :call RubyView()<CR>
 map <F4> :call OutputView()<CR>
 
-command -nargs=1 O call SetCurrentOutput(<f-args>)
+command! -nargs=1 O call SetCurrentOutput(<f-args>)
 
 let b:current_syntax = ""
 let b:current_output = "none"
