@@ -330,7 +330,7 @@ linemap = []
 
 # DNA helper functions
 def dnaerror(s):
-    print "#{dnastack.last[1]}:#{$dnastack.last[2]} - #{s}"
+    print >> sys.stderr, "%s:%s - %s" %(dnastack[-1][1], dnastack[-1][2], s)
 
 # Generate new line(s) into the RNA file.
 def rnawrite(s):
