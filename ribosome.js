@@ -485,6 +485,7 @@ if (!rnaopt) {
     rnawrite('try {\n');
 }
 
+var eol = /\r?\n/;
 var dirname = path.normalize(path.dirname(dnafile));
 var file;
 try {
@@ -494,7 +495,7 @@ try {
     process.exit(1);
 }
 
-dnastack.push([file.split("\n"), dnafile, 0, dirname]);
+dnastack.push([file.split(eol), dnafile, 0, dirname]);
 
 while (dnastack.length > 1) {
 
@@ -588,7 +589,7 @@ while (dnastack.length > 1) {
             } catch (e) {
                 dnaerror("File doesn't exist.");
             }
-            dnastack.push([file.split("\n"), filename, 0, dirname]);
+            dnastack.push([file.split(eol), filename, 0, dirname]);
             continue;
         }
 
