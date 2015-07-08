@@ -562,7 +562,7 @@ while (dnastack.length > 1) {
             dnastack.last()[2] += 1;
             if (line == null || line[0] == "." ||
                 (!line.indexOf("while") && !line.indexOf("for"))) {
-                dnaerror("'sepearate' command must be folloed by a loop.");
+                dnaerror("'separate' command must be followed by a loop.");
             }
 
             rnawrite(line);
