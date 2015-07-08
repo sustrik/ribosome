@@ -87,5 +87,9 @@ Explicit commands for loading input files added:
 - Version reporting
 - Several bug fixes
 
+1.15
+====
 
+- JavaScript versio handles newlines on Windows properly
+- Several bug fixes
 

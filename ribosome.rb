@@ -402,7 +402,7 @@ if(ARGV.size() < 1 || ARGV[0] == "-h" || ARGV[0] == "--help")
     usage()
 end
 if ARGV[0] == "-v" || ARGV[0] == "--version"
-    puts "ribosome code generator, version 1.14"
+    puts "ribosome code generator, version 1.15"
     exit(1)
 end
 if ARGV[0] == "--rna"

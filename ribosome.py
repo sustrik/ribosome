@@ -306,7 +306,7 @@ import re
 
 # Set up the arguments parser.
 parser = argparse.ArgumentParser(
-    version = "ribosome code generator, version 1.14")
+    version = "ribosome code generator, version 1.15")
 parser.add_argument('dna', type=file)
 parser.add_argument('--rna', action='store_true')
 
