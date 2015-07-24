@@ -1,16 +1,29 @@
 
-CHECKS = $(wildcard *.check)
+CHECKS := $(wildcard *.check)
+PORTS  := python2 python3 ruby node
 
-all: $(CHECKS:%.check=run-%) clean
+all: $(PORTS)
 
-run-%: %.sh
-	@echo -n "Testing $*..."
-	@./$*.sh>$*.log && echo "\033[92mOK\033[0m" || echo "\033[91mFAIL\033[0m"
-	@cat $*.log
+$(PORTS): %: %-premsg $(CHECKS:%.check=%-%) %-postmsg
 
-%.sh: %.rb.dna %.js.dna %.py.dna ../ribosome.rb ../ribosome.js ../ribosome.py runtest.dna
-	@../ribosome.rb runtest.dna $* > $@
-	@chmod +x $@
+
+%-premsg:
+	@echo "Running $* tests."
+
+%-postmsg:
+	@echo
+
+%-python2:
+	@./runtest.sh python2 py $*
+
+%-python3:
+	@./runtest.sh python3 py $*
+	
+%-ruby:
+	@./runtest.sh ruby rb $*
+
+%-node:
+	@./runtest.sh node js $*
 
 clean:
-	@rm -f $(CHECKS:.check=.sh) *.out *.log
+	rm -f *.out *.log
