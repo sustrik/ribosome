@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 #
 # Copyright (c) 2015 Ali Zaidi  All rights reserved.
@@ -39,7 +39,7 @@ def __line__():
 #################
 
 PROLOGUE_LINE = __line__()
-PROLOGUE = """#!/usr/bin/env python
+PROLOGUE = """#!/usr/bin/env python2
 
 #
 # The initial part of this file belongs to the ribosome project.
@@ -501,7 +501,7 @@ rna.close()
 if not args.rna:
     import subprocess
     # Execute the RNA file. Pass it any arguments not used by ribosome.
-    subprocess.call(['python', rnafile] + sys.argv[2:])
+    subprocess.call(['python2', rnafile] + sys.argv[2:])
     # Delete the RNA file.
     os.remove(rnafile)
 
