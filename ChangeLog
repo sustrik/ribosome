@@ -90,6 +90,11 @@ Explicit commands for loading input files added:
 1.15
 ====
 
-- JavaScript versio handles newlines on Windows properly
+- JavaScript versioin handles newlines on Windows properly
 - Several bug fixes
 
+1.16
+
+- Supports both Python 2 and Python 3
+- Uses standard "node" command rather than "nodejs"
+- Test system doesn't need autotools
