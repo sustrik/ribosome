@@ -1,4 +1,4 @@
-#!/usr/bin/env nodejs
+#!/usr/bin/env node
 
 /*
 
@@ -24,7 +24,7 @@
 
 */
 
-var PROLOGUE = "#!/usr/bin/env nodejs\n\
+var PROLOGUE = "#!/usr/bin/env node\n\
 \n\
 /*\n\
 \n\
@@ -630,7 +630,7 @@ if (rnaopt) {
 }
 
 if (!rnaopt) {
-    exec("nodejs " + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
+    exec("node" + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
         if(stderr != "") {
             exec("node " + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
                 process.stdout.write(stdout);

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+
 #
 # Copyright (c) 2015 Ali Zaidi  All rights reserved.
 #
@@ -65,6 +67,8 @@ PROLOGUE = """#!/usr/bin/env python
 # IN THE SOFTWARE.
 #
 
+from __future__ import print_function, division
+
 import sys
 import re
 
@@ -121,7 +125,7 @@ class Block:
             # If required, replace the initial whitespace by tabs.
             if tabsize > 0:
                 ws = len(l) - len(l.lstrip())
-                l = '\t' * (ws / tabsize) + ' ' * (ws % tabsize) + l.lstrip()
+                l = '\t' * (ws // tabsize) + ' ' * (ws % tabsize) + l.lstrip()
             # Write an individual line to the output file.
             out.write(l + '\\n')
 
@@ -283,7 +287,7 @@ class Block:
                 l = ', '.join(['File "<%s>"' % linemap[j][1], 
                                'line %d' % num, 
                                ts[-1]])
-                print l
+                print(l)
         sys.exit(1)
 
             
@@ -305,9 +309,8 @@ import argparse
 import re
 
 # Set up the arguments parser.
-parser = argparse.ArgumentParser(
-    version = "ribosome code generator, version 1.15")
-parser.add_argument('dna', type=file)
+parser = argparse.ArgumentParser(prog="ribosome code generator, version 1.15")
+parser.add_argument('dna', type=argparse.FileType('r'))
 parser.add_argument('--rna', action='store_true')
 
 # Pwd
@@ -330,7 +333,7 @@ linemap = []
 
 # DNA helper functions
 def dnaerror(s):
-    print >> sys.stderr, "%s:%s - %s" %(dnastack[-1][1], dnastack[-1][2], s)
+    print("%s:%s - %s" %(dnastack[-1][1], dnastack[-1][2], s), file=sys.stderr)
 
 # Generate new line(s) into the RNA file.
 def rnawrite(s):
@@ -501,7 +504,7 @@ rna.close()
 if not args.rna:
     import subprocess
     # Execute the RNA file. Pass it any arguments not used by ribosome.
-    subprocess.call(['python', rnafile] + sys.argv[2:])
+    subprocess.call([sys.executable, rnafile] + sys.argv[2:])
     # Delete the RNA file.
     os.remove(rnafile)
 
