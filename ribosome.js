@@ -440,7 +440,7 @@ if (process.argv.length < 3 || process.argv[2] == "-h" ||
     usage();
 }
 if (process.argv[2] == "-v" || process.argv[2] == "--version") {
-    process.stderr.write("ribosome code generator, version 1.15\n");
+    process.stderr.write("ribosome code generator, version 1.16\n");
     process.exit(1);
 }
 
