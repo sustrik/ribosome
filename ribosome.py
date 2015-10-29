@@ -309,7 +309,9 @@ import argparse
 import re
 
 # Set up the arguments parser.
-parser = argparse.ArgumentParser(prog="ribosome code generator, version 1.16")
+parser = argparse.ArgumentParser(
+    prog="ribosome code generator, version 1.16",
+    usage="%(prog)s [options] <dna_file> [-- <arguments-to-dna>*]")
 parser.add_argument('dna', type=argparse.FileType('r'))
 parser.add_argument('--rna', action='store_true')
 
@@ -343,7 +345,7 @@ def rnawrite(s):
     rna.write(s)
     rnaln += len(s.splitlines())
 
-args = parser.parse_args()
+args, unknown = parser.parse_known_args()
 
 # Handle the CLI arguments.
 if args.rna:
@@ -504,7 +506,7 @@ rna.close()
 if not args.rna:
     import subprocess
     # Execute the RNA file. Pass it any arguments not used by ribosome.
-    subprocess.call([sys.executable, rnafile] + sys.argv[2:])
+    subprocess.call([sys.executable, rnafile] + unknown)
     # Delete the RNA file.
     os.remove(rnafile)
 
