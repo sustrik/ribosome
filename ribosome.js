@@ -636,6 +636,10 @@ if (!rnaopt) {
                 process.stdout.write(stdout);
                 process.stdout.write(stderr);
                 fs.unlinkSync(rnafile);
+
+                if (error) {
+                    process.exit(error.code);
+                }
             });
         } else {
             process.stdout.write(stdout);
