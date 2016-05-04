@@ -580,10 +580,12 @@ $rna.close()
 if !rnaopt
 
     # Execute the RNA file. Pass it any arguments not used by ribosome.
-    system("ruby #{$rnafile} " + ARGV[1..-1].join(' '))
+    result = system("ruby #{$rnafile} " + ARGV[1..-1].join(' '))
 
     # Delete the RNA file.
     File.delete($rnafile)
+
+    exit result
 
 end
 
