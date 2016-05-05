@@ -506,7 +506,8 @@ rna.close()
 if not args.rna:
     import subprocess
     # Execute the RNA file. Pass it any arguments not used by ribosome.
-    subprocess.call([sys.executable, rnafile] + unknown)
+    result = subprocess.call([sys.executable, rnafile] + unknown)
     # Delete the RNA file.
     os.remove(rnafile)
 
+    sys.exit(result)
