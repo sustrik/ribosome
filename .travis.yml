@@ -1,0 +1,12 @@
+os:
+  - linux
+
+branches:
+  only:
+    - master
+
+script:
+  - cd tests && make
+
+notifications:
+  email: false
