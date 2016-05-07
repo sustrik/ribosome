@@ -47,3 +47,6 @@ pre {
     font-size: 120%
 } 
 
+.travis-widget {
+    border-style: none;
+}
