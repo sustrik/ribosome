@@ -113,6 +113,7 @@ class Block:
             # empty block
             self.text = ['']
             self.width = 0
+            return
         # Strip off the top and bottom whitespace.
         self.text = self.text[top:bottom+1]
         # Strip off the whitespace on the left and on the right.
