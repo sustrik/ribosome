@@ -94,7 +94,13 @@ Explicit commands for loading input files added:
 - Several bug fixes
 
 1.16
+====
 
 - Supports both Python 2 and Python 3
 - Uses standard "node" command rather than "nodejs"
 - Test system doesn't need autotools
+
+1.17
+====
+
+- A bug fix release
