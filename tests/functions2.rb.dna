@@ -1,0 +1,25 @@
+# Tests how functions called from functions within embedded expressions are
+# evaluated
+
+def colours()
+.    White
+.    Black
+.    Ultramarine
+.    Red
+.    Green
+.    Blue
+end
+
+def shapes()
+.    Triangle
+.    Circle
+end
+
+def template()
+.Colours: @{colours()} Shapes: @{shapes()}
+.
+.That's all, folks!
+end
+
+template()
+
