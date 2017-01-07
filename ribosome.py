@@ -240,7 +240,7 @@ class Block:
             idx = i+2 if level == 0 else i+3
             expr = line[idx:j]
             Block.stack.append([])
-            val = eval(expr, bind)
+            val = eval(expr, globals(), bind)
             top = Block.stack.pop()
             if len(top) == 0:
                 val = Block(str(val))

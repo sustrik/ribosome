@@ -1,0 +1,25 @@
+// Tests how functions called from functions within embedded expressions are
+// evaluated
+
+function colours() {
+.    White
+.    Black
+.    Ultramarine
+.    Red
+.    Green
+.    Blue
+}
+
+function shapes() {
+.    Triangle
+.    Circle
+}
+
+function template() {
+.Colours: @{colours()} Shapes: @{shapes()}
+.
+.That's all, folks!
+}
+
+template()
+
