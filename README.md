@@ -3,4 +3,4 @@ RIBOSOME [![Build Status](https://travis-ci.org/sustrik/ribosome.svg?branch=mast
 
 A simple generic code generation tool.
 
-For details check http://ribosome.ch
+For details check http://sustrik.github.io/ribosome/
