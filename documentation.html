@@ -71,6 +71,12 @@ often  looks like this:</p>
 $ ribosome.py foo.py.dna arg1 arg2 arg3
 </pre>
 
+<b>Warning:</b> If your Python-based Ribosome script is written with Python 3 in mind, you must run Ribosome itself with Python 3, like so:
+
+<pre>
+$ python3 `which ribosome.py` foo.py.dna arg1 arg2 arg3
+</pre>
+
 <h3 id="simple-output">Simple output</h3>
 
 <p>Lines starting with a dot (.) are copied directly to the output:</p>
