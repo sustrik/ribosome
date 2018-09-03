@@ -633,7 +633,7 @@ if (!rnaopt) {
     exec("node " + rnafile + " " + process.argv.slice(3).join(' '),
          function(error, stdout, stderr) {
             process.stdout.write(stdout);
-            process.stdout.write(stderr);
+            process.stderr.write(stderr);
             fs.unlinkSync(rnafile);
 
             if (error)
