@@ -630,21 +630,17 @@ if (rnaopt) {
 }
 
 if (!rnaopt) {
-    exec("node" + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
-        if(stderr != "") {
-            exec("node " + rnafile + " " + process.argv.slice(3).join(' '), function(error, stdout, stderr) {
-                process.stdout.write(stdout);
-                process.stdout.write(stderr);
-                fs.unlinkSync(rnafile);
+    var proc = exec("node " + rnafile + " " + process.argv.slice(3).join(' '));
+    proc.stdout.pipe(process.stdout);
+    proc.stderr.pipe(process.stderr);
 
-                if (error) {
-                    process.exit(error.code);
-                }
-            });
-        } else {
-            process.stdout.write(stdout);
-            fs.unlinkSync(rnafile);
-        }
+    proc.on('exit', function (code) {
+        fs.unlinkSync(rnafile);
+        process.exit(code);
     });
-}
 
+    proc.on('error', function (code) {
+        fs.unlinkSync(rnafile);
+        process.exit(code);
+    });
+}   
